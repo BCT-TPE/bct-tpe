@@ -739,10 +739,39 @@ const connwrap=document.getElementById("connwrap");
 const connVid=document.getElementById("connvid");
 connVid.muted=true; connVid.playsInline=true;
 function connSrc(i){ return "clay/assets/conn"+i+".mp4"; }
+
+/* ---- warm cache: on hosted sites, fetch the flight clips fully into memory
+   so a scroll never catches an empty player (skipped on file:// where the
+   disk is instant; falls back silently if fetch fails) ---- */
+const PRE=[];
+(function warmFlights(){
+  if(!window.fetch || location.protocol==="file:") return;
+  const list=[["fly","clay/assets/flythrough.mp4"]];
+  for(let i=1;i<N;i++) list.push([i,connSrc(i)]);
+  let k=0;
+  const grab=()=>{
+    if(k>=list.length) return;
+    const [key,url]=list[k++];
+    fetch(url).then(r=>r.ok?r.blob():null).then(b=>{
+      if(b){ const u=URL.createObjectURL(b);
+        if(key==="fly"){ if(state===-1&&!busy){ transVid.src=u; transVid.load(); } }
+        else PRE[key]=u;
+      }
+      grab();
+    }).catch(grab);
+  };
+  setTimeout(grab,900);
+})();
+
 function primeConn(){
   if(!act2Mode && state>=0 && state<N-1){
-    const s=connSrc(state+1);
-    if(!connVid.src.endsWith(s)){ connVid.src=s; connVid.load(); }
+    const id=String(state+1), blob=PRE[state+1];
+    const fresh=connVid.dataset.conn!==id || (blob && connVid.dataset.blob!=="1");
+    if(fresh){
+      connVid.src=blob||connSrc(state+1);
+      connVid.dataset.conn=id; connVid.dataset.blob=blob?"1":"0";
+      connVid.load();
+    }
   }
 }
 function flyForward(){
@@ -788,13 +817,20 @@ function flyForward(){
       setTimeout(()=>land(false),(connVid.duration?connVid.duration*1000/CONN_RATE:2100)+800);
     },360);
   };
+  /* last-resort landing when the clip truly cannot load: graceful crossfade
+     (NOT an instant cut), so slow hosting still looks intentional */
+  const landPlain=()=>{ if(done) return; done=true;
+    state=to; showStation(to);
+    setTimeout(()=>{ busy=false; primeConn(); },950);
+  };
   primeConn();
   if(connVid.readyState>=2){ begin(); }
   else{
     const onC=()=>{ connVid.removeEventListener("canplay",onC); if(!done) begin(); };
     connVid.addEventListener("canplay",onC);
+    /* wait patiently (current station keeps playing) — only bail after 6s */
     setTimeout(()=>{ if(!done && connVid.readyState<2){
-      connVid.removeEventListener("canplay",onC); land(true); } },1600);
+      connVid.removeEventListener("canplay",onC); landPlain(); } },6000);
   }
 }
 
