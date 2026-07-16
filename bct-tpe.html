@@ -666,6 +666,9 @@ function goTo(n){                  /* jump between stations (dots / skip) */
   if(busy||state===-1&&n>0&&false) return;
   if(state===-1){ enterJourney(); if(n>0){ setTimeout(()=>goTo(n),6500); } return; }
   if(n===state) return;
+  /* adjacent dot = real flight (fwd / reversed); farther jumps stay a crossfade */
+  if(!REDUCE && n===state+1){ flyForward(); return; }
+  if(!REDUCE && n===state-1){ flyBackward(); return; }
   busy=true; state=n;
   showStation(n);
   setTimeout(()=>busy=false,950);
