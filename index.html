@@ -266,13 +266,20 @@
   .scrollmore,#finale p.scrollmore{margin-top:18px;font-size:14px;font-weight:700;color:var(--blue)}
 
   @media (max-width:640px){
+    /* journey on phones: card up top (88vw wide, 16:9 → 49.5vw tall),
+       text right below it, dots keep the bottom to themselves */
     .scene{right:6vw;left:6vw;top:8vh;width:auto;transform:none;border-radius:22px}
     #cardshadow{right:6vw;left:6vw;top:8vh;width:auto;transform:none;border-radius:22px;
       box-shadow:0 14px 40px rgba(20,40,60,.2)}
-    .caption{left:0;right:0;top:auto;bottom:4vh;max-width:none;padding:24px 8vw;
-      background:linear-gradient(0deg,var(--paper) 70%,rgba(247,244,239,0));border-radius:0;
-      transform:translateY(22px)}
+    #connwrap{right:6vw;left:6vw;top:8vh;width:auto;transform:none;border-radius:22px}
+    .caption{left:0;right:0;top:calc(8vh + 49.5vw + 26px);bottom:auto;max-width:none;
+      padding:0 6vw;transform:translateY(22px)}
     .caption.on{transform:none}
+    .caption p{max-width:none}
+    #finale{left:0;right:0;top:calc(8vh + 49.5vw + 26px);bottom:auto;max-width:none;
+      padding:0 6vw;transform:translateY(22px)}
+    #finale.on{transform:none}
+    #finale p{max-width:none}
     #dots{gap:12px;bottom:14px}
     #nav .logo img{height:26px}
     #hero .copyband{padding:84px 6vw 22px}
@@ -725,7 +732,7 @@ function dockTo(el,delay,dur){
       `width ${dur}ms var(--ease),height ${dur}ms var(--ease),`+
       `border-radius ${dur}ms var(--ease),box-shadow ${dur}ms var(--ease)`;
     s.left=r.left+"px"; s.top=r.top+"px"; s.width=r.width+"px"; s.height=r.height+"px";
-    s.borderRadius="36px";                                   /* card corners grow in */
+    s.borderRadius=getComputedStyle(scenes[0]).borderRadius||"36px";  /* match the card radius at any breakpoint */
     cardshadow.classList.add("on");                          /* persistent shadow fades in beneath */
   },delay);
 }
