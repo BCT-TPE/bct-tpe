@@ -50,7 +50,8 @@
     transform:translateY(-50%);z-index:3;opacity:0;pointer-events:none;background:#e9e4dc;
     border-radius:36px;overflow:hidden;
     transition:opacity .35s var(--ease)}
-  #connwrap video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  #connwrap video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0}
+  #connwrap video.act{opacity:1}
 
   /* ---------- captions (z4) ---------- */
   #hud{position:fixed;inset:0;pointer-events:none;z-index:4}
@@ -266,17 +267,17 @@
   .scrollmore,#finale p.scrollmore{margin-top:18px;font-size:14px;font-weight:700;color:var(--blue)}
 
   @media (max-width:640px){
-    /* journey on phones: card up top (88vw wide, 16:9 → 49.5vw tall),
-       text right below it, dots keep the bottom to themselves */
-    .scene{right:6vw;left:6vw;top:8vh;width:auto;transform:none;border-radius:22px}
-    #cardshadow{right:6vw;left:6vw;top:8vh;width:auto;transform:none;border-radius:22px;
+    /* journey on phones: TALL portrait card (88vw wide, 8:9 → 99vw tall,
+       video sides crop via object-fit), text below, dots own the bottom */
+    .scene{right:6vw;left:6vw;top:8vh;width:auto;aspect-ratio:8/9;transform:none;border-radius:22px}
+    #cardshadow{right:6vw;left:6vw;top:8vh;width:auto;aspect-ratio:8/9;transform:none;border-radius:22px;
       box-shadow:0 14px 40px rgba(20,40,60,.2)}
-    #connwrap{right:6vw;left:6vw;top:8vh;width:auto;transform:none;border-radius:22px}
-    .caption{left:0;right:0;top:calc(8vh + 49.5vw + 26px);bottom:auto;max-width:none;
+    #connwrap{right:6vw;left:6vw;top:8vh;width:auto;aspect-ratio:8/9;transform:none;border-radius:22px}
+    .caption{left:0;right:0;top:calc(8vh + 99vw + 24px);bottom:auto;max-width:none;
       padding:0 6vw;transform:translateY(22px)}
     .caption.on{transform:none}
     .caption p{max-width:none}
-    #finale{left:0;right:0;top:calc(8vh + 49.5vw + 26px);bottom:auto;max-width:none;
+    #finale{left:0;right:0;top:calc(8vh + 99vw + 24px);bottom:auto;max-width:none;
       padding:0 6vw;transform:translateY(22px)}
     #finale.on{transform:none}
     #finale p{max-width:none}
@@ -305,9 +306,10 @@
   </video>
 </div>
 
-<!-- station-to-station connector flights -->
+<!-- station-to-station connector flights (fwd + reversed) -->
 <div id="connwrap">
   <video id="connvid" muted playsinline preload="auto"></video>
+  <video id="connvidR" muted playsinline preload="auto"></video>
 </div>
 
 <!-- captions -->
@@ -744,20 +746,24 @@ function undock(el){ const s=el.style;
 const CONN_RATE=3.0;   /* 5s clip lands in ~1.7s */
 const connwrap=document.getElementById("connwrap");
 const connVid=document.getElementById("connvid");
+const connVidR=document.getElementById("connvidR");
 connVid.muted=true; connVid.playsInline=true;
+connVidR.muted=true; connVidR.playsInline=true;
 function connSrc(i){ return "clay/assets/conn"+i+".mp4"; }
 
 /* ---- warm cache: on hosted sites, fetch the flight clips fully into memory
    so a scroll never catches an empty player (skipped on file:// where the
    disk is instant; falls back silently if fetch fails) ---- */
-const PRE=[];
+const PRE=[], PRER=[];
+function connSrcR(i){ return "clay/assets/conn"+i+"r.mp4"; }
 (function warmFlights(){
   if(!window.fetch || location.protocol==="file:") return;
-  /* phones: skip the ~75MB blob warm — it starves the hero stream on cellular;
+  /* phones: skip the blob warm — it starves the hero stream on cellular;
      mobile relies on native streaming + the 6s patient wait instead */
   if(matchMedia("(pointer:coarse)").matches) return;
   const list=[["fly","clay/assets/flythrough.mp4"]];
   for(let i=1;i<N;i++) list.push([i,connSrc(i)]);
+  for(let i=1;i<N;i++) list.push(["r"+i,connSrcR(i)]);   /* reversed clips last */
   let k=0;
   const grab=()=>{
     if(k>=list.length) return;
@@ -765,6 +771,7 @@ const PRE=[];
     fetch(url).then(r=>r.ok?r.blob():null).then(b=>{
       if(b){ const u=URL.createObjectURL(b);
         if(key==="fly"){ if(state===-1&&!busy){ transVid.src=u; transVid.load(); } }
+        else if(String(key).charAt(0)==="r") PRER[+String(key).slice(1)]=u;
         else PRE[key]=u;
       }
       grab();
@@ -784,6 +791,17 @@ function primeConn(){
     }
   }
 }
+function primeConnR(){                        /* reversed clip for flying BACK from here */
+  if(!act2Mode && state>=1){
+    const id=String(state), blob=PRER[state];
+    const fresh=connVidR.dataset.conn!==id || (blob && connVidR.dataset.blob!=="1");
+    if(fresh){
+      connVidR.src=blob||connSrcR(state);
+      connVidR.dataset.conn=id; connVidR.dataset.blob=blob?"1":"0";
+      connVidR.load();
+    }
+  }
+}
 function flyForward(){
   const to=state+1;
   busy=true; let done=false;
@@ -795,10 +813,11 @@ function flyForward(){
       connwrap.style.transition="none"; connwrap.style.opacity=0;
       void connwrap.offsetWidth;
       connwrap.style.transition="";
-      setTimeout(()=>{ busy=false; primeConn(); },250);
+      setTimeout(()=>{ busy=false; primeConn(); primeConnR(); },250);
     },fast?0:100);
   };
   const begin=()=>{
+    connVid.classList.add("act"); connVidR.classList.remove("act");
     connVid.currentTime=0; connVid.pause();
     caps.forEach(c=>c.classList.remove("on"));
     /* the NEXT caption slides in while the camera is still flying */
@@ -844,6 +863,56 @@ function flyForward(){
   }
 }
 
+/* fly BACK one station: the reversed clip of the flight that brought us here */
+function flyBackward(){
+  const to=state-1;
+  busy=true; let done=false;
+  const land=()=>{ if(done) return; done=true;
+    state=to; showStation(to,true);          /* station snaps in UNDER the cover */
+    setTimeout(()=>{
+      /* landing frame = station's LAST frame but the video restarts at 0 —
+         a short crossfade (not a hard cut) masks the pose difference */
+      connwrap.style.opacity=0;
+      setTimeout(()=>{ busy=false; primeConn(); primeConnR(); },550);
+    },100);
+  };
+  const landPlain=()=>{ if(done) return; done=true;
+    state=to; showStation(to);
+    setTimeout(()=>{ busy=false; primeConn(); primeConnR(); },950);
+  };
+  const begin=()=>{
+    connVidR.classList.add("act"); connVid.classList.remove("act");
+    connVidR.currentTime=0; connVidR.pause();
+    caps.forEach(c=>c.classList.remove("on"));
+    finale.classList.remove("on");
+    setTimeout(()=>{ caps.forEach(c=>c.classList.toggle("on",+c.dataset.cap===to)); },280);
+    connwrap.style.opacity=1;
+    setTimeout(()=>{
+      const old=scenes[to+1];
+      if(old && old.classList.contains("on")){
+        old.classList.add("snap"); old.classList.remove("on");
+        void old.offsetWidth;
+        setTimeout(()=>old.classList.remove("snap"),120);
+      }
+      const nv=videos[to];
+      try{ nv.currentTime=0; }catch(e){}
+      nv.play().then(()=>{ setTimeout(()=>{ nv.pause(); try{ nv.currentTime=0; }catch(e){} },180); }).catch(()=>{});
+      connVidR.playbackRate=CONN_RATE;
+      connVidR.play().catch(()=>{});
+      connVidR.addEventListener("ended",land,{once:true});
+      setTimeout(land,(connVidR.duration?connVidR.duration*1000/CONN_RATE:2100)+800);
+    },360);
+  };
+  primeConnR();
+  if(connVidR.readyState>=2){ begin(); }
+  else{
+    const onC=()=>{ connVidR.removeEventListener("canplay",onC); if(!done) begin(); };
+    connVidR.addEventListener("canplay",onC);
+    setTimeout(()=>{ if(!done && connVidR.readyState<2){
+      connVidR.removeEventListener("canplay",onC); landPlain(); } },6000);
+  }
+}
+
 const REDUCE=matchMedia("(prefers-reduced-motion: reduce)").matches;
 function next(){
   if(busy) return;
@@ -857,7 +926,10 @@ function next(){
 function prev(){
   if(busy) return;
   if(state===0){ backToHero(); return; }
-  if(state>0){ busy=true; state--; showStation(state); setTimeout(()=>busy=false,950); }
+  if(state>0){
+    if(REDUCE){ busy=true; state--; showStation(state); setTimeout(()=>busy=false,950); }
+    else flyBackward();
+  }
 }
 
 /* ---------- input ---------- */
@@ -919,7 +991,7 @@ setInterval(()=>{
   if(act2Mode) return;
   if(state>=0){ const v=videos[state]; if(v.paused) v.play().catch(()=>{}); }
   if(state===-1 && heroFront.paused) heroFront.play().catch(()=>{});
-  if(!busy) primeConn();
+  if(!busy){ primeConn(); primeConnR(); }
 },700);
 </script>
 </body>
