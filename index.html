@@ -352,7 +352,7 @@
     <h1><span class="l1">Step inside.</span><span class="en">Watch ideas ship.</span></h1>
   </div>
   <div class="visual">
-    <video id="herovid" muted playsinline preload="auto"
+    <video id="herovid" autoplay muted playsinline preload="auto"
       poster="clay/assets/hero-poster.png">
       <source src="clay/assets/hero.mp4" type="video/mp4">
     </video>
@@ -753,6 +753,9 @@ function connSrc(i){ return "clay/assets/conn"+i+".mp4"; }
 const PRE=[];
 (function warmFlights(){
   if(!window.fetch || location.protocol==="file:") return;
+  /* phones: skip the ~75MB blob warm — it starves the hero stream on cellular;
+     mobile relies on native streaming + the 6s patient wait instead */
+  if(matchMedia("(pointer:coarse)").matches) return;
   const list=[["fly","clay/assets/flythrough.mp4"]];
   for(let i=1;i<N;i++) list.push([i,connSrc(i)]);
   let k=0;
@@ -872,7 +875,11 @@ addEventListener("wheel",e=>{
 },{passive:true});
 
 let touchY=null;
-addEventListener("touchstart",e=>{touchY=e.touches[0].clientY},{passive:true});
+addEventListener("touchstart",e=>{touchY=e.touches[0].clientY;
+  /* first touch = user gesture: use it to unlock playback on iOS */
+  if(state===-1 && heroFront.paused) heroFront.play().catch(()=>{});
+  if(state>=0 && videos[state] && videos[state].paused) videos[state].play().catch(()=>{});
+},{passive:true});
 addEventListener("touchend",e=>{
   if(touchY===null) return;
   const dy=touchY-e.changedTouches[0].clientY;
