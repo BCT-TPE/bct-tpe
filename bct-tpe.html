@@ -527,6 +527,11 @@ const SCENES = [
 ];
 const N=SCENES.length;
 
+/* mobile = 720p "-m" encodes: ~1/4 the decode load and 4× faster loads —
+   phones drop frames on the 2K/4K masters, especially at 3× flight speed */
+const MOBILE=matchMedia("(pointer:coarse)").matches && matchMedia("(max-width:640px)").matches;
+function mSrc(u){ return MOBILE ? u.replace(/\.mp4$/,"-m.mp4") : u; }
+
 /* build scene DOM */
 const stage=document.getElementById("stage");
 SCENES.forEach((s,i)=>{
@@ -535,7 +540,7 @@ SCENES.forEach((s,i)=>{
   sc.innerHTML=`
     <img class="poster" src="${s.poster}" alt="">
     <video muted playsinline preload="auto" poster="${s.poster}">
-      <source src="${s.video}" type="video/mp4">
+      <source src="${mSrc(s.video)}" type="video/mp4">
     </video>
     <div class="tint"></div>`;
   stage.appendChild(sc);
@@ -555,6 +560,11 @@ const finale=document.getElementById("finale");
 const dots=document.getElementById("dots");
 const hint=document.getElementById("hint");
 [heroVid,heroVidB,transVid].forEach(v=>{v.muted=true;v.playsInline=true;});
+if(MOBILE){
+  heroVid.src=mSrc("clay/assets/hero.mp4");
+  heroVidB.src=mSrc("clay/assets/hero.mp4");
+  transVid.src=mSrc("clay/assets/flythrough.mp4");
+}
 heroVid.play&&heroVid.play().catch(()=>{});
 transVid.load();
 
@@ -752,13 +762,13 @@ const connVid=document.getElementById("connvid");
 const connVidR=document.getElementById("connvidR");
 connVid.muted=true; connVid.playsInline=true;
 connVidR.muted=true; connVidR.playsInline=true;
-function connSrc(i){ return "clay/assets/conn"+i+".mp4"; }
+function connSrc(i){ return mSrc("clay/assets/conn"+i+".mp4"); }
 
 /* ---- warm cache: on hosted sites, fetch the flight clips fully into memory
    so a scroll never catches an empty player (skipped on file:// where the
    disk is instant; falls back silently if fetch fails) ---- */
 const PRE=[], PRER=[];
-function connSrcR(i){ return "clay/assets/conn"+i+"r.mp4"; }
+function connSrcR(i){ return mSrc("clay/assets/conn"+i+"r.mp4"); }
 (function warmFlights(){
   if(!window.fetch || location.protocol==="file:") return;
   /* phones: skip the blob warm — it starves the hero stream on cellular;
