@@ -801,6 +801,8 @@ function primeConn(){
       connVid.src=blob||connSrc(state+1);
       connVid.dataset.conn=id; connVid.dataset.blob=blob?"1":"0";
       connVid.load();
+      /* iOS ignores preload — a hidden play/pause kick forces it to buffer */
+      if(MOBILE) connVid.play().then(()=>connVid.pause()).catch(()=>{});
     }
   }
 }
@@ -812,6 +814,7 @@ function primeConnR(){                        /* reversed clip for flying BACK f
       connVidR.src=blob||connSrcR(state);
       connVidR.dataset.conn=id; connVidR.dataset.blob=blob?"1":"0";
       connVidR.load();
+      if(MOBILE) connVidR.play().then(()=>connVidR.pause()).catch(()=>{});
     }
   }
 }
@@ -870,6 +873,7 @@ function flyForward(){
   else{
     const onC=()=>{ connVid.removeEventListener("canplay",onC); if(!done) begin(); };
     connVid.addEventListener("canplay",onC);
+    connVid.play().catch(()=>{});        /* force iOS to actually fetch; begin() rewinds */
     /* wait patiently (current station keeps playing) — only bail after 6s */
     setTimeout(()=>{ if(!done && connVid.readyState<2){
       connVid.removeEventListener("canplay",onC); landPlain(); } },6000);
@@ -921,6 +925,7 @@ function flyBackward(){
   else{
     const onC=()=>{ connVidR.removeEventListener("canplay",onC); if(!done) begin(); };
     connVidR.addEventListener("canplay",onC);
+    connVidR.play().catch(()=>{});       /* force iOS to actually fetch; begin() rewinds */
     setTimeout(()=>{ if(!done && connVidR.readyState<2){
       connVidR.removeEventListener("canplay",onC); landPlain(); } },6000);
   }
