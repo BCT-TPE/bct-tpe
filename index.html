@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BCT Taipei — Build what comes next</title>
 <meta name="description" content="走進 BCT Taipei 的黏土微縮辦公室 — 我們如何理解問題、敏捷打造、交付真實出貨的產品。">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
 <style>
   :root{
     --blue:#0a7bc4; --blue-deep:#0b5a91; --ink:#1a1a1a; --paper:#f7f4ef;
@@ -13,7 +15,7 @@
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%;overflow:hidden}  /* step-based: no native scroll */
-  body{font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,"PingFang TC","Noto Sans TC",sans-serif;
+  body{font-family:"General Sans",-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,"PingFang TC","Noto Sans TC",sans-serif;
     background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased}
 
   /* ---------- station stage (z1) ---------- */
@@ -63,7 +65,7 @@
   .caption .num{font-size:12.5px;letter-spacing:.3em;color:#8a93a0;font-weight:600;margin-bottom:10px}
   .caption .kick,#finale .kick{font-size:13px;letter-spacing:.2em;text-transform:uppercase;
     font-weight:700;color:var(--blue);margin-bottom:16px}
-  .caption h2{font-size:clamp(30px,4.2vw,52px);line-height:1.1;font-weight:800;color:var(--ink);
+  .caption h2{font-size:clamp(30px,4.2vw,52px);line-height:1.1;font-weight:700;color:var(--ink);
     letter-spacing:-.015em;text-wrap:balance}
   .caption h2 .en{display:block;font-weight:500;font-size:.6em;color:#5d6673;margin-top:8px}
   .caption p{margin-top:16px;font-size:clamp(14.5px,1.4vw,17px);line-height:1.75;color:#414b59;max-width:44ch}
@@ -78,7 +80,7 @@
     transform:translateY(calc(-50% + 22px));
     transition:opacity .55s var(--ease),transform .65s var(--ease)}
   #finale.on{opacity:1;transform:translateY(-50%);pointer-events:auto}
-  #finale h2{font-size:clamp(30px,4.2vw,52px);line-height:1.1;font-weight:800;color:var(--ink);
+  #finale h2{font-size:clamp(30px,4.2vw,52px);line-height:1.1;font-weight:700;color:var(--ink);
     letter-spacing:-.015em;text-wrap:balance}
   #finale p{margin-top:16px;color:#414b59;font-size:clamp(14.5px,1.4vw,17px);line-height:1.75;max-width:44ch}
   #finale .btns{margin-top:20px;display:flex;gap:12px;justify-content:flex-start;flex-wrap:wrap}
@@ -113,8 +115,14 @@
   #hero .visual{position:absolute;left:0;right:0;top:var(--vtop);bottom:0;
     overflow:hidden;transition:top .8s var(--ease)}
   #hero .visual video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
-  #hero .visual .topfade{position:absolute;left:0;right:0;top:0;height:120px;
-    background:linear-gradient(180deg,var(--paper) 20%,transparent);pointer-events:none;transition:opacity .5s}
+  #hero .visual .topfade{display:none}
+  /* concave arc top edge: paper mask whose bottom corners round fully up —
+     video sits higher at the sides, dips at the centre */
+  #hero .visual::before{content:"";position:absolute;left:-8%;right:-8%;top:-2px;height:84px;
+    background:var(--paper);border-radius:0 0 50% 50% / 0 0 84px 84px;
+    box-shadow:0 12px 22px var(--paper),0 28px 46px rgba(247,244,239,.6),0 48px 76px rgba(247,244,239,.3);
+    pointer-events:none;z-index:1;transition:opacity .5s}
+  #hero.expanding .visual::before{opacity:0}
   /* expanding = the moment the journey starts */
   #hero.expanding .copyband{transform:translateY(-130%);opacity:0}
   #hero.expanding .visual{top:0}
@@ -163,21 +171,22 @@
   @keyframes wheel{0%{transform:translateY(0);opacity:1}70%{transform:translateY(10px);opacity:0}100%{opacity:0}}
 
   /* ---------- ACT 2 (post-journey, natural scroll) ---------- */
-  html.free,html.free body{overflow:auto;height:auto}
+  html.free{overflow:auto;height:auto}
+  html.free body{overflow:visible;height:auto}   /* NOT auto — body must not become a scroll container or sticky breaks */
   #act2{display:none;position:relative;z-index:7;background:var(--paper);color:var(--ink)}
   html.free #act2{display:block}
   html.free #skip,html.free #hint{display:none}
   #stage,#hud{transition:opacity .5s var(--ease)}
   #act2 .wrap{max-width:1080px;margin:0 auto;padding:0 6vw}
   #act2 section{padding:96px 0}
-  #act2 h2{font-size:clamp(30px,4.2vw,52px);font-weight:800;letter-spacing:-.015em;text-wrap:balance}
+  #act2 h2{font-size:clamp(30px,4.2vw,52px);font-weight:700;letter-spacing:-.015em;text-wrap:balance}
   #act2 h2 .si{font-weight:600;font-size:1.0em;color:var(--blue-deep)}
   #act2 .lead{margin-top:12px;color:#414b59;font-size:16px;max-width:62ch;line-height:1.7;text-wrap:pretty}
   #act2 a:focus-visible,#act2 summary:focus-visible,#backstory:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
   /* opening statement — a manifesto line, not a metric wall */
   #stats{padding:130px 6vw 0;text-align:center;font-size:clamp(18px,2.3vw,27px);color:#414b59;
     line-height:1.85;max-width:1100px;margin:0 auto;text-wrap:balance}
-  #stats b{color:var(--ink);font-weight:800}
+  #stats b{color:var(--ink);font-weight:700}
   #stats .si{font-weight:600;font-size:1.0em;color:var(--blue-deep)}
   #stats .sep{margin:0 .5em;color:#b8b0a2}
   /* case studies — featured + stack, asymmetric */
@@ -205,7 +214,7 @@
   .step2{background:#fff;border-radius:14px;padding:16px;box-shadow:0 4px 18px rgba(20,40,60,.08);
     transition:box-shadow .25s var(--ease)}
   .step2:hover{box-shadow:0 8px 24px rgba(20,40,60,.13)}
-  .step2 summary{list-style:none;cursor:pointer;font-weight:800;font-size:15px;position:relative;padding-right:18px}
+  .step2 summary{list-style:none;cursor:pointer;font-weight:700;font-size:15px;position:relative;padding-right:18px}
   .step2 summary::-webkit-details-marker{display:none}
   .step2 summary::before{counter-increment:st;content:counter(st,decimal-leading-zero);display:block;
     font-size:12px;color:var(--blue);font-weight:700;margin-bottom:6px}
@@ -214,7 +223,65 @@
   .step2[open] summary::after{transform:rotate(45deg)}
   .step2 .one{font-size:13px;color:#414b59;margin-top:6px;line-height:1.55;font-weight:400}
   .step2 ul{margin:10px 0 0 16px;font-size:12.5px;color:#5d6673;line-height:1.75}
-  .svc{margin-top:32px;border-top:1px solid #e6e1d8}
+  /* ---------- client / product logo marquee (from Janet's dark site, re-inked for paper) ---------- */
+  .logos-wrap{border-top:1px solid #e6e1d8;border-bottom:1px solid #e6e1d8;height:86px;
+    overflow:hidden;display:flex;align-items:center;position:relative;background:#fbf9f4}
+  .logos-wrap::before,.logos-wrap::after{content:'';position:absolute;top:0;bottom:0;width:120px;
+    z-index:3;pointer-events:none}
+  .logos-wrap::before{left:0;background:linear-gradient(90deg,var(--paper),transparent)}
+  .logos-wrap::after{right:0;background:linear-gradient(-90deg,var(--paper),transparent)}
+  .logo-track{display:flex;align-items:center;width:max-content;animation:logomarquee 26s linear infinite}
+  .logo-it{padding:0 64px;display:flex;align-items:center}
+  .logo-it img{height:17px;width:auto;filter:brightness(0);opacity:.55}
+  @keyframes logomarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion:reduce){.logo-track{animation:none}}
+
+  /* ---------- services: fan → grid scroll piece (ref: Pallet Ross 00:13→00:20) ---------- */
+  #svc{position:relative;height:340vh}   /* longer pin = calmer, three-phase choreography */
+  #svc .svcpin{position:sticky;top:0;height:100vh;overflow:hidden}
+  #svc .svcstage{position:relative;width:min(1240px,88vw);height:100%;margin:0 auto}
+  .svcline{position:absolute;left:50%;top:57%;transform:translate(-50%,-50%);width:min(1080px,94%);
+    text-align:center;font-size:clamp(24px,3.1vw,42px);line-height:1.42;font-weight:600;color:var(--ink);
+    font-family:"General Sans","PingFang TC","Noto Sans TC",sans-serif;letter-spacing:-.01em}
+  .svcline b{color:var(--blue);font-weight:700}
+  .svcline .dim{color:#b3bac3}
+  .svchead{position:absolute;left:0;top:50%;transform:translateY(-50%);width:29%;opacity:0}
+  .svchead h2{font-size:clamp(28px,2.9vw,42px);line-height:1.15;font-weight:700;letter-spacing:-.015em;
+    font-family:"General Sans","PingFang TC","Noto Sans TC",sans-serif}
+  .svchead p{margin-top:14px;font-size:15.5px;line-height:1.7;color:#414b59}
+  .svcpanel{position:absolute;right:0;top:50%;transform:translateY(-50%);width:64%;
+    background:#fff;border:1px solid #eee9e0;border-radius:26px;padding:20px;
+    box-shadow:0 18px 60px rgba(20,40,60,.08);opacity:0}
+  .svcpanel .slots{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .svcpanel .slot{aspect-ratio:3/4;visibility:hidden}
+  .svccards{position:absolute;inset:0;pointer-events:none}
+  .scard{position:absolute;left:0;top:0;width:212px;aspect-ratio:3/4;border-radius:18px;
+    padding:16px;display:flex;flex-direction:column;color:#fff;will-change:transform;
+    transform-origin:0 0;box-shadow:0 10px 30px rgba(20,40,60,.18);
+    background-size:cover;background-position:center;overflow:hidden}
+  .scard .no{font-style:normal;font-size:11px;font-weight:700;letter-spacing:.14em;opacity:.85;
+    text-shadow:0 1px 5px rgba(0,0,0,.25)}
+  .scard b{font-size:16px;line-height:1.25;letter-spacing:-.01em;margin-top:3px;
+    text-shadow:0 1px 6px rgba(0,0,0,.28)}
+  .c1{background:#1f6fd6 url("clay/assets/svc1.jpg")}
+  .c2{background:#d8a92f url("clay/assets/svc2.jpg")}
+  .c3{background:#8f83bd url("clay/assets/svc3.jpg")}
+  .c4{background:#9ec9e8 url("clay/assets/svc4.jpg")}
+  .c5{background:#eba7b6 url("clay/assets/svc5.jpg")}
+  .c6{background:#5f9e4d url("clay/assets/svc6.jpg")}
+  .c1,.c2,.c3,.c4,.c5,.c6{background-size:cover;background-position:center}
+  .c4 .no,.c4 b,.c5 .no,.c5 b{color:#17303f;text-shadow:none}
+  /* static fallback (mobile / reduced-motion) */
+  #svc.static{height:auto;padding:100px 0}
+  #svc.static .svcpin{position:static;height:auto}
+  #svc.static .svcstage{height:auto}
+  #svc.static .svcline{position:static;transform:none;width:auto;margin:0 auto 34px}
+  #svc.static .svchead{position:static;transform:none;width:auto;opacity:1;margin-bottom:20px}
+  #svc.static .svcpanel{display:none}
+  #svc.static .svccards{position:static;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;pointer-events:auto}
+  #svc.static .scard{position:static;width:auto;transform:none!important}
+
+  .svc-legacy{margin-top:32px;border-top:1px solid #e6e1d8}
   .svc a{display:flex;gap:18px;align-items:baseline;padding:19px 6px;border-bottom:1px solid #e6e1d8;
     text-decoration:none;color:inherit;transition:background .2s}
   .svc a:hover{background:#fffdf9}
@@ -369,6 +436,19 @@
 <div id="act2">
   <p id="stats" class="rv">Founded <b>1999</b><span class="sep">·</span>in Taipei since <b>2016</b><span class="sep">·</span><b>50+</b> projects shipped worldwide<span class="sep">·</span><b>98%</b> on time<span class="sep">·</span><span class="si">and still curious.</span></p>
 
+  <div class="logos-wrap" aria-hidden="true"><div class="logo-track">
+    <div class="logo-it"><img src="logos/img_logo_giant.png" alt=""></div>
+    <div class="logo-it"><img src="logos/img_logo_dcf.png" alt=""></div>
+    <div class="logo-it"><img src="logos/img_logo_flir.png" alt=""></div>
+    <div class="logo-it"><img src="logos/img_logo_nova.png" alt=""></div>
+    <div class="logo-it"><img src="logos/img_logo_dropthought.png" alt=""></div>
+    <div class="logo-it"><img src="logos/img_logo_giant.png" alt=""></div>
+    <div class="logo-it"><img src="logos/img_logo_dcf.png" alt=""></div>
+    <div class="logo-it"><img src="logos/img_logo_flir.png" alt=""></div>
+    <div class="logo-it"><img src="logos/img_logo_nova.png" alt=""></div>
+    <div class="logo-it"><img src="logos/img_logo_dropthought.png" alt=""></div>
+  </div></div>
+
   <section id="cases2"><div class="wrap">
     <h2 class="rv">Work that <span class="si">speaks for itself.</span></h2>
     <p class="lead rv">Real products, really shipped — a few of our favorites.</p>
@@ -415,16 +495,27 @@
     </div>
   </div></section>
 
-  <section id="svc"><div class="wrap">
-    <h2 class="rv">Five ways <span class="si">we can help.</span></h2>
-    <div class="svc rv">
-      <a href="mailto:hello@bcttaipei.com"><b>AI Application</b><span>Generative features, computer vision, NLP-driven apps.</span><span class="go">→</span></a>
-      <a href="mailto:hello@bcttaipei.com"><b>Data Platform</b><span>Data lakes, pipelines, analytics dashboards and BI.</span><span class="go">→</span></a>
-      <a href="mailto:hello@bcttaipei.com"><b>Cloud Services</b><span>Scalable AWS architecture, CI/CD, security and reliability.</span><span class="go">→</span></a>
-      <a href="mailto:hello@bcttaipei.com"><b>UI / UX Design</b><span>Wireframes to design systems, backed by real UX research.</span><span class="go">→</span></a>
-      <a href="mailto:hello@bcttaipei.com"><b>Mobile &amp; Web Apps</b><span>Native iOS &amp; Android, PWA, cross-platform — built for scale.</span><span class="go">→</span></a>
-    </div>
-  </div></section>
+  <section id="svc">
+    <div class="svcpin"><div class="svcstage">
+      <div class="svcline"><p>Whether you need an <b>AI platform</b> 🧠 or an <b>app that ships</b> 🚀 — <span class="dim">one Taipei team takes it from idea to production.</span></p></div>
+      <div class="svchead">
+        <h2>Six ways <span class="si">we can help.</span></h2>
+        <p>End-to-end with one team in Taipei — strategy, design, build and run.</p>
+      </div>
+      <div class="svcpanel"><div class="slots">
+        <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+        <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      </div></div>
+      <div class="svccards">
+        <div class="scard c1"><i class="no">01</i><b>Mobile &amp; Web Apps</b></div>
+        <div class="scard c2"><i class="no">02</i><b>No / Low Code Apps</b></div>
+        <div class="scard c3"><i class="no">03</i><b>RPA &amp; ML Services</b></div>
+        <div class="scard c4"><i class="no">04</i><b>Cloud Services</b></div>
+        <div class="scard c5"><i class="no">05</i><b>UI / UX Design</b></div>
+        <div class="scard c6"><i class="no">06</i><b>AR / VR Experiences</b></div>
+      </div>
+    </div></div>
+  </section>
 
   <section id="cult"><div class="wrap">
     <h2 class="rv">High freedom, <span class="si">high responsibility.</span></h2>
@@ -460,8 +551,8 @@
       </div>
       <div>
         <h4>SERVICES</h4>
-        <a href="#svc">AI Application</a><a href="#svc">Data Platform</a><a href="#svc">Cloud Services</a>
-        <a href="#svc">UI / UX Design</a><a href="#svc">Mobile &amp; Web Apps</a>
+        <a href="#svc">Mobile &amp; Web Apps</a><a href="#svc">No / Low Code Apps</a><a href="#svc">RPA &amp; ML Services</a>
+        <a href="#svc">Cloud Services</a><a href="#svc">UI / UX Design</a><a href="#svc">AR / VR Experiences</a>
       </div>
       <div>
         <h4>COMPANY</h4>
@@ -570,7 +661,7 @@ transVid.load();
 
 /* measure the copy band so the card's top edge is exact (prevents end-of-expand jump) */
 const copyband=hero.querySelector(".copyband");
-function sizeHero(){ hero.style.setProperty("--vtop",(copyband.offsetHeight+18)+"px"); }
+function sizeHero(){ hero.style.setProperty("--vtop",(copyband.offsetHeight-62)+"px"); }  /* arc sides ride up beside the headline */
 addEventListener("resize",sizeHero); addEventListener("load",sizeHero); sizeHero();
 
 /* ---------- state (must be declared BEFORE any function touches it) ---------- */
@@ -1003,6 +1094,83 @@ document.querySelectorAll("#nav [data-target]").forEach(a=>{
     setTimeout(go,80);
   });
 });
+
+/* ---------- services fan → grid scroll piece (Act 2) ---------- */
+(function(){
+  const sec=document.getElementById("svc");
+  if(!sec) return;
+  const stage=sec.querySelector(".svcstage");
+  const cards=[...sec.querySelectorAll(".scard")];
+  const slots=[...sec.querySelectorAll(".slot")];
+  const line=sec.querySelector(".svcline");
+  const head=sec.querySelector(".svchead");
+  const panel=sec.querySelector(".svcpanel");
+  if(MOBILE||REDUCE){ sec.classList.add("static"); return; }   /* phones & reduced-motion: plain grid */
+  /* three-phase choreography, studied frame-by-frame from the reference (12s–18s):
+     A) a near-aligned PILE grows in over the statement line
+     B) cards CASCADE out into a diagonal staircase — per-card stagger
+     C) they straighten and gather into the panel GRID; heading/panel fade last */
+  const PILE=[[-72,-10,-18],[-48,-6,-12],[-27,-3,-7],[-8,0,-2],[10,2,3],[26,5,9]];  /* dx,dy,rot — edges peek left, top card near centre */
+  let geo=null;
+  function measure(){
+    const st=stage.getBoundingClientRect();
+    geo=cards.map((c,i)=>{
+      const s=slots[i].getBoundingClientRect();
+      const cw=c.offsetWidth, ch=c.offsetHeight;
+      return {
+        pile:{x:st.width/2-cw/2+PILE[i][0], y:st.height*0.37-ch/2+PILE[i][1], r:PILE[i][2], s:1.04},  /* bigger deck, bottom overlapping the line */
+        casc:{x:st.width*0.16+i*st.width*0.105-cw/2, y:st.height*0.17+i*st.height*0.094-ch/2, r:-7, s:.9},
+        grid:{x:s.left-st.left, y:s.top-st.top, r:0, s:s.width/cw}
+      };
+    });
+  }
+  const eIO=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+  const eO=t=>1-Math.pow(1-t,3);
+  const seg=(p,a,b,d,tot)=>Math.min(1,Math.max(0,(p-a-d)/((b-a)-tot)));
+  const mix=(a,b,t)=>({x:a.x+(b.x-a.x)*t, y:a.y+(b.y-a.y)*t, r:a.r+(b.r-a.r)*t, s:a.s+(b.s-a.s)*t});
+  function targ(){
+    const vh=innerHeight, r=sec.getBoundingClientRect();
+    return Math.min(1,Math.max(0,-r.top/(r.height-vh)));
+  }
+  function apply(p){
+    if(!geo) measure();
+    const A=0.16, B0=0.30, B1=0.62, C0=0.64, C1=0.97, ST=0.045;
+    const grow=p<A?eO(p/A):1;                       /* phase A: the pile grows in */
+    geo.forEach((g,i)=>{
+      const tB=eIO(seg(p,B0,B1,i*ST,ST*5));
+      const tC=eIO(seg(p,C0,C1,i*0.03,0.03*5));
+      let ps;
+      if(tB<=0)      ps={...g.pile, s:g.pile.s*(0.5+0.5*grow)};
+      else if(tC<=0) ps=mix(g.pile,g.casc,tB);
+      else           ps=mix(g.casc,g.grid,tC);
+      cards[i].style.transform=
+        `translate(${ps.x}px,${ps.y}px) rotate(${ps.r}deg) scale(${ps.s})`;
+    });
+    /* statement: fades in with the pile, fades out as the cascade begins */
+    const lin=p<0.06?p/0.06:(p<0.28?1:Math.max(0,1-(p-0.28)/0.13));
+    line.style.opacity=String(lin);
+    line.style.transform=`translate(-50%,-50%) translateY(${-Math.max(0,p-0.28)*160}px)`;
+    /* heading + panel arrive in the last stretch */
+    const q=Math.max(0,Math.min(1,(p-0.78)/0.18));
+    head.style.opacity=q; panel.style.opacity=q;
+    head.style.transform=`translateY(calc(-50% + ${(1-q)*26}px))`;
+  }
+  /* inertia smoothing: the displayed progress EASES toward the scroll target each
+     frame — this is what makes the reference feel fluid; raw wheel input is notchy */
+  let curP=0, raf=null;
+  function loop(){
+    const t=targ();
+    curP+=(t-curP)*0.13;
+    if(Math.abs(t-curP)<0.0008){ curP=t; apply(curP); raf=null; return; }
+    apply(curP);
+    raf=requestAnimationFrame(loop);
+  }
+  function kick(){ if(!raf) raf=requestAnimationFrame(loop); }
+  addEventListener("scroll",()=>{ if(act2Mode) kick(); },{passive:true});
+  addEventListener("resize",()=>{ geo=null; if(act2Mode) kick(); });
+  new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ geo=null; curP=targ(); apply(curP); } }))
+    .observe(sec);
+})();
 
 /* keep active videos playing (autoplay-policy retries) + preload next flight */
 setInterval(()=>{
