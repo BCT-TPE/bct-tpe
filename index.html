@@ -207,6 +207,24 @@
   .case .tag{font-size:12px;font-weight:700;color:var(--blue-deep);letter-spacing:.05em}
   .case h3{font-size:20px;margin:6px 0}
   .case p{font-size:14px;color:#414b59;line-height:1.65}
+  /* DCF stays the one orange card (ref 0:32 — big orange card shrinks into the wall) */
+  .case.dcf{background:#e07a3f;color:#fff}
+  .case.dcf .tag{color:#ffe9d8}
+  .case.dcf p{color:#fff3e8}
+  .case.dcf h3 .arr{color:#fff}
+  /* scroll piece: pinned stage + flying featured card */
+  #cases2.pinned{height:230vh;position:relative}
+  #cases2.pinned .c2pin{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden}
+  #cases2.pinned .c2pin .wrap{width:100%}
+  #cases2.pinned .case:not(.dcf),#cases2.pinned .morecases{opacity:0;transform:translateY(26px) scale(.94)}
+  #cases2.pinned .case.dcf{opacity:0}
+  #caseflip{position:fixed;z-index:6;border-radius:16px;overflow:hidden;background:#e07a3f;color:#fff;
+    box-shadow:0 26px 80px rgba(20,40,60,.28);display:none;flex-direction:column;pointer-events:none}
+  #caseflip .im{flex:1;overflow:hidden;min-height:0}
+  #caseflip .im img{width:100%;height:100%;object-fit:cover;display:block}
+  #caseflip .cb{padding:16px 20px 18px}
+  #caseflip .tag{font-size:12px;font-weight:700;color:#ffe9d8;letter-spacing:.05em}
+  #caseflip h3{font-size:20px;margin:6px 0 0}
   .morecases{margin-top:22px;font-size:14px;color:#5d6673}
   .morecases a{color:var(--blue-deep);font-weight:700;text-decoration:none;margin:0 4px;padding:4px 2px}
   .morecases a:hover{text-decoration:underline}
@@ -303,17 +321,20 @@
   .svc .go{margin-left:auto;color:var(--blue);opacity:0;transform:translateX(-6px);
     transition:opacity .25s var(--ease),transform .25s var(--ease)}
   .svc a:hover .go,.svc a:focus-visible .go{opacity:1;transform:none}
-  #cult{background:linear-gradient(180deg,rgba(10,123,196,.055),rgba(10,123,196,.015))}
-  #cult .row{display:flex;gap:40px;align-items:center;flex-wrap:wrap;margin-top:26px}
-  #cult figure{margin:0}
-  #cult img{width:min(380px,88vw);border-radius:18px;box-shadow:0 8px 28px rgba(20,40,60,.14);display:block;
-    transform:rotate(-1.6deg);transition:transform .35s var(--ease)}
-  #cult figure:hover img{transform:rotate(0)}
-  #cult figcaption{font-weight:500;font-size:13.5px;
-    color:#5d6673;margin-top:12px;text-align:center}
-  #cult .cr{flex:1;min-width:260px}
-  .perks{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-  .perk{background:#fff;border:1px solid #e6e1d8;border-radius:999px;padding:8px 16px;font-size:13.5px;font-weight:600}
+  /* ---------- culture / join us (ref 0:21 — floating tiles around centred copy) ---------- */
+  #cult{background:linear-gradient(180deg,rgba(10,123,196,.055),rgba(10,123,196,.015));
+    padding:70px 0 78px;overflow:hidden}
+  #cult .cult-center{text-align:center;max-width:760px;margin:46px auto;padding:0 6vw}
+  #cult .cult-center .lead{margin:14px auto 0}
+  .tilerow{display:flex;justify-content:center;gap:clamp(14px,2.6vw,34px);pointer-events:none}
+  .tilerow .tile{width:clamp(56px,6.2vw,86px);aspect-ratio:1;border-radius:22%;
+    background:var(--tc,#ddd);box-shadow:0 8px 22px rgba(20,40,60,.13);
+    transform:translateY(var(--o,0));overflow:hidden;flex-shrink:0;
+    animation:tilefloat var(--fd,7s) ease-in-out infinite alternate}
+  .tilerow .tile img{width:100%;height:100%;object-fit:cover;display:block}
+  @keyframes tilefloat{from{transform:translateY(var(--o,0))}to{transform:translateY(calc(var(--o,0) - 10px))}}
+  @media (prefers-reduced-motion:reduce){.tilerow .tile{animation:none}}
+  @media (max-width:640px){.tilerow .tile:nth-child(n+7){display:none}}
   .joinlink{display:inline-block;margin-top:20px;font-weight:700;color:var(--blue-deep);text-decoration:none}
   /* committed close: the one drenched-blue moment of the page */
   #cta2{text-align:center;padding:140px 0 130px;background:var(--blue-deep);color:#fff}
@@ -462,7 +483,7 @@
     <div class="logo-it"><img src="logos/img_logo_dropthought.png" alt=""></div>
   </div></div>
 
-  <section id="cases2"><div class="wrap">
+  <section id="cases2"><div class="c2pin"><div class="wrap">
     <h2 class="rv">Work that <span class="si">speaks for itself.</span></h2>
     <p class="lead rv">Real products, really shipped — a few of our favorites.</p>
     <div class="cases">
@@ -471,12 +492,12 @@
         <div class="cb"><div class="tag">AI · Web</div><h3>NOVA <span class="arr">↗</span></h3>
         <p>An AI platform that turns enterprise data into answers your team can act on.</p></div>
       </a>
-      <a class="case rv" style="--d:.08s" href="Claude/fitting.html">
+      <a class="case dcf rv" style="--d:.08s" href="mailto:hello@bcttaipei.com">
         <div class="im"><img src="case-dcf.jpg" alt="Dynamic Cycling Fit — bike fitting app"></div>
         <div class="cb"><div class="tag">Fitness · App</div><h3>Dynamic Cycling Fit <span class="arr">↗</span></h3>
         <p>Bike fitting measured with an iPad — computer vision doing the tailor's work.</p></div>
       </a>
-      <a class="case rv" style="--d:.16s" href="Claude/DataLake.html">
+      <a class="case rv" style="--d:.16s" href="mailto:hello@bcttaipei.com">
         <div class="im"><img src="case-datalake.jpg" alt="DataLake — data platform"></div>
         <div class="cb"><div class="tag">Data · Platform</div><h3>DataLake <span class="arr">↗</span></h3>
         <p>Pipelines and dashboards that turn raw data into daily decisions.</p></div>
@@ -487,7 +508,12 @@
       <a href="mailto:hello@bcttaipei.com">eShipping</a> ·
       <a href="mailto:hello@bcttaipei.com">GAC</a>
     </p>
-  </div></section>
+  </div></div>
+  <div id="caseflip" aria-hidden="true">
+    <div class="im"><img src="case-dcf.jpg" alt=""></div>
+    <div class="cb"><div class="tag">Fitness · App</div><h3>Dynamic Cycling Fit ↗</h3></div>
+  </div>
+  </section>
 
   <section id="proc"><div class="wrap">
     <h2 class="rv">From first meeting <span class="si">to launch day.</span></h2>
@@ -538,24 +564,33 @@
     </div></div>
   </section>
 
-  <section id="cult"><div class="wrap">
-    <h2 class="rv">High freedom, <span class="si">high responsibility.</span></h2>
-    <div class="row">
-      <figure class="rv">
-        <img src="clay/assets/s5-pantry.png" alt="Life at BCT — the pantry, in clay">
-        <figcaption>Our pantry — pour-over, darts, and a city view. In clay.</figcaption>
-      </figure>
-      <div class="cr rv" style="--d:.1s">
-        <p class="lead">The best work comes from people who own their craft — in the office or remote.</p>
-        <div class="perks">
-          <span class="perk">💻 MacBook Pro + monitors</span><span class="perk">🏠 Hybrid work</span>
-          <span class="perk">🎉 Team events</span><span class="perk">☕ Snacks &amp; coffee</span>
-          <span class="perk">🩺 Health check</span><span class="perk">🌴 Flexible leave</span>
-        </div>
-        <a class="joinlink" href="mailto:hello@bcttaipei.com?subject=Joining%20BCT%20Taipei">Join our team →</a>
-      </div>
+  <section id="cult">
+    <div class="tilerow t" aria-hidden="true">
+      <span class="tile" style="--tc:#e8996b;--o:18px;--fd:6.2s"></span>
+      <span class="tile" style="--tc:#9b8ecf;--o:-10px;--fd:7.1s"></span>
+      <span class="tile img" style="--o:26px;--fd:6.6s"><img src="clay/assets/s5-pantry.png" alt=""></span>
+      <span class="tile" style="--tc:#e3c065;--o:-22px;--fd:7.8s"></span>
+      <span class="tile" style="--tc:#7fb4d9;--o:8px;--fd:6.9s"></span>
+      <span class="tile" style="--tc:#e493a4;--o:-14px;--fd:7.4s"></span>
+      <span class="tile img" style="--o:20px;--fd:6.4s"><img src="clay/assets/s6-finale.png" alt=""></span>
+      <span class="tile" style="--tc:#93c07f;--o:-6px;--fd:7.0s"></span>
     </div>
-  </div></section>
+    <div class="cult-center">
+      <h2 class="rv">High freedom, <span class="si">high responsibility.</span></h2>
+      <p class="lead rv" style="--d:.08s">The best work comes from people who own their craft — in the office or remote.</p>
+      <p class="rv" style="--d:.16s"><a class="joinlink" href="mailto:hello@bcttaipei.com?subject=Joining%20BCT%20Taipei">Join our team →</a></p>
+    </div>
+    <div class="tilerow b" aria-hidden="true">
+      <span class="tile" style="--tc:#93c07f;--o:-16px;--fd:7.2s"></span>
+      <span class="tile" style="--tc:#e493a4;--o:10px;--fd:6.5s"></span>
+      <span class="tile" style="--tc:#7fb4d9;--o:-24px;--fd:7.7s"></span>
+      <span class="tile img" style="--o:14px;--fd:6.8s"><img src="clay/assets/s1-overview.png" alt=""></span>
+      <span class="tile" style="--tc:#e3c065;--o:-8px;--fd:6.3s"></span>
+      <span class="tile" style="--tc:#9b8ecf;--o:22px;--fd:7.5s"></span>
+      <span class="tile" style="--tc:#e8996b;--o:-18px;--fd:6.7s"></span>
+      <span class="tile img" style="--o:6px;--fd:7.3s"><img src="clay/assets/s4-meeting.png" alt=""></span>
+    </div>
+  </section>
 
   <section id="cta2"><div class="wrap">
     <h2 class="rv">Ready to build <span class="si">what comes next?</span></h2>
@@ -565,29 +600,7 @@
   </div></section>
 
   <footer>
-    <div class="cols">
-      <div>
-        <h4>BCT TAIPEI</h4>
-        <p style="max-width:32ch">Global digital transformation.<br>Delivering innovative technology since 1999.</p>
-      </div>
-      <div>
-        <h4>SERVICES</h4>
-        <a href="#svc">Mobile &amp; Web Apps</a><a href="#svc">No / Low Code Apps</a><a href="#svc">RPA &amp; ML Services</a>
-        <a href="#svc">Cloud Services</a><a href="#svc">UI / UX Design</a><a href="#svc">AR / VR Experiences</a>
-      </div>
-      <div>
-        <h4>COMPANY</h4>
-        <a href="mailto:hello@bcttaipei.com">About Us</a><a href="#proc">Our Process</a>
-        <a href="#cases2">Case Studies</a><a href="mailto:hello@bcttaipei.com?subject=Joining%20BCT%20Taipei">Careers</a>
-      </div>
-      <div>
-        <h4>CONTACT</h4>
-        <a href="mailto:hello@bcttaipei.com">hello@bcttaipei.com</a>
-        <a href="https://www.linkedin.com/company/bahwan-cybertek/" target="_blank" rel="noopener">LinkedIn</a>
-        <span>Taipei, Taiwan</span>
-      </div>
-    </div>
-    <p class="fine">© 2026 BCT Taipei. All rights reserved. · Bahwan CyberTek Group</p>
+    <p class="fine" style="margin-top:0;text-align:center">© 2026 BCT Taipei. All rights reserved. · Bahwan CyberTek Group</p>
   </footer>
 </div>
 
@@ -1194,6 +1207,54 @@ document.querySelectorAll("#nav [data-target]").forEach(a=>{
   addEventListener("resize",()=>{ geo=null; if(act2Mode) kick(); });
   new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ geo=null; curP=targ(); apply(curP); } }))
     .observe(sec);
+})();
+
+/* ---------- cases: big orange card shrinks into the wall (ref 0:32→0:34) ---------- */
+(function(){
+  const sec=document.getElementById("cases2");
+  const flip=document.getElementById("caseflip");
+  const dcf=sec.querySelector(".case.dcf");
+  const others=[...sec.querySelectorAll(".case:not(.dcf)")];
+  const more=sec.querySelector(".morecases");
+  if(MOBILE||REDUCE) return;                       /* phones keep the plain grid */
+  sec.classList.add("pinned");
+  const eIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  const seg=(p,a,b)=>Math.min(1,Math.max(0,(p-a)/(b-a)));
+  let raf2=null;
+  function tick(){
+    raf2=null;
+    if(!act2Mode) return;
+    const r=sec.getBoundingClientRect();
+    const total=sec.offsetHeight-innerHeight;
+    const p=Math.min(1,Math.max(0,-r.top/total));
+    if(r.top>innerHeight||r.bottom<0){ flip.style.display="none"; return; }
+    /* featured flight: big centred → its grid cell */
+    const q=eIO(seg(p,0.04,0.78));
+    const cell=dcf.getBoundingClientRect();
+    const W0=Math.min(innerWidth*0.7,880), H0=Math.min(innerHeight*0.68,W0*0.72);
+    const X0=(innerWidth-W0)/2, Y0=(innerHeight-H0)/2;
+    const L=X0+(cell.left-X0)*q, T=Y0+(cell.top-Y0)*q;
+    const W=W0+(cell.width-W0)*q, H=H0+(cell.height-H0)*q;
+    if(p<0.995){
+      flip.style.display="flex";
+      flip.style.left=L+"px"; flip.style.top=T+"px";
+      flip.style.width=W+"px"; flip.style.height=H+"px";
+      dcf.style.opacity=0;
+    }else{
+      flip.style.display="none";
+      dcf.style.opacity=1; dcf.style.transform="none";
+    }
+    /* the rest of the wall pops in staggered while the card lands */
+    others.concat([more]).forEach((el,i)=>{
+      const s=eIO(seg(p,0.42+i*0.09,0.72+i*0.09));
+      el.style.opacity=s;
+      el.style.transform=`translateY(${26*(1-s)}px) scale(${0.94+0.06*s})`;
+    });
+    if(p>=0.995){ dcf.style.opacity=1; }
+  }
+  function kick2(){ if(!raf2) raf2=requestAnimationFrame(tick); }
+  addEventListener("scroll",()=>{ if(act2Mode) kick2(); },{passive:true});
+  addEventListener("resize",()=>{ if(act2Mode) kick2(); });
 })();
 
 /* keep active videos playing (autoplay-policy retries) + preload next flight */
