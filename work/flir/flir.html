@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FLIR — Seamless Connectivity for Your Specialized Sensors</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:    #008275;
+      --primary-dim:#00574d;
+      --graph:      #3BE8D3;
+      --hi-line:    #F25F21;
+      --lo-line:    #F8C527;
+      --error:      #EFB155;
+      --bg:         #1E1E1E;
+      --bg2:        #262626;
+      --bg3:        #2F2F2F;
+      --bd:         rgba(255,255,255,0.07);
+      --sec:        #546869;
+      --muted:      #899595;
+      --text:       #FFFFFF;
+      --ff:         'Noto Sans', system-ui, sans-serif;
+      --nav-bg:     rgba(4,5,13,0.6);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--ff);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── BCT NAV ─── */
+    nav {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 80px); max-width: 1320px;
+      height: 64px;
+      background: var(--nav-bg);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 50px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 8px 0 24px;
+      z-index: 200;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    nav.scrolled { border-color: rgba(255,255,255,0.1); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-links a {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.45);
+      text-decoration: none; padding: 8px 16px; border-radius: 50px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    .nav-work-wrap { position: relative; }
+    .nav-work-btn {
+      font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 500;
+      color: rgba(255,255,255,0.45); background: none; border: none; cursor: pointer;
+      padding: 8px 16px; border-radius: 50px;
+      display: flex; align-items: center; gap: 5px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-work-btn svg { transition: transform 0.2s; }
+    .nav-work-wrap:hover .nav-work-btn,
+    .nav-work-wrap.open .nav-work-btn { color: #fff; background: rgba(255,255,255,0.05); }
+    .nav-work-wrap:hover .nav-work-btn svg,
+    .nav-work-wrap.open .nav-work-btn svg { transform: rotate(180deg); }
+    .nav-dropdown {
+      position: absolute; top: 100%;
+      left: 50%; transform: translateX(-50%) translateY(-4px);
+      background: var(--nav-bg);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 18px;
+      padding: 18px 0 8px; min-width: 190px;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+      z-index: 300;
+    }
+    .nav-work-wrap:hover .nav-dropdown,
+    .nav-work-wrap.open .nav-dropdown {
+      opacity: 1; visibility: visible; pointer-events: all;
+      transform: translateX(-50%) translateY(0);
+    }
+    .nav-dropdown a {
+      display: block; text-align: center; padding: 13px 20px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.45);
+      text-decoration: none; white-space: nowrap;
+      transition: color 0.15s, background 0.15s;
+      border-radius: 10px; margin: 0 6px;
+    }
+    .nav-dropdown a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+    .nav-dropdown a.current { color: #FFFFFF; }
+    .nav-btn {
+      display: inline-flex; align-items: center;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: #fff; font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700; font-size: 14px;
+      padding: 10px 24px; border-radius: 50px; border: none;
+      cursor: pointer; text-decoration: none;
+      box-shadow: 0 0 24px rgba(37,99,235,0.35);
+      transition: box-shadow 0.3s, transform 0.2s;
+    }
+    .nav-btn:hover { box-shadow: 0 0 40px rgba(37,99,235,0.55); transform: scale(1.03); }
+
+    /* ─── REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(.22,.68,0,1), transform 0.7s cubic-bezier(.22,.68,0,1);
+    }
+    .reveal.on { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: 0.1s; }
+    .d2 { transition-delay: 0.2s; }
+    .d3 { transition-delay: 0.3s; }
+    .d4 { transition-delay: 0.4s; }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      padding-top: 76px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 50% at 72% 55%, rgba(0,130,117,0.14) 0%, transparent 70%),
+        radial-gradient(ellipse 30% 30% at 20% 80%, rgba(59,232,211,0.04) 0%, transparent 60%);
+    }
+    .hero-left {
+      padding: 100px 64px 100px 100px;
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; gap: 26px;
+    }
+    .label {
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--graph);
+    }
+    .hero-h1 {
+      font-size: clamp(2.6rem, 3.4vw, 3.6rem);
+      font-weight: 800; line-height: 1.08;
+      letter-spacing: -0.025em;
+    }
+    .hero-h1 .accent { color: var(--graph); }
+    .hero-sub {
+      font-size: 1rem; font-weight: 400;
+      color: var(--muted); line-height: 1.75;
+      max-width: 46ch;
+    }
+    .hero-chips {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-top: 4px;
+    }
+    .chip {
+      padding: 5px 14px;
+      border: 1px solid rgba(59,232,211,0.22);
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--graph);
+    }
+
+    .hero-right {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      height: 100vh;
+      perspective: 1200px;
+      cursor: none;
+    }
+
+    /* ─── DEVICE IMAGE ─── */
+    .device-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      padding: 0 20px;
+      transform-style: preserve-3d;
+    }
+    .device-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 40px 80px rgba(0,0,0,0.7));
+      animation: float 5s ease-in-out infinite;
+      transform-origin: center center;
+      transition: filter 0.3s ease;
+      will-change: transform;
+    }
+    .device-wrap:hover .device-img {
+      filter: drop-shadow(0 40px 80px rgba(0,0,0,0.7)) drop-shadow(0 0 40px rgba(59,232,211,0.15));
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0px);   }
+      50%      { transform: translateY(-14px); }
+    }
+
+    /* ─── CUSTOM CURSOR ─── */
+    .cursor-dot {
+      position: fixed; pointer-events: none; z-index: 9999;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--graph);
+      transform: translate(-50%,-50%);
+      transition: opacity 0.2s, transform 0.15s;
+      opacity: 0;
+    }
+    .cursor-ring {
+      position: fixed; pointer-events: none; z-index: 9998;
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1.5px solid rgba(59,232,211,0.6);
+      transform: translate(-50%,-50%);
+      transition: width 0.25s, height 0.25s, opacity 0.2s, border-color 0.2s;
+      opacity: 0;
+    }
+    .cursor-dot.active   { opacity: 1; }
+    .cursor-ring.active  { opacity: 1; }
+    .cursor-ring.hover   { width: 56px; height: 56px; border-color: rgba(59,232,211,1); }
+
+    /* ─── HERO DEVICE GLOW ─── */
+    .hero-device-glow {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,130,117,0.22) 0%, rgba(59,232,211,0.08) 45%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transition: transform 0.8s cubic-bezier(.22,.68,0,1), opacity 0.8s;
+      opacity: 0.7;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-right:hover .hero-device-glow {
+      transform: translate(-50%, -50%) scale(1.55);
+      opacity: 1;
+    }
+
+    /* ─── CHART SVG ─── */
+    .ch { width: 100%; display: block; }
+
+    /* ─── SECTION / CONTAINER ─── */
+    .section { padding: 100px 0; }
+    .wrap { max-width: 1440px; margin: 0 auto; padding: 0 100px; }
+    .divider { height: 1px; background: var(--bd); }
+
+    .sec-label {
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--graph); margin-bottom: 14px;
+    }
+    .sec-h2 {
+      font-size: clamp(2rem, 2.8vw, 2.9rem);
+      font-weight: 800; letter-spacing: -0.025em; line-height: 1.1;
+    }
+
+    /* ─── MISSION ─── */
+    .mission-head { margin-bottom: 56px; }
+    .mission-head .sec-h2 { max-width: 22ch; margin-bottom: 18px; text-align: center; margin-left: auto; margin-right: auto; }
+    .mission-intro {
+      font-size: 0.97rem; color: var(--muted);
+      line-height: 1.75; max-width: 54ch;
+    }
+    .mission-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 2px;
+    }
+    .m-card {
+      position: relative; overflow: hidden;
+      min-height: 380px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 32px;
+      cursor: default;
+    }
+    .m-card-bg {
+      position: absolute; inset: 0;
+      transition: transform 0.55s cubic-bezier(.22,.68,0,1);
+    }
+    .m-card:hover .m-card-bg { transform: scale(1.04); }
+    .m-card-ov {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top,
+        rgba(0,0,0,0.88) 0%,
+        rgba(0,0,0,0.45) 55%,
+        rgba(0,0,0,0.15) 100%);
+    }
+    .m-card-1 .m-card-bg {
+      background-image: url('FLIR Image/Monitor.webp');
+      background-size: cover; background-position: center;
+      opacity: 0.45;
+    }
+    .m-card-2 .m-card-bg {
+      background-image: url('FLIR Image/Capture Data.webp');
+      background-size: cover; background-position: center;
+      opacity: 0.45;
+    }
+
+    /* subtle grid texture */
+    .m-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(59,232,211,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,232,211,0.03) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+    .m-card-ico {
+      position: absolute; top: 28px; right: 28px; z-index: 2;
+      width: 40px; height: 40px;
+      border: 1px solid rgba(59,232,211,0.28);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .m-card-ico svg { width: 18px; height: 18px; color: var(--graph); }
+    .m-card-body { position: relative; z-index: 2; }
+    .m-card-num {
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--graph); margin-bottom: 10px;
+    }
+    .m-card-title {
+      font-size: 1.22rem; font-weight: 700;
+      line-height: 1.25; margin-bottom: 11px;
+    }
+    .m-card-desc {
+      font-size: 0.85rem; color: rgba(255,255,255,0.65); line-height: 1.68;
+    }
+
+    /* ─── SERVICE CONCEPT ─── */
+    .service { position: relative; overflow: hidden; }
+    .service-bg {
+      position: absolute; inset: 0;
+      background-image: url('FLIR Image/BG.png');
+      background-size: cover; background-position: center;
+      opacity: 0.18;
+      filter: blur(0px);
+      animation: bgBlurPulse 8s ease-in-out infinite;
+      pointer-events: none; z-index: 0;
+    }
+    @keyframes bgBlurPulse {
+      0%,100% { filter: blur(0px);   opacity: 0.18; }
+      50%      { filter: blur(6px);  opacity: 0.28; }
+    }
+    .service-head { margin-bottom: 64px; position: relative; z-index: 2; }
+    .pill {
+      position: relative; z-index: 2;
+      border: 1px solid rgba(59,232,211,0.22);
+      border-radius: 999px;
+      padding: 80px 96px;
+      max-width: 940px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 48px 1fr;
+      gap: 0; align-items: center;
+      background: rgba(10,20,18,0.5);
+      backdrop-filter: blur(4px);
+      transition: border-color 0.4s, box-shadow 0.4s;
+      cursor: default;
+    }
+    .pill.stroke-hover {
+      border-color: rgba(239,177,85,0.75);
+      box-shadow: 0 0 0 3px rgba(239,177,85,0.12), 0 0 28px rgba(239,177,85,0.18);
+    }
+    .pill > div { padding: 24px; }
+    .pill-item-title {
+      font-size: 1.28rem; font-weight: 700;
+      line-height: 1.28; margin-bottom: 16px;
+    }
+    .pill-item-title.teal  { color: var(--graph); }
+    .pill-item-title.amber { color: var(--lo-line); }
+    .pill-item-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.72; }
+    .pill-sep {
+      display: flex; flex-direction: column; align-items: center; gap: 0;
+      position: relative;
+    }
+    .pill-sep::before, .pill-sep::after {
+      content: '';
+      flex: 1; width: 1px; background: rgba(59,232,211,0.18);
+    }
+    .pill-plus {
+      width: 34px; height: 34px;
+      border: 1px solid rgba(59,232,211,0.28);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--graph);
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+    .pill-sep-wrap {
+      display: flex; flex-direction: column;
+      align-items: center; height: 180px; justify-content: space-between;
+    }
+    .pill-line { flex: 1; width: 1px; background: rgba(59,232,211,0.18); }
+
+    /* ─── FEATURES ─── */
+    .features { background: var(--bg2); position: relative; overflow: hidden; }
+    .feat-wave-bg {
+      position: absolute; bottom: 0; left: -5%; width: 110%;
+      pointer-events: none; opacity: 0.13;
+      animation: ecgScan 12s linear infinite;
+    }
+    @keyframes ecgScan {
+      0%   { transform: translateX(0)    scaleY(1);    opacity: 0.13; }
+      20%  { transform: translateX(-3%)  scaleY(1.12); opacity: 0.18; }
+      45%  { transform: translateX(-8%)  scaleY(0.92); opacity: 0.10; }
+      60%  { transform: translateX(-12%) scaleY(1.2);  opacity: 0.20; }
+      80%  { transform: translateX(-6%)  scaleY(0.88); opacity: 0.11; }
+      100% { transform: translateX(0)    scaleY(1);    opacity: 0.13; }
+    }
+    /* ── Step animation layout ── */
+    .feat-anim-layout {
+      display: grid; grid-template-columns: 1fr 1.2fr;
+      gap: 72px; align-items: center;
+    }
+
+    /* Left: step info */
+    .feat-steps-info { position: relative; }
+    .feat-step-item {
+      opacity: 0; position: absolute; top: 0; left: 0; right: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: translateY(14px); pointer-events: none;
+    }
+    .feat-step-item.active {
+      opacity: 1; position: relative; transform: translateY(0); pointer-events: auto;
+    }
+    /* Reserve space for the tallest step text so layout doesn't collapse */
+    .feat-steps-body { position: relative; min-height: 220px; }
+    .feat-h3 { font-size: 1.65rem; font-weight: 700; line-height: 1.2; margin-bottom: 16px; }
+    .feat-step-desc {
+      font-size: 0.92rem; color: rgba(255,255,255,0.62); line-height: 1.72; margin-bottom: 0;
+    }
+
+    /* Step dots */
+    .feat-step-dots { display: flex; gap: 8px; margin-top: 36px; align-items: center; }
+    .feat-step-dot {
+      height: 3px; border-radius: 2px; background: rgba(255,255,255,0.1);
+      cursor: pointer; transition: background 0.3s, width 0.35s ease;
+      width: 24px;
+    }
+    .feat-step-dot.active { width: 48px; background: var(--graph); }
+
+    /* Right: SVG frame */
+    .feat-phone-anim {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .feat-svg-frame {
+      position: relative; width: 100%;
+      aspect-ratio: 800 / 730;
+    }
+    .feat-step-img {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: contain; opacity: 0;
+      transition: opacity 0.65s ease;
+      filter: drop-shadow(0 32px 72px rgba(0,0,0,0.65));
+    }
+    .feat-step-img:first-child { position: absolute; }
+    .feat-step-img.active { opacity: 1; }
+
+    /* Progress bar */
+    .feat-progress-track {
+      width: 100%; height: 2px;
+      background: rgba(255,255,255,0.07); border-radius: 1px;
+      margin-top: 16px; overflow: hidden;
+    }
+    .feat-progress-fill {
+      height: 100%; background: var(--graph); border-radius: 1px; width: 0%;
+    }
+
+    /* ─── QUOTE + STATS COMBINED ─── */
+    .stats-combined {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 520px;
+    }
+
+    /* ── Left: Quote panel ── */
+    .sq-left {
+      background: #292929;
+      position: relative;
+      overflow: hidden;
+      padding: 72px 64px 72px 300px; /* 300px left clears the 260px circle */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Concentric circles (decorative, left-anchored) */
+    @keyframes breathe {
+      0%, 100% { transform: translateY(-50%) scale(1);    opacity: 0.55; }
+      50%       { transform: translateY(-50%) scale(1.12); opacity: 0.78; }
+    }
+    .qc-group {
+      position: absolute;
+      left: 24px; top: 50%;
+      transform: translateY(-50%);
+      width: 260px; height: 260px;
+      opacity: 0.55;
+      animation: breathe 5s ease-in-out infinite;
+      transform-origin: center center;
+    }
+    .qc { position: absolute; border-radius: 50%; }
+    .qc-4 { inset: 0;                                                   background: rgba(0,130,117,0.10); }
+    .qc-3 { width: 213px; height: 213px; left: 23px; top: 23px;        background: rgba(0,130,117,0.15); }
+    .qc-2 { width: 168px; height: 168px; left: 46px; top: 46px;        background: rgba(0,130,117,0.20); }
+    .qc-1 { width: 122px; height: 122px; left: 69px; top: 69px;        background: rgba(0,130,117,0.44); }
+
+    /* Avatar — outside qc-group so opacity:1 is not inherited */
+    .q-avatar {
+      position: absolute;
+      left: 108px; top: 50%;
+      transform: translateY(-50%);
+      width: 91px; height: 97px;
+      object-fit: cover; z-index: 3;
+      opacity: 1;
+    }
+
+    /* Quote content stack */
+    .sq-content {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .q-mark         { width: 46px; height: auto; display: block; }
+    .q-mark-open    { /* inherits */ }
+    .q-mark-close   { transform: rotate(180deg); align-self: flex-end; }
+    .q-text {
+      font-size: 20px; font-weight: 400;
+      line-height: 1.5; color: #C8E2DF; margin: 0;
+    }
+    .q-author {
+      font-size: 14px; font-weight: 400;
+      color: rgba(200,226,223,0.7); margin: 0;
+    }
+
+    /* ── Right: Stats panel ── */
+    .sq-right {
+      background: var(--primary);
+      padding: 72px 72px;
+      display: flex; flex-direction: column;
+      justify-content: center; gap: 16px;
+      position: relative; overflow: hidden;
+    }
+    .sq-right::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(140deg, rgba(0,0,0,0.2) 0%, transparent 60%);
+    }
+    .stats-num {
+      position: relative; z-index: 1;
+      font-size: clamp(3.5rem, 5vw, 5.8rem);
+      font-weight: 800; letter-spacing: -0.04em; line-height: 0.9;
+    }
+    .stats-num .n-hi   { color: var(--lo-line); }
+    .stats-num .n-plus { color: rgba(0,0,0,0.38); font-size: 0.55em; }
+    .slot-char { display: inline-block; min-width: 0.52em; text-align: center; }
+    .slot-sep  { display: inline-block; }
+    .stats-word {
+      position: relative; z-index: 1;
+      font-size: 1.7rem; font-weight: 800;
+      color: rgba(0,0,0,0.72); letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+    .stats-rule {
+      width: 48px; height: 1px;
+      background: rgba(0,0,0,0.2);
+      position: relative; z-index: 1; margin: 4px 0;
+    }
+    .stats-sub {
+      position: relative; z-index: 1;
+      font-size: 0.85rem; color: rgba(0,0,0,0.52);
+    }
+    .stats-sub strong { color: var(--lo-line); font-weight: 700; }
+
+    /* ─── BCT FOOTER ─── */
+    footer {
+      position: relative; z-index: 2;
+      background: rgba(0,0,0,0.5);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 64px 64px 40px;
+      backdrop-filter: blur(8px);
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+      padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.07); margin-bottom: 36px;
+    }
+    .f-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .f-desc { font-size: 14px; line-height: 2; color: rgba(255,255,255,0.45); max-width: 280px; }
+    .f-col h4 { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: rgba(255,255,255,0.25); text-transform: uppercase; margin-bottom: 18px; font-family: 'Space Grotesk', sans-serif; }
+    .f-links { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+    .f-links a { font-size: 14px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; font-family: 'Space Grotesk', sans-serif; }
+    .f-links a:hover { color: #fff; }
+    .footer-btm { display: flex; justify-content: space-between; align-items: center; }
+    .f-copy, .f-parent { font-size: 12px; color: rgba(255,255,255,0.25); font-family: 'Space Grotesk', sans-serif; }
+  </style>
+<style id="bctshell-css">
+#bctnav,#bctnav *{box-sizing:border-box}
+#bctnav{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:auto!important;
+  z-index:99999;transform:none!important;margin:0!important;border-radius:0!important;width:auto!important;
+  max-width:none!important;min-width:0!important;height:auto!important;padding:16px 6vw;
+  font-family:"General Sans",-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,"PingFang TC","Noto Sans TC",sans-serif;
+  background:rgba(247,244,239,.82);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);
+  border-bottom:1px solid rgba(20,40,60,.06)}
+#bctnav .bar{display:flex;align-items:center;gap:18px;position:relative;z-index:2}
+#bctnav a{font-family:inherit}
+#bctnav .logo img{height:30px;display:block}
+#bctnav .burger{width:28px;height:22px;display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:0;flex-shrink:0}
+#bctnav .burger span{display:block;height:2px;width:24px;background:#1a1a1a;border-radius:2px;transition:transform .3s cubic-bezier(.22,.61,.36,1),opacity .2s}
+#bctnav.open .burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+#bctnav.open .burger span:nth-child(2){opacity:0}
+#bctnav.open .burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+#bctnav .menu{display:flex;gap:36px;margin:0 auto}
+#bctnav .menu>a,#bctnav .droptrig{font-size:14px;font-weight:600;color:#4a5462;text-decoration:none;transition:color .2s cubic-bezier(.22,.61,.36,1)}
+#bctnav .menu>a:hover,#bctnav .droptrig:hover{color:#1a1a1a}
+#bctnav .navdrop{position:relative;display:flex;align-items:center}
+#bctnav .droptrig{display:inline-flex;align-items:center;gap:5px;cursor:pointer}
+#bctnav .caret{display:block;transition:transform .28s cubic-bezier(.22,.61,.36,1)}
+#bctnav .navdrop:hover .caret,#bctnav .navdrop:focus-within .caret{transform:rotate(180deg)}
+#bctnav .dropmenu{position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%) translateY(-8px);min-width:236px;
+  background:rgba(255,255,255,.78);backdrop-filter:blur(22px) saturate(1.6);-webkit-backdrop-filter:blur(22px) saturate(1.6);
+  border:1px solid rgba(255,255,255,.7);border-radius:20px;padding:11px;box-shadow:0 24px 60px rgba(20,40,60,.16);
+  display:flex;flex-direction:column;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .26s,transform .32s,visibility .26s}
+#bctnav .dropmenu::before{content:"";position:absolute;top:-16px;left:0;right:0;height:16px}
+#bctnav .navdrop:hover .dropmenu,#bctnav .navdrop:focus-within .dropmenu{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+#bctnav .dropmenu a{color:#3b4552;font-size:13px;font-weight:500;text-align:center;padding:10px 18px;border-radius:12px;white-space:nowrap;text-decoration:none;transition:color .18s,background .18s}
+#bctnav .dropmenu a:hover{color:#0b5a91;background:rgba(20,40,60,.06)}
+#bctnav .cta{font-size:12.5px;font-weight:700;color:#fff;background:#0a7bc4;text-decoration:none;padding:7px 15px;border-radius:999px;white-space:nowrap;transition:transform .18s,box-shadow .18s}
+#bctnav .cta:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(10,123,196,.35)}
+#bctnav .navmenu{display:none}
+@media(max-width:760px){
+  #bctnav .menu{display:none}
+  #bctnav .burger{display:flex}
+  #bctnav .bar{justify-content:space-between}
+  #bctnav .logo{position:absolute;left:50%;transform:translateX(-50%)}
+  #bctnav .navmenu{display:flex;position:fixed;inset:0;z-index:1;background:#f7f4ef;flex-direction:column;justify-content:flex-start;gap:6px;padding:14vh 10vw 0;opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .35s cubic-bezier(.22,.61,.36,1),transform .4s cubic-bezier(.22,.61,.36,1),visibility .35s}
+  #bctnav.open .navmenu{opacity:1;visibility:visible;transform:none}
+  #bctnav .navmenu>a,#bctnav .nm-worktrig{font-size:clamp(34px,10vw,60px);font-weight:700;color:#1a1a1a;text-decoration:none;letter-spacing:-.02em;line-height:1.3;background:none;border:none;cursor:pointer;padding:0;text-align:left;display:inline-flex;align-items:center;gap:12px;width:max-content}
+  #bctnav .navmenu>a:hover,#bctnav .nm-worktrig:hover{color:#0a7bc4}
+  #bctnav .nm-work{display:flex;flex-direction:column}
+  #bctnav .nm-caret{transition:transform .3s cubic-bezier(.22,.61,.36,1)}
+  #bctnav .nm-work.open .nm-caret{transform:rotate(180deg)}
+  #bctnav .nm-sub{display:flex;flex-direction:column;max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.22,.61,.36,1)}
+  #bctnav .nm-work.open .nm-sub{max-height:80vh}
+  #bctnav .nm-sub a{font-size:clamp(16px,4.4vw,21px);font-weight:500;color:#5a6470;text-decoration:none;padding:8px 0}
+  #bctnav .nm-sub a:hover{color:#0a7bc4}
+}
+#bctftr{background:#f7f4ef;border-top:1px solid #e6e1d8;padding:13px 6vw;margin:0;text-align:center;color:#5d6673;font-size:12.5px;line-height:1.6;
+  font-family:"General Sans",-apple-system,BlinkMacSystemFont,system-ui,"PingFang TC","Noto Sans TC",sans-serif}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav data-orig-hidden style="display:none!important" id="nav">
+  <a href="../Claude/BCT Taipei Dark.html" class="nav-logo">
+    <img src="../Claude/uploads/ic_bct_logo_white.png" alt="Bahwan CyberTek" style="height:34px;width:auto;display:block">
+  </a>
+  <div class="nav-links">
+    <a href="../Claude/BCT Taipei Dark.html#about">About</a>
+    <a href="../Claude/BCT Taipei Dark.html#services">Services</a>
+    <a href="../Claude/BCT Taipei Dark.html#process">Process</a>
+    <div class="nav-work-wrap" id="navWorkWrap">
+      <button class="nav-work-btn" aria-haspopup="true" aria-expanded="false">
+        Work
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="2,4 6,8 10,4"/>
+        </svg>
+      </button>
+      <div class="nav-dropdown" role="menu">
+        <a href="https://dev.bct-nova.net/" target="_blank" rel="noopener noreferrer" role="menuitem">NOVA</a>
+        <a href="../Claude/fitting.html" role="menuitem">Dynamic Cycling Fit</a>
+        <a href="flir.html" role="menuitem" class="current">FLIR</a>
+        <a href="../Claude/DataLake.html" role="menuitem">DataLake</a>
+        <a href="../Claude/eshipping.html" role="menuitem">eShipping</a>
+        <a href="../Claude/costombike.html" role="menuitem">Custom Bike</a>
+        <a href="../Claude/gid.html" role="menuitem">Account System</a>
+      </div>
+    </div>
+  </div>
+  <a href="../Claude/BCT Taipei Dark.html#cta" class="nav-btn">Contact Us</a>
+</nav>
+<nav id="bctnav">
+  <div class="bar">
+    <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <a class="logo" href="../../index.html"><img src="../../ic_logo_bct.png" alt="BahwanCyberTek"></a>
+    <div class="menu">
+      <a href="../../index.html">Services</a>
+      <div class="navdrop">
+        <a class="droptrig" href="../../index.html">Work <svg class="caret" width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="dropmenu">
+          <a href="../Claude/BCT%20Taipei%20Dark.html">NOVA</a>
+          <a href="../Claude/fitting.html">Dynamic Cycling Fit</a>
+          <a href="flir.html">FLIR</a>
+          <a href="../Claude/DataLake.html">DataLake</a>
+          <a href="../Claude/eshipping.html">eShipping</a>
+          <a href="../Claude/custombike.html">Custom Bike</a>
+          <a href="../Claude/gac.html">Account System</a>
+        </div>
+      </div>
+      <a href="../../index.html">Team</a>
+    </div>
+    <a class="cta" href="mailto:taipei-bct@bahwancybertek.com">Contact Us</a>
+  </div>
+  <div class="navmenu" aria-hidden="true">
+    <a href="../../index.html">Services</a>
+    <div class="nm-work">
+      <button class="nm-worktrig" aria-expanded="false">Work <svg class="nm-caret" width="16" height="10" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="nm-sub">
+          <a href="../Claude/BCT%20Taipei%20Dark.html">NOVA</a>
+          <a href="../Claude/fitting.html">Dynamic Cycling Fit</a>
+          <a href="flir.html">FLIR</a>
+          <a href="../Claude/DataLake.html">DataLake</a>
+          <a href="../Claude/eshipping.html">eShipping</a>
+          <a href="../Claude/custombike.html">Custom Bike</a>
+          <a href="../Claude/gac.html">Account System</a>
+      </div>
+    </div>
+    <a href="../../index.html">Team</a>
+  </div>
+</nav>
+<script>(function(){var n=document.getElementById("bctnav");if(!n)return;var b=n.querySelector(".burger");if(b)b.addEventListener("click",function(){var o=n.classList.toggle("open");b.setAttribute("aria-expanded",o);});var wt=n.querySelector(".nm-worktrig");if(wt)wt.addEventListener("click",function(){var w=wt.closest(".nm-work");var o=w.classList.toggle("open");wt.setAttribute("aria-expanded",o);});})();</script>
+
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <div class="hero-glow"></div>
+
+  <div class="hero-left">
+    <p class="label reveal">Mobile App &nbsp;·&nbsp; IoT &nbsp;·&nbsp; Environmental Monitoring</p>
+    <h1 class="hero-h1 reveal d1">
+      Seamless Connectivity<br>
+      for Your <span class="accent">Specialized</span><br>
+      Sensors
+    </h1>
+    <p class="hero-sub reveal d2">
+      A mobile companion connecting FLIR's environmental sensors to real-time monitoring, intelligent alarms, and custom PDF reports — over a proprietary Bluetooth protocol.
+    </p>
+    <div class="hero-chips reveal d3">
+      <span class="chip">App Develop</span>
+      <span class="chip">iOS &amp; Android</span>
+      <span class="chip">Real-time Data</span>
+    </div>
+  </div>
+
+  <!-- Custom cursor elements -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <div class="hero-right reveal d2">
+    <div class="hero-device-glow"></div>
+    <div class="device-wrap" id="deviceWrap">
+      <img class="device-img" id="deviceImg" src="FLIR Image/Device-2.svg" alt="FLIR App Mockup">
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ═══════════ MISSION ═══════════ -->
+<section class="section">
+  <div class="wrap">
+    <div class="mission-head reveal" style="text-align:center;margin-bottom:48px">
+      <p class="sec-label" style="justify-content:center;display:flex">Our Mission</p>
+      <h2 class="sec-h2">What We Built for FLIR</h2>
+    </div>
+    <div class="mission-grid" style="grid-template-columns:1fr 1fr">
+      <div class="m-card m-card-1 reveal">
+        <div class="m-card-bg"></div>
+        <div class="m-card-ov"></div>
+        <div class="m-card-body" style="text-align:center">
+          <div class="m-card-ico" style="position:relative;top:auto;right:auto;margin:0 auto 16px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01M5.657 13.657a8.5 8.5 0 0112.686 0M2.343 10.343a13.5 13.5 0 0119.314 0"/>
+            </svg>
+          </div>
+          <div class="m-card-num" style="justify-content:center;display:flex">Remote Monitoring</div>
+          <div class="m-card-title">Monitor from a safe distance</div>
+          <div class="m-card-desc">Technicians can remotely monitor a variety of environmental conditions from outside unsafe or difficult to reach areas.</div>
+        </div>
+      </div>
+      <div class="m-card m-card-2 reveal d1">
+        <div class="m-card-bg"></div>
+        <div class="m-card-ov"></div>
+        <div class="m-card-body" style="text-align:center">
+          <div class="m-card-ico" style="position:relative;top:auto;right:auto;margin:0 auto 16px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <div class="m-card-num" style="justify-content:center;display:flex">Capture Data</div>
+          <div class="m-card-title">Record, analyse, and share</div>
+          <div class="m-card-desc">Collect measurement data for displaying trend and further analysis as well as sharing findings with others.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ═══════════ SERVICE CONCEPT ═══════════ -->
+<section class="section service">
+  <div class="service-bg"></div>
+  <div class="wrap">
+    <div class="service-head reveal" style="text-align:center">
+      <p class="sec-label" style="justify-content:center;display:flex">Service Concept</p>
+      <h2 class="sec-h2" style="white-space:nowrap">One App &nbsp;·&nbsp; Every Meter &nbsp;·&nbsp; Real&#8209;Time</h2>
+    </div>
+    <div class="pill reveal d1">
+      <div>
+        <h3 class="pill-item-title teal">Remote connection &amp;<br>Real time monitoring</h3>
+        <p class="pill-item-desc">Allow multiple and different meters to connect through FLIR's BT protocol. Display live readings from all devices simultaneously on a single screen, from a safe distance.</p>
+      </div>
+      <div class="pill-sep-wrap">
+        <div class="pill-line"></div>
+        <div class="pill-plus">+</div>
+        <div class="pill-line"></div>
+      </div>
+      <div>
+        <h3 class="pill-item-title amber">Display trends &amp;<br>Custom report</h3>
+        <p class="pill-item-desc">Graphical and numerical representation of all measurement data. Generate detailed custom PDF reports with user-defined information, timestamps, and alarm records.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ═══════════ FEATURES ═══════════ -->
+<section class="section features">
+  <img class="feat-wave-bg" src="FLIR Image/Wave.svg" alt="">
+  <div class="wrap">
+
+    <!-- Step animation layout -->
+    <div class="feat-anim-layout reveal">
+
+      <!-- Left: sec-h2 + step copy (auto-updates with animation) -->
+      <div class="feat-steps-info">
+
+        <h2 class="sec-h2" style="margin-bottom:48px">Features</h2>
+
+        <div class="feat-steps-body">
+          <div class="feat-step-item active" id="fstep-1">
+            <h3 class="feat-h3">Enable alarms.<br>Return to live view.</h3>
+            <p class="feat-step-desc">Select any connected device and configure its high and low alarm thresholds. Toggle the alarm on and tap back to return to the live dashboard — your settings are saved instantly.</p>
+          </div>
+
+          <div class="feat-step-item" id="fstep-2">
+            <h3 class="feat-h3">All meters.<br>One live screen.</h3>
+            <p class="feat-step-desc">Watch Humidity and Sound Level values shift in real-time as conditions change. When a reading demands a closer look, tap its card to drill into the full measurement detail.</p>
+          </div>
+
+          <div class="feat-step-item" id="fstep-3">
+            <h3 class="feat-h3">Tap any point.<br>See the exact moment.</h3>
+            <p class="feat-step-desc">The detail view renders a full measurement graph with alarm threshold lines. Switch to light mode for bright environments, or export a timestamped PDF report directly from the app.</p>
+          </div>
+        </div>
+
+        <!-- Step progress dots -->
+        <div class="feat-step-dots">
+          <div class="feat-step-dot active" data-goto="0"></div>
+          <div class="feat-step-dot" data-goto="1"></div>
+          <div class="feat-step-dot" data-goto="2"></div>
+        </div>
+      </div>
+
+      <!-- Right: SVG phone screens cycling automatically -->
+      <div class="feat-phone-anim">
+        <div class="feat-svg-frame">
+          <img class="feat-step-img active" src="FLIR Image/Step1.svg" alt="Step 1 – Set Alarm">
+          <img class="feat-step-img"        src="FLIR Image/Step2.svg" alt="Step 2 – Live Monitoring">
+          <img class="feat-step-img"        src="FLIR Image/Step3.svg" alt="Step 3 – Inspect &amp; Report">
+        </div>
+        <!-- Thin progress bar showing time until next step -->
+        <div class="feat-progress-track">
+          <div class="feat-progress-fill" id="feat-progress"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ═══════════ QUOTE + STATS ═══════════ -->
+<div class="stats-combined">
+
+  <!-- Left: Quote -->
+  <div class="sq-left reveal">
+    <!-- Concentric circles (breathing animation) -->
+    <div class="qc-group">
+      <div class="qc qc-4"></div>
+      <div class="qc qc-3"></div>
+      <div class="qc qc-2"></div>
+      <div class="qc qc-1"></div>
+    </div>
+    <!-- Avatar outside group → full opacity -->
+    <img class="q-avatar" src="FLIR Image/Customer.svg" alt="Vernis Yang">
+
+    <!-- Quote content -->
+    <div class="sq-content">
+      <img class="q-mark q-mark-open" src="FLIR Image/quote.svg" alt="">
+      <p class="q-text">High efficiency and quick response, also has good quality output. Great communication and knowledge about mobile app launches. Very patient team willing to work through challenges.</p>
+      <p class="q-author">– Vernis Yang, Director R&amp;D</p>
+      <img class="q-mark q-mark-close" src="FLIR Image/quote.svg" alt="">
+    </div>
+  </div>
+
+  <!-- Right: Stats -->
+  <div class="sq-right reveal d1">
+    <div class="stats-num">
+      <span class="n-hi" id="stat-num">1,000,000</span><span class="n-plus">+</span>
+    </div>
+    <div class="stats-word">downloads</div>
+    <div class="stats-rule"></div>
+    <div class="stats-sub">Ratings of <strong>4.7+</strong> / 5 on Play &amp; App Stores</div>
+  </div>
+
+</div>
+
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer data-orig-hidden style="display:none!important">
+  <div class="footer-grid">
+    <div>
+      <div class="f-brand"><img src="../Claude/uploads/ic_bct_logo_white.png" alt="Bahwan CyberTek" style="height:28px;width:auto;opacity:0.7"></div>
+      <p class="f-desc">Global digital transformation. Delivering innovative technology since 1999.</p>
+    </div>
+    <div class="f-col"><h4>Services</h4><ul class="f-links">
+      <li><a href="#">AI Application</a></li>
+      <li><a href="#">Data Platform</a></li>
+      <li><a href="#">Cloud Services</a></li>
+      <li><a href="#">UI / UX Design</a></li>
+      <li><a href="#">Mobile &amp; Web Apps</a></li>
+    </ul></div>
+    <div class="f-col"><h4>Company</h4><ul class="f-links">
+      <li><a href="../Claude/BCT Taipei Dark.html#about">About Us</a></li>
+      <li><a href="../Claude/BCT Taipei Dark.html#process">Our Process</a></li>
+      <li><a href="../Claude/BCT Taipei Dark.html#cases">Case Studies</a></li>
+      <li><a href="#">Careers</a></li>
+    </ul></div>
+    <div class="f-col"><h4>Contact</h4><ul class="f-links">
+      <li><a href="#">hello@bcttaipei.com</a></li>
+      <li><a href="#">LinkedIn</a></li>
+      <li><a href="#">Taipei, Taiwan</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-btm">
+    <div class="f-copy">© 2026 BCT Taipei. All rights reserved.</div>
+    <div class="f-parent">Bahwan CyberTek Group</div>
+  </div>
+</footer>
+
+
+<script>
+/* ── Nav scroll + dropdown ── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  const scrolled = scrollY > 80;
+  nav.classList.toggle('scrolled', scrolled);
+  document.documentElement.style.setProperty('--nav-bg', scrolled ? 'rgba(4,5,13,0.85)' : 'rgba(4,5,13,0.6)');
+}, { passive: true });
+const navWorkWrap = document.getElementById('navWorkWrap');
+navWorkWrap.querySelector('.nav-work-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  const open = navWorkWrap.classList.toggle('open');
+  navWorkWrap.querySelector('.nav-work-btn').setAttribute('aria-expanded', open);
+});
+document.addEventListener('click', () => {
+  navWorkWrap.classList.remove('open');
+  navWorkWrap.querySelector('.nav-work-btn').setAttribute('aria-expanded', false);
+});
+
+/* ── Scroll reveal ── */
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+
+/* ── Pill stroke cursor interaction ── */
+(function () {
+  const pill = document.querySelector('.pill');
+  if (!pill) return;
+
+  pill.addEventListener('mousemove', e => {
+    const r = pill.getBoundingClientRect();
+    const EDGE = 32; // px from border edge counts as "on stroke"
+    const onLeft   = e.clientX - r.left   < EDGE;
+    const onRight  = r.right  - e.clientX < EDGE;
+    const onTop    = e.clientY - r.top    < EDGE;
+    const onBottom = r.bottom - e.clientY < EDGE;
+    if (onLeft || onRight || onTop || onBottom) {
+      pill.classList.add('stroke-hover');
+    } else {
+      pill.classList.remove('stroke-hover');
+    }
+  });
+  pill.addEventListener('mouseleave', () => pill.classList.remove('stroke-hover'));
+})();
+
+/* ── Slot-machine counter ── */
+(function () {
+  const el = document.getElementById('stat-num');
+  if (!el) return;
+  let fired = false;
+  const DISPLAY = '1,000,000'; // final string shown
+
+  function buildReels() {
+    el.innerHTML = '';
+    DISPLAY.split('').forEach(ch => {
+      const span = document.createElement('span');
+      if (/\d/.test(ch)) {
+        span.className = 'slot-char';
+        span.dataset.target = ch;
+        span.textContent = Math.floor(Math.random() * 10); // random start
+      } else {
+        span.className = 'slot-sep';
+        span.textContent = ch;
+      }
+      el.appendChild(span);
+    });
+  }
+
+  function spinDigit(span, delayMs) {
+    const target = span.dataset.target;
+    const spinCount = 18 + Math.floor(Math.random() * 14); // how many random frames
+    let frame = 0;
+    setTimeout(() => {
+      const iv = setInterval(() => {
+        frame++;
+        if (frame < spinCount) {
+          span.textContent = Math.floor(Math.random() * 10);
+          span.style.opacity = 0.4 + (frame / spinCount) * 0.6; // brightens as it settles
+        } else {
+          span.textContent = target;
+          span.style.opacity = 1;
+          clearInterval(iv);
+        }
+      }, 38);
+    }, delayMs);
+  }
+
+  function run() {
+    buildReels();
+    let digitIndex = 0;
+    el.querySelectorAll('.slot-char').forEach(span => {
+      spinDigit(span, digitIndex * 110); // 110ms stagger per digit
+      digitIndex++;
+    });
+  }
+
+  new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !fired) {
+      fired = true;
+      run();
+    }
+  }, { threshold: 0.5 }).observe(el);
+})();
+
+/* ── Features: Auto step animation (Step1→Step2→Step3→loop) ── */
+(function() {
+  // Durations per step in ms
+  const DURATIONS = [3800, 4200, 4600];
+
+  const imgs  = document.querySelectorAll('.feat-step-img');
+  const items = [
+    document.getElementById('fstep-1'),
+    document.getElementById('fstep-2'),
+    document.getElementById('fstep-3'),
+  ];
+  const dots  = document.querySelectorAll('.feat-step-dot');
+  const fill  = document.getElementById('feat-progress');
+
+  if (!imgs.length) return;
+
+  let current = 0;
+  let stepTimer = null;
+
+  function animateProgress(duration) {
+    if (!fill) return;
+    fill.style.transition = 'none';
+    fill.style.width = '0%';
+    // double rAF to ensure the reset paints before we start the transition
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      fill.style.transition = 'width ' + duration + 'ms linear';
+      fill.style.width = '100%';
+    }));
+  }
+
+  function goTo(n) {
+    const prev = current;
+    current = ((n % DURATIONS.length) + DURATIONS.length) % DURATIONS.length;
+
+    // Swap SVG images
+    imgs[prev].classList.remove('active');
+    imgs[current].classList.add('active');
+
+    // Swap text panels
+    if (items[prev]) items[prev].classList.remove('active');
+    if (items[current]) items[current].classList.add('active');
+
+    // Swap dots
+    dots[prev] && dots[prev].classList.remove('active');
+    dots[current] && dots[current].classList.add('active');
+
+    // Restart progress bar
+    animateProgress(DURATIONS[current]);
+
+    // Schedule next step
+    clearTimeout(stepTimer);
+    stepTimer = setTimeout(() => goTo(current + 1), DURATIONS[current]);
+  }
+
+  // Dot click overrides
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      clearTimeout(stepTimer);
+      goTo(parseInt(dot.dataset.goto, 10));
+    });
+  });
+
+  // Kick off
+  goTo(0);
+})();
+
+/* ── Custom cursor + device 3D tilt ── */
+(function() {
+  const dot  = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  const wrap = document.getElementById('deviceWrap');
+  const img  = document.getElementById('deviceImg');
+
+  document.addEventListener('mousemove', e => {
+    dot.style.left  = e.clientX + 'px';
+    dot.style.top   = e.clientY + 'px';
+    ring.style.left = e.clientX + 'px';
+    ring.style.top  = e.clientY + 'px';
+  });
+
+  const heroRight = document.querySelector('.hero-right');
+  if (heroRight) {
+    heroRight.addEventListener('mouseenter', () => {
+      dot.classList.add('active');
+      ring.classList.add('active');
+    });
+    heroRight.addEventListener('mouseleave', () => {
+      dot.classList.remove('active');
+      ring.classList.remove('active');
+      ring.classList.remove('hover');
+      img.style.transform = '';
+      img.style.animationPlayState = 'running';
+    });
+  }
+
+  if (wrap) {
+    wrap.addEventListener('mouseenter', () => {
+      ring.classList.add('hover');
+      img.style.animationPlayState = 'paused';
+    });
+    wrap.addEventListener('mouseleave', () => {
+      ring.classList.remove('hover');
+      img.style.transform = '';
+      img.style.animationPlayState = 'running';
+    });
+    wrap.addEventListener('mousemove', e => {
+      const r = wrap.getBoundingClientRect();
+      const x = (e.clientX - r.left)  / r.width  - 0.5;
+      const y = (e.clientY - r.top)   / r.height - 0.5;
+      img.style.transform = `perspective(1000px) rotateY(${x * 14}deg) rotateX(${-y * 10}deg) scale(1.02)`;
+    });
+  }
+})();
+</script>
+<footer id="bctftr">© 2026 BCT Taipei. All rights reserved. · Bahwan CyberTek Group</footer>
+</body>
+</html>

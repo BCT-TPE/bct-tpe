@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="xMidYMid meet" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 381.818 393.564" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Vector">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M228.577 0.501346C311.475 6.08784 352.931 92.0238 374.677 172.214C392.544 238.098 377.399 308.437 323.413 350.215C263.779 396.363 183.251 410.127 119.714 369.521C42.2198 319.995 -20.0092 235.579 6.01316 147.369C33.8182 53.1165 130.53 -6.10599 228.577 0.501346Z" fill="url(#paint0_radial_0_27)"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M228.577 0.501346C311.475 6.08784 352.931 92.0238 374.677 172.214C392.544 238.098 377.399 308.437 323.413 350.215C263.779 396.363 183.251 410.127 119.714 369.521C42.2198 319.995 -20.0092 235.579 6.01316 147.369C33.8182 53.1165 130.53 -6.10599 228.577 0.501346Z" fill="var(--fill-1, white)" fill-opacity="0.2"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_0_27" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(190.909 196.782) rotate(90) scale(196.782 190.909)">
+<stop offset="0.6" stop-color="white" stop-opacity="0.75"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>

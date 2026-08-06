@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Study — Building a Data Lake Solution | BCT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Design tokens — from Figma "Case Studies 2025 / DataLake"
+   ============================================================ */
+:root{
+  --primary:      #04ACEB;   /* Primary Blue */
+  --deep:         #2E3841;   /* Deep Blue (body text) */
+  --dark:         #121212;   /* Dark (headings / nav) */
+  --mid-gray:     #6D777F;   /* Mid Gray */
+  --water:        #93DCEC;   /* Water */
+  --grad-a:       #06AEEA;   /* Blue gradient start */
+  --grad-b:       #2CD1C1;   /* Blue gradient end   */
+  --white:        #ffffff;
+
+  /* AWS service tile gradients */
+  --s3-a:#90DF75;     --s3-b:#62B655;     --s3-glow:rgba(98,182,85,.4);
+  --glue-a:#CF65F4;   --glue-b:#952CB9;   --glue-glow:rgba(149,44,185,.4);
+  --lambda-a:#FFCF53; --lambda-b:#FF9900; --lambda-glow:rgba(255,153,0,.4);
+  --db-a:#44BBFE;     --db-b:#1E78FE;     --db-glow:rgba(32,124,254,.4);
+  --src-a:#FC7E91;    --src-b:#E95666;    --src-glow:#FFC9CF;
+  --erp-a:#70F2DB;    --erp-b:#23BBC5;    --erp-glow:rgba(56,158,165,.4);
+  --pos-a:#FF9252;    --pos-b:#FF3F15;    --pos-glow:rgba(255,77,0,.4);
+
+  --glass-bg:     rgba(255,255,255,.7);
+  --glass-shadow: 0 8.8px 14px rgba(22,29,36,.08);
+  --header-h:     100px;
+  --nav-bg:       rgba(4,5,13,0.6);
+  --dim:          rgba(255,255,255,0.55);
+  --bg:           #04050d;
+  --radius-tile:  24px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Poppins',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--white);
+  color:var(--deep);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img{display:block}
+a{text-decoration:none;color:inherit}
+
+.grad-text{
+  background:linear-gradient(92deg,var(--grad-a) 5%,var(--grad-b) 98%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+
+/* ============================================================
+   Reveal-on-scroll
+   ============================================================ */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.1s}.reveal.d2{transition-delay:.2s}
+.reveal.d3{transition-delay:.3s}.reveal.d4{transition-delay:.4s}
+
+/* ============================================================
+   BCT Pill Nav
+   ============================================================ */
+nav#nav {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  width: calc(100% - 80px); max-width: 1320px;
+  height: 64px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 50px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 12px 0 24px;
+  z-index: 200;
+  transition: background .3s, border-color .3s;
+}
+nav#nav.scrolled { border-color: rgba(255,255,255,0.12); }
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-links a {
+  font-size: 14px; font-weight: 500; color: var(--dim);
+  text-decoration: none; padding: 8px 16px; border-radius: 50px;
+  transition: color .2s, background .2s;
+}
+.nav-links a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.nav-work-wrap { position: relative; }
+.nav-work-btn {
+  font-family: inherit; font-size: 14px; font-weight: 500;
+  color: var(--dim); background: none; border: none; cursor: pointer;
+  padding: 8px 16px; border-radius: 50px;
+  display: flex; align-items: center; gap: 5px;
+  transition: color .2s, background .2s;
+}
+.nav-work-btn svg { transition: transform .2s; }
+.nav-work-wrap:hover .nav-work-btn,
+.nav-work-wrap.open .nav-work-btn { color: #fff; background: rgba(255,255,255,0.06); }
+.nav-work-wrap:hover .nav-work-btn svg,
+.nav-work-wrap.open .nav-work-btn svg { transform: rotate(180deg); }
+.nav-dropdown {
+  position: absolute; top: 100%;
+  left: 50%; transform: translateX(-50%) translateY(-4px);
+  background: var(--nav-bg);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px; padding: 18px 0 8px; min-width: 190px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease, visibility .18s;
+  z-index: 300;
+}
+.nav-work-wrap:hover .nav-dropdown,
+.nav-work-wrap.open .nav-dropdown {
+  opacity: 1; visibility: visible; pointer-events: all;
+  transform: translateX(-50%) translateY(0);
+}
+.nav-dropdown a {
+  display: block; text-align: center; padding: 13px 20px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px; font-weight: 500;
+  color: rgba(255,255,255,0.45);
+  text-decoration: none; white-space: nowrap;
+  transition: color .15s, background .15s;
+  border-radius: 10px; margin: 0 6px;
+}
+.nav-dropdown a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.nav-dropdown a.current { color: #FFFFFF; }
+.nav-btn {
+  display: inline-flex; align-items: center;
+  padding: 10px 24px; border-radius: 50px; border: none;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: #fff; font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px; font-weight: 700;
+  text-decoration: none; cursor: pointer;
+  box-shadow: 0 0 24px rgba(37,99,235,0.35);
+  transition: box-shadow .3s, transform .2s;
+}
+.nav-btn:hover { box-shadow: 0 0 40px rgba(37,99,235,0.55); transform: scale(1.03); }
+
+/* ============================================================
+   Footer
+   ============================================================ */
+footer {
+  background: var(--bg);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding: 64px 80px 32px;
+  font-family: 'Poppins', sans-serif;
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px; margin-bottom: 48px;
+}
+.f-brand { margin-bottom: 16px; }
+.f-desc { font-size: 13px; color: rgba(255,255,255,0.32); line-height: 20px; }
+.f-col h4 {
+  font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: rgba(255,255,255,0.35); margin-bottom: 16px;
+}
+.f-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.f-links a { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color .2s; }
+.f-links a:hover { color: #fff; }
+.footer-btm {
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px;
+}
+.f-copy, .f-parent { font-size: 12px; color: rgba(255,255,255,0.28); }
+
+/* ============================================================
+   AWS / system tiles (shared component)
+   ============================================================ */
+.tile{position:relative;flex:none}
+.tile.glass{
+  background:var(--glass-bg);
+  border:3px solid #fff;border-radius:var(--radius-tile);
+  box-shadow:var(--glass-shadow);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.tile-core{
+  position:absolute;inset:22%;
+  border-radius:34%;
+  border:2px solid rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;
+}
+.tile.flat .tile-core{inset:0;position:relative;width:100%;height:100%}
+.tile-core img{width:46%;height:46%;object-fit:contain}
+/* glyph_glue.svg is tall & narrow — enlarge in sec4 so it matches the other three */
+.sec4 .t-glue .tile-core img{width:58%;height:58%}
+.tile-core span{
+  color:#fff;font-weight:600;
+  text-shadow:0 1px 1px rgba(0,0,0,.15);
+  font-size:.95em;letter-spacing:.2px;
+}
+.t-s3     .tile-core{background:linear-gradient(180deg,var(--s3-a),var(--s3-b));box-shadow:0 8px 16px var(--s3-glow)}
+.t-glue   .tile-core,
+.t-athena .tile-core{background:linear-gradient(180deg,var(--glue-a),var(--glue-b));box-shadow:0 8px 16px var(--glue-glow)}
+.t-lambda .tile-core{background:linear-gradient(180deg,var(--lambda-a),var(--lambda-b));box-shadow:0 8px 16px var(--lambda-glow)}
+.t-db     .tile-core{background:linear-gradient(180deg,var(--db-a),var(--db-b));box-shadow:0 8px 16px var(--db-glow)}
+.t-src    .tile-core{background:linear-gradient(180deg,var(--src-a),var(--src-b));box-shadow:0 8px 16px var(--src-glow)}
+.t-erp    .tile-core{background:linear-gradient(180deg,var(--erp-a),var(--erp-b));box-shadow:0 8px 16px var(--erp-glow)}
+.t-pos    .tile-core{background:linear-gradient(180deg,var(--pos-a),var(--pos-b));box-shadow:0 8px 16px var(--pos-glow)}
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.hero{
+  position:relative;height:816px;margin-top:var(--header-h);
+  overflow:hidden;background:#fff;
+}
+.icon-field{
+  position:absolute;left:0;right:0;top:80px;height:412px;
+  opacity:.65;overflow:hidden;
+}
+.icon-row{
+  display:flex;align-items:center;
+  width:max-content;margin-bottom:20px;
+  animation:drift 70s linear infinite;
+}
+.icon-row.rev{animation-direction:reverse}
+/* margin-right (not gap) ensures every tile is exactly 120px wide,
+   so translateX(-50%) == exactly one set's width = seamless loop */
+.icon-row .tile{width:88px;height:88px;flex-shrink:0;margin-right:32px}
+@keyframes drift{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+.icon-field::before,.icon-field::after{
+  content:'';position:absolute;top:0;bottom:0;width:140px;z-index:2;pointer-events:none;
+}
+.icon-field::before{left:0;background:linear-gradient(90deg,#fff,rgba(255,255,255,0))}
+.icon-field::after{right:0;background:linear-gradient(270deg,#fff,rgba(255,255,255,0))}
+.icon-field .fade-btm{
+  position:absolute;left:0;right:0;bottom:0;height:120px;z-index:2;pointer-events:none;
+  background:linear-gradient(0deg,#fff,rgba(255,255,255,0));
+}
+
+.hero-icon{
+  position:absolute;left:50%;top:226px;transform:translateX(-50%);
+  width:160px;height:160px;z-index:3;
+  background:var(--glass-bg);
+  border:4px solid #fff;border-radius:40px;
+  box-shadow:0 12px 19px rgba(22,29,36,.08);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  display:flex;align-items:center;justify-content:center;
+}
+.water-circle{
+  position:relative;width:100px;height:100px;border-radius:50%;
+  background:#f8f8f8;border:2px solid #fff;overflow:hidden;
+}
+.water-circle .wave{
+  position:absolute;left:50%;top:36%;
+  width:240px;height:240px;margin-left:-120px;
+  border-radius:42%;
+  background:#93DCEC;
+  animation:spin 9s linear infinite;
+}
+.water-circle .wave.w2{
+  top:44%;border-radius:46%;
+  background:#2E9BD0;
+  animation-duration:13s;animation-direction:reverse;
+}
+.water-circle .wave.w3{
+  top:50%;border-radius:44%;
+  background:#0785C4;
+  animation-duration:11s;
+}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+.hero-title{
+  position:absolute;left:0;right:0;top:532px;margin:0 auto;
+  width:952px;max-width:90vw;z-index:3;
+  font-size:56px;font-weight:700;line-height:68px;
+  color:var(--dark);text-align:center;
+}
+
+/* ============================================================
+   Soft page background behind Sec2–Sec8
+   ============================================================ */
+.page-bg{
+  position:relative;
+  background:
+    radial-gradient(900px 700px at 12% 18%, rgba(147,220,236,.28), transparent 65%),
+    radial-gradient(1000px 800px at 88% 36%, rgba(44,209,193,.18), transparent 65%),
+    radial-gradient(900px 900px at 30% 72%, rgba(6,174,234,.12), transparent 60%),
+    linear-gradient(180deg,#ffffff 0%,#f4fbfd 30%,#f0fafc 70%,#ffffff 100%);
+}
+
+section{position:relative}
+.sec-pad{padding:100px 80px}
+.t2{font-size:40px;font-weight:700;line-height:52px;color:var(--deep)}
+.c2{font-size:20px;font-weight:500;line-height:28px;color:var(--deep)}
+.c3{font-size:16px;font-weight:400;line-height:24px;color:var(--deep)}
+.step-label{
+  font-size:20px;font-weight:700;line-height:32px;letter-spacing:.4px;
+  color:var(--primary);
+}
+
+/* ============================================================
+   Sec2 — Data Integration (scroll convergence)
+   ============================================================ */
+.sec2{height:983px;overflow:hidden}
+.sec2-stage{position:absolute;inset:0;pointer-events:none}
+.chip{
+  position:absolute;will-change:transform,opacity;
+}
+.chip .chip-bob{animation:bob 5s ease-in-out infinite}
+.chip .tile{width:72px;height:72px;border-radius:22px}
+.chip .tile .tile-core span{font-size:15px}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+.sec2-db{
+  position:absolute;left:50%;top:142px;transform:translateX(-50%);
+  width:80px;height:80px;pointer-events:none;z-index:1;
+}
+.sec2-db .tile{width:80px;height:80px}
+.sec2-db .pulse{
+  position:absolute;inset:-18px;border-radius:36px;
+  border:2px solid rgba(32,124,254,.35);
+  opacity:0;transform:scale(.7);
+}
+.sec2-db.absorb .pulse{animation:pulse 1.6s ease-out infinite}
+@keyframes pulse{
+  0%{opacity:.8;transform:scale(.7)}
+  100%{opacity:0;transform:scale(1.3)}
+}
+
+.bubble{
+  position:absolute;bottom:-260px;pointer-events:none;z-index:0;
+  opacity:0;animation:rise 14s linear infinite;
+}
+.bubble img{width:100%;height:auto;opacity:.4}
+@keyframes rise{
+  0%{transform:translateY(0);opacity:0}
+  12%{opacity:.6}
+  88%{opacity:.5}
+  100%{transform:translateY(-1150px);opacity:0}
+}
+/* center bubble: rises once and stays behind #sec2Db */
+.bubble-main{
+  left:calc(50% - 200px);
+  z-index:0;
+  animation:rise-stop 3.5s ease-out forwards;
+}
+@keyframes rise-stop{
+  0%  {transform:translateY(0);opacity:0}
+  15% {opacity:.55}
+  100%{transform:translateY(-847px);opacity:.5}
+}
+
+.sec2-content{
+  position:absolute;left:50%;top:571px;transform:translateX(-50%);
+  width:846px;max-width:90vw;text-align:center;
+}
+.sec2-content h2{font-size:40px;font-weight:700;line-height:52px;color:var(--deep)}
+.sec2-content p{margin-top:36px;font-size:20px;font-weight:500;line-height:28px}
+
+/* ============================================================
+   Sec3 — Building a Secure, Analytical Data Lake
+   ============================================================ */
+.sec3{min-height:720px;display:flex;align-items:center;padding:80px}
+.sec3-grid{display:grid;grid-template-columns:434px 1fr;gap:80px;align-items:center;width:100%;max-width:1280px;margin:0 auto}
+.checklist{display:flex;flex-direction:column;gap:24px;margin-top:40px}
+.check-item{display:flex;gap:10px;align-items:flex-start}
+.check-icon{
+  flex:none;width:24px;height:24px;margin-top:3px;position:relative;
+}
+.check-icon svg{width:24px;height:24px}
+.check-icon .tick{
+  stroke:var(--grad-b);stroke-width:2.5;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:20;stroke-dashoffset:20;
+  transition:stroke-dashoffset .5s ease .2s;
+}
+.check-item.in .tick{stroke-dashoffset:0}
+
+.secure-visual{position:relative;height:480px;display:flex;align-items:center;justify-content:center}
+.wave-svg{position:absolute;inset:0;width:100%;height:100%}
+.wave-svg path{
+  fill:none;stroke:url(#waveGrad);stroke-width:1.2;opacity:.5;
+}
+.shield{
+  position:relative;width:140px;z-index:2;
+  filter:drop-shadow(0 16px 30px rgba(35,187,197,.3));
+  animation:bob 6s ease-in-out infinite;
+}
+.shield img{width:100%;height:auto}
+
+/* ============================================================
+   Sec4 — Technical Architecture
+   ============================================================ */
+.sec4{min-height:916px;padding:100px 80px;overflow:hidden;position:relative}
+.sec4::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:url('uploads/datalake/img_ripple_bk@3x.png') center/cover no-repeat;
+  opacity:1;
+}
+.sec4 .sec-head,.arch-grid{position:relative;z-index:1}
+.sec4 .sec-head{text-align:center;max-width:890px;margin:0 auto}
+.sec4 .sec-head p{margin-top:20px}
+.arch-grid{
+  position:relative;max-width:1280px;margin:56px auto 0;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+}
+.arch-card{
+  position:relative;z-index:0;padding:16px 32px 32px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  border-radius:24px;
+  transition:transform .25s ease,background .25s ease,box-shadow .25s ease;
+}
+.arch-card:nth-child(2),.arch-card:nth-child(4){margin-top:160px}
+.arch-card:hover{
+  transform:translateY(-6px);
+}
+.arch-card .ripple{
+  position:absolute;left:50%;top:50%;width:400px;height:400px;
+  transform:translate(-50%,-50%);pointer-events:none;z-index:-1;
+}
+.arch-card .ripple img{width:100%;height:100%;animation:ripple-pulse 5s ease-in-out infinite}
+.arch-card:nth-child(2) .ripple img{animation-delay:1.2s}
+.arch-card:nth-child(3) .ripple img{animation-delay:2.4s}
+.arch-card:nth-child(4) .ripple img{animation-delay:3.6s}
+@keyframes ripple-pulse{
+  0%,100%{transform:scale(.92);opacity:.55}
+  50%{transform:scale(1.05);opacity:1}
+}
+.arch-card .tile{width:88px;height:88px}
+.arch-card h3{font-size:20px;font-weight:700;line-height:32px;letter-spacing:.4px;color:var(--deep)}
+.arch-card p{font-size:16px;line-height:24px;color:var(--deep)}
+
+/* ============================================================
+   Sec5 / Sec6 / Sec7 — Data Processing Workflow
+   ============================================================ */
+.workflow-title{padding:100px 80px 0;max-width:1280px;margin:0 auto}
+.wf-row{
+  display:grid;grid-template-columns:434px 1fr;gap:80px;align-items:center;
+  max-width:1280px;margin:0 auto;padding:64px 80px;
+}
+.wf-text{display:flex;flex-direction:column;gap:24px}
+.wf-sub{display:flex;flex-direction:column;gap:8px}
+.wf-sub .sub-t{font-weight:500}
+.wf-diagram{
+  position:relative;height:320px;
+  display:flex;align-items:center;justify-content:center;gap:28px;
+}
+.wf-node{display:flex;flex-direction:column;gap:14px;align-items:center}
+.wf-node .tile{width:72px;height:72px;border-radius:22px}
+.wf-node .lbl{font-size:16px;line-height:24px;text-align:center;color:var(--deep)}
+.wf-col{display:flex;flex-direction:column;gap:20px;align-items:center}
+.wf-col .col-lbl{font-size:16px;font-weight:500;line-height:24px;text-align:center;color:var(--deep);min-height:48px}
+.flow-arrow{flex:none}
+.flow-arrow .dash{
+  stroke:var(--primary);stroke-width:2;stroke-dasharray:6 6;
+  animation:dashflow 1.2s linear infinite;
+}
+@keyframes dashflow{to{stroke-dashoffset:-12}}
+.sources-cluster{position:relative;width:170px;height:150px}
+.sources-cluster .tile{position:absolute;width:72px;height:72px;border-radius:22px}
+.sources-cluster .s-db{left:50%;top:0;transform:translateX(-50%)}
+.sources-cluster .s-mes{left:0;top:46px}
+.sources-cluster .s-erp{right:0;top:46px}
+.sources-cluster .clu-lbl{
+  position:absolute;left:50%;bottom:-30px;transform:translateX(-50%);
+  font-size:16px;line-height:24px;white-space:nowrap;color:var(--deep);
+}
+.bi-logos{display:flex;align-items:center;gap:72px}
+.bi-logos .bi{transition:transform .25s ease,filter .25s ease;filter:grayscale(.1)}
+.bi-logos .bi:hover{transform:scale(1.06);filter:none}
+.bi-logos img{height:auto}
+
+/* ============================================================
+   Sec8 — Solution summary
+   ============================================================ */
+.sec8{height:980px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.sec8-photo{
+  position:absolute;left:0;right:0;bottom:0;height:890px;
+  pointer-events:none;z-index:0;opacity:.5;
+  background:url('uploads/datalake/solution_img.png') center bottom/cover no-repeat;
+}
+.sec8-photo::after{
+  content:'';position:absolute;left:0;right:0;top:0;height:65%;
+  background:linear-gradient(to bottom,#f4fbfd 0%,rgba(244,251,253,0) 100%);
+}
+.sec8-bg{
+  position:absolute;left:0;right:0;top:192px;height:890px;opacity:.75;
+  pointer-events:none;
+}
+.sec8-bg .map{
+  position:absolute;inset:-30px 0 0;height:1032px;
+  background:url('uploads/datalake/solution_img.png') center/cover no-repeat;
+  -webkit-mask:url('uploads/datalake/solution_mask.svg') center/100% 100% no-repeat;
+  mask:url('uploads/datalake/solution_mask.svg') center/100% 100% no-repeat;
+}
+.sec8-bg .tint{
+  position:absolute;inset:0;
+  background:rgba(4,172,235,.35);
+  mix-blend-mode:multiply;
+  -webkit-mask:url('uploads/datalake/solution_mask.svg') center/100% 100% no-repeat;
+  mask:url('uploads/datalake/solution_mask.svg') center/100% 100% no-repeat;
+}
+.sec8-content{
+  position:relative;z-index:1;width:846px;max-width:90vw;text-align:center;
+  display:flex;flex-direction:column;gap:40px;align-items:center;
+  transform:translateY(-120px);
+}
+.sec8-content p{width:720px;max-width:100%}
+
+/* ============================================================
+   Voices of our customers
+   ============================================================ */
+.voices{height:640px;overflow:hidden;display:flex;align-items:center}
+.voices-bg{
+  position:absolute;inset:0;
+  background:url('uploads/datalake/voices_bg.jpg') center/cover no-repeat;
+}
+.voices-bg::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(0,0,0,.25);
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+}
+.voices-inner{
+  position:relative;z-index:2;width:100%;max-width:1280px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 519px;gap:24px;align-items:center;
+  padding:0 80px;
+}
+.voices h2{
+  font-size:40px;font-weight:600;line-height:60px;color:#fff;
+  text-shadow:0 4px 8px rgba(0,0,0,.2);
+}
+.quote-card{
+  position:relative;background:#fff;padding:44px;
+  box-shadow:0 4px 24px rgba(0,0,0,.2);
+  display:flex;flex-direction:column;gap:24px;
+}
+.quote-card .qmark{
+  position:absolute;top:-22px;left:22px;width:50px;height:44px;
+}
+.quote-card blockquote{
+  font-size:28px;font-weight:500;line-height:44px;letter-spacing:.28px;color:var(--dark);
+}
+.quote-card .q-name{font-size:16px;font-weight:700;line-height:16px;color:var(--dark)}
+.quote-card .q-role{font-size:16px;line-height:24px;color:var(--mid-gray);margin-top:4px}
+
+/* ============================================================
+   Let's connect
+   ============================================================ */
+.connect{
+  height:640px;display:flex;align-items:center;justify-content:center;
+  background:#fff url('uploads/datalake/connect_tile.png') top left/64px 64px repeat;
+}
+.connect-card{
+  background:#fff;width:628px;max-width:92vw;padding:44px;
+  display:flex;flex-direction:column;gap:48px;align-items:center;
+}
+.connect-card h2{
+  font-size:40px;font-weight:600;line-height:60px;color:var(--dark);text-align:center;
+}
+.btn-grad{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:16px 24px;border-radius:99px;border:none;cursor:pointer;overflow:hidden;
+  background:linear-gradient(91deg,var(--grad-a) 5%,var(--grad-b) 98%);
+  color:#fff;font-family:inherit;font-size:16px;font-weight:700;line-height:1;
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.btn-grad::before{
+  content:'';position:absolute;top:0;left:-80%;width:60%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);
+  transform:skewX(-20deg);
+}
+.btn-grad:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(44,209,193,.4)}
+.btn-grad:hover::before{animation:sheen .8s ease}
+.btn-grad:focus-visible{outline:2px solid var(--dark);outline-offset:3px}
+@keyframes sheen{to{left:120%}}
+
+/* ============================================================
+   Back to top
+   ============================================================ */
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width:1180px){
+  .header{padding:0 32px}
+  .nav-links{display:none}
+  .sec3-grid,.wf-row{grid-template-columns:1fr;gap:48px}
+  .wf-row{padding:48px 32px}
+  .workflow-title{padding:80px 32px 0}
+  .wf-diagram{flex-wrap:wrap;height:auto;min-height:320px;row-gap:32px}
+  .sec3{padding:64px 32px}
+  .arch-grid{grid-template-columns:repeat(2,1fr)}
+  .arch-card:nth-child(2),.arch-card:nth-child(4){margin-top:0}
+  .voices-inner{grid-template-columns:1fr;gap:40px;padding:48px 32px}
+  .hero-title{font-size:40px;line-height:52px}
+  .sec2-content h2{font-size:32px;line-height:44px}
+  .t2{font-size:32px;line-height:44px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+}
+
+/* ── OUR WORKS (light, adapted from fitting.html) ── */
+.our-works{background:#fff;padding:100px 0 80px}
+.works-inner{max-width:1440px;margin:0 auto;padding:0 80px}
+.works-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:52px}
+.works-title{font-size:48px;font-weight:600;color:#121212;line-height:60px;margin-bottom:16px}
+.works-sub{font-size:20px;font-weight:400;color:#6D777F;line-height:36px;max-width:640px}
+.works-view-all{font-size:14px;font-weight:700;color:#04ACEB;text-decoration:none;display:flex;align-items:center;gap:8px;transition:gap .2s;margin-bottom:4px;white-space:nowrap}
+.works-view-all:hover{gap:12px}
+.cases-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px;min-height:640px}
+.case-card{background:#fff;border:1px solid #E6ECF0;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;text-decoration:none;transition:border-color .3s,box-shadow .3s}
+.case-card:hover{border-color:rgba(4,172,235,0.4);box-shadow:0 24px 60px rgba(22,29,36,0.12)}
+.case-img{flex:1;overflow:hidden;position:relative;background:linear-gradient(135deg,#eef4f8,#dfe9f0)}
+.case-img img{width:100%;height:100%;object-fit:cover;opacity:1;display:block;transition:transform .6s,opacity .3s}
+.case-card:hover .case-img img{transform:scale(1.05)}
+.case-info{padding:22px 26px;border-top:1px solid #E6ECF0;display:flex;flex-direction:column;gap:7px;flex-shrink:0}
+.case-tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#04ACEB}
+.case-name{font-size:17px;font-weight:700;color:#121212}
+.case-go{font-size:13px;font-weight:600;color:#6D777F;display:flex;align-items:center;gap:6px;text-decoration:none;transition:color .2s,gap .2s}
+.case-card:hover .case-go{color:#04ACEB;gap:10px}
+.cases-right{display:flex;flex-direction:column;gap:20px}
+.cases-right .case-card{flex:1}
+@media (max-width:900px){.works-inner{padding:0 32px}.cases-grid{grid-template-columns:1fr;min-height:0}.works-title{font-size:34px;line-height:44px}}
+</style>
+<style id="bctshell-css">
+#bctnav,#bctnav *{box-sizing:border-box}
+#bctnav{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:auto!important;
+  z-index:99999;transform:none!important;margin:0!important;border-radius:0!important;width:auto!important;
+  max-width:none!important;min-width:0!important;height:auto!important;padding:16px 6vw;
+  font-family:"General Sans",-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,"PingFang TC","Noto Sans TC",sans-serif;
+  background:rgba(247,244,239,.82);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);
+  border-bottom:1px solid rgba(20,40,60,.06)}
+#bctnav .bar{display:flex;align-items:center;gap:18px;position:relative;z-index:2}
+#bctnav a{font-family:inherit}
+#bctnav .logo img{height:30px;display:block}
+#bctnav .burger{width:28px;height:22px;display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:0;flex-shrink:0}
+#bctnav .burger span{display:block;height:2px;width:24px;background:#1a1a1a;border-radius:2px;transition:transform .3s cubic-bezier(.22,.61,.36,1),opacity .2s}
+#bctnav.open .burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+#bctnav.open .burger span:nth-child(2){opacity:0}
+#bctnav.open .burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+#bctnav .menu{display:flex;gap:36px;margin:0 auto}
+#bctnav .menu>a,#bctnav .droptrig{font-size:14px;font-weight:600;color:#4a5462;text-decoration:none;transition:color .2s cubic-bezier(.22,.61,.36,1)}
+#bctnav .menu>a:hover,#bctnav .droptrig:hover{color:#1a1a1a}
+#bctnav .navdrop{position:relative;display:flex;align-items:center}
+#bctnav .droptrig{display:inline-flex;align-items:center;gap:5px;cursor:pointer}
+#bctnav .caret{display:block;transition:transform .28s cubic-bezier(.22,.61,.36,1)}
+#bctnav .navdrop:hover .caret,#bctnav .navdrop:focus-within .caret{transform:rotate(180deg)}
+#bctnav .dropmenu{position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%) translateY(-8px);min-width:236px;
+  background:rgba(255,255,255,.78);backdrop-filter:blur(22px) saturate(1.6);-webkit-backdrop-filter:blur(22px) saturate(1.6);
+  border:1px solid rgba(255,255,255,.7);border-radius:20px;padding:11px;box-shadow:0 24px 60px rgba(20,40,60,.16);
+  display:flex;flex-direction:column;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .26s,transform .32s,visibility .26s}
+#bctnav .dropmenu::before{content:"";position:absolute;top:-16px;left:0;right:0;height:16px}
+#bctnav .navdrop:hover .dropmenu,#bctnav .navdrop:focus-within .dropmenu{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+#bctnav .dropmenu a{color:#3b4552;font-size:13px;font-weight:500;text-align:center;padding:10px 18px;border-radius:12px;white-space:nowrap;text-decoration:none;transition:color .18s,background .18s}
+#bctnav .dropmenu a:hover{color:#0b5a91;background:rgba(20,40,60,.06)}
+#bctnav .cta{font-size:12.5px;font-weight:700;color:#fff;background:#0a7bc4;text-decoration:none;padding:7px 15px;border-radius:999px;white-space:nowrap;transition:transform .18s,box-shadow .18s}
+#bctnav .cta:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(10,123,196,.35)}
+#bctnav .navmenu{display:none}
+@media(max-width:760px){
+  #bctnav .menu{display:none}
+  #bctnav .burger{display:flex}
+  #bctnav .bar{justify-content:space-between}
+  #bctnav .logo{position:absolute;left:50%;transform:translateX(-50%)}
+  #bctnav .navmenu{display:flex;position:fixed;inset:0;z-index:1;background:#f7f4ef;flex-direction:column;justify-content:flex-start;gap:6px;padding:14vh 10vw 0;opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .35s cubic-bezier(.22,.61,.36,1),transform .4s cubic-bezier(.22,.61,.36,1),visibility .35s}
+  #bctnav.open .navmenu{opacity:1;visibility:visible;transform:none}
+  #bctnav .navmenu>a,#bctnav .nm-worktrig{font-size:clamp(34px,10vw,60px);font-weight:700;color:#1a1a1a;text-decoration:none;letter-spacing:-.02em;line-height:1.3;background:none;border:none;cursor:pointer;padding:0;text-align:left;display:inline-flex;align-items:center;gap:12px;width:max-content}
+  #bctnav .navmenu>a:hover,#bctnav .nm-worktrig:hover{color:#0a7bc4}
+  #bctnav .nm-work{display:flex;flex-direction:column}
+  #bctnav .nm-caret{transition:transform .3s cubic-bezier(.22,.61,.36,1)}
+  #bctnav .nm-work.open .nm-caret{transform:rotate(180deg)}
+  #bctnav .nm-sub{display:flex;flex-direction:column;max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.22,.61,.36,1)}
+  #bctnav .nm-work.open .nm-sub{max-height:80vh}
+  #bctnav .nm-sub a{font-size:clamp(16px,4.4vw,21px);font-weight:500;color:#5a6470;text-decoration:none;padding:8px 0}
+  #bctnav .nm-sub a:hover{color:#0a7bc4}
+}
+#bctftr{background:#f7f4ef;border-top:1px solid #e6e1d8;padding:13px 6vw;margin:0;text-align:center;color:#5d6673;font-size:12.5px;line-height:1.6;
+  font-family:"General Sans",-apple-system,BlinkMacSystemFont,system-ui,"PingFang TC","Noto Sans TC",sans-serif}
+</style>
+</head>
+<body>
+
+<!-- ================= BCT Pill Nav ================= -->
+<nav data-orig-hidden style="display:none!important" id="nav">
+  <a href="BCT Taipei Dark.html" class="nav-logo">
+    <img src="uploads/ic_bct_logo_white.png" alt="Bahwan CyberTek" style="height:34px;width:auto;display:block">
+  </a>
+  <div class="nav-links">
+    <a href="BCT Taipei Dark.html#about">About</a>
+    <a href="BCT Taipei Dark.html#services">Services</a>
+    <a href="BCT Taipei Dark.html#process">Process</a>
+    <div class="nav-work-wrap" id="navWorkWrap">
+      <button class="nav-work-btn" aria-haspopup="true" aria-expanded="false">
+        Work
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="2,4 6,8 10,4"/>
+        </svg>
+      </button>
+      <div class="nav-dropdown" role="menu">
+        <a href="https://dev.bct-nova.net/" target="_blank" rel="noopener noreferrer" role="menuitem">NOVA</a>
+        <a href="fitting.html" role="menuitem">Dynamic Cycling Fit</a>
+        <a href="../flir/flir.html" role="menuitem">FLIR</a>
+        <a href="DataLake.html" role="menuitem" class="current">DataLake</a>
+        <a href="eshipping.html" role="menuitem">eShipping</a>
+        <a href="custombike.html" role="menuitem">Custom Bike</a>
+        <a href="gid_n.html" role="menuitem">Account System</a>
+      </div>
+    </div>
+  </div>
+  <a href="BCT Taipei Dark.html#cta" class="nav-btn">Contact Us</a>
+</nav>
+<nav id="bctnav">
+  <div class="bar">
+    <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <a class="logo" href="../../index.html"><img src="../../ic_logo_bct.png" alt="BahwanCyberTek"></a>
+    <div class="menu">
+      <a href="../../index.html">Services</a>
+      <div class="navdrop">
+        <a class="droptrig" href="../../index.html">Work <svg class="caret" width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="dropmenu">
+          <a href="BCT%20Taipei%20Dark.html">NOVA</a>
+          <a href="fitting.html">Dynamic Cycling Fit</a>
+          <a href="../flir/flir.html">FLIR</a>
+          <a href="DataLake.html">DataLake</a>
+          <a href="eshipping.html">eShipping</a>
+          <a href="custombike.html">Custom Bike</a>
+          <a href="gac.html">Account System</a>
+        </div>
+      </div>
+      <a href="../../index.html">Team</a>
+    </div>
+    <a class="cta" href="mailto:taipei-bct@bahwancybertek.com">Contact Us</a>
+  </div>
+  <div class="navmenu" aria-hidden="true">
+    <a href="../../index.html">Services</a>
+    <div class="nm-work">
+      <button class="nm-worktrig" aria-expanded="false">Work <svg class="nm-caret" width="16" height="10" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="nm-sub">
+          <a href="BCT%20Taipei%20Dark.html">NOVA</a>
+          <a href="fitting.html">Dynamic Cycling Fit</a>
+          <a href="../flir/flir.html">FLIR</a>
+          <a href="DataLake.html">DataLake</a>
+          <a href="eshipping.html">eShipping</a>
+          <a href="custombike.html">Custom Bike</a>
+          <a href="gac.html">Account System</a>
+      </div>
+    </div>
+    <a href="../../index.html">Team</a>
+  </div>
+</nav>
+<script>(function(){var n=document.getElementById("bctnav");if(!n)return;var b=n.querySelector(".burger");if(b)b.addEventListener("click",function(){var o=n.classList.toggle("open");b.setAttribute("aria-expanded",o);});var wt=n.querySelector(".nm-worktrig");if(wt)wt.addEventListener("click",function(){var w=wt.closest(".nm-work");var o=w.classList.toggle("open");wt.setAttribute("aria-expanded",o);});})();</script>
+
+<!-- ================= Hero ================= -->
+<section class="hero" id="hero">
+  <div class="icon-field" id="iconField" aria-hidden="true">
+    <!-- rows injected by JS -->
+    <div class="fade-btm"></div>
+  </div>
+
+  <div class="hero-icon" aria-hidden="true">
+    <div class="water-circle">
+      <div class="wave"></div>
+      <div class="wave w2"></div>
+      <div class="wave w3"></div>
+    </div>
+  </div>
+
+  <h1 class="hero-title reveal in">
+    Building a <span class="grad-text">Data Lake</span> Solution for a Large Bicycle Manufacturer
+  </h1>
+</section>
+
+<div class="page-bg">
+
+<!-- ================= Sec2 — Data Integration ================= -->
+<section class="sec2" id="overview">
+  <div class="sec2-stage" id="sec2Stage" aria-hidden="true">
+    <div class="sec2-db" id="sec2Db">
+      <div class="pulse"></div>
+      <div class="tile flat t-db"><div class="tile-core"><img src="uploads/datalake/glyph_db.svg" alt=""></div></div>
+    </div>
+    <!-- floating system chips (converge on scroll) -->
+    <div class="chip" data-x="11" data-y="34" data-r="-25"><div class="chip-bob"><div class="tile flat t-src"><div class="tile-core"><span>MES</span></div></div></div></div>
+    <div class="chip" data-x="86" data-y="6"  data-r="10"><div class="chip-bob" style="animation-delay:-1.6s"><div class="tile flat t-erp"><div class="tile-core"><span>ERP</span></div></div></div></div>
+    <div class="chip" data-x="22" data-y="9"  data-r="14"><div class="chip-bob" style="animation-delay:-3s"><div class="tile flat t-pos"><div class="tile-core"><span>POS</span></div></div></div></div>
+    <div class="chip" data-x="74" data-y="40" data-r="-12"><div class="chip-bob" style="animation-delay:-2.2s"><div class="tile flat t-glue"><div class="tile-core"><span>CRM</span></div></div></div></div>
+    <!-- rising bubbles -->
+    <div class="bubble" style="left:18%;width:200px"><img src="uploads/datalake/bubble.png" alt=""></div>
+    <div class="bubble bubble-main" style="width:400px"><img src="uploads/datalake/bubble.png" alt=""></div>
+    <div class="bubble" style="left:70%;width:110px;animation-delay:-9s"><img src="uploads/datalake/bubble.png" alt=""></div>
+  </div>
+
+  <div class="sec2-content">
+    <h2 class="reveal"><span class="grad-text">Data Integration</span> for<br>Bicycle Manufacturer</h2>
+    <p class="reveal d1">The client is a large bicycle manufacturer with extensive data spread across multiple systems, including ERP, MES, POS, and a vast amount of consumer-related information. With data dispersed across various systems, the client aims to establish a unified Data Lake for centralized data access, querying, and analysis to support business decision-making.</p>
+  </div>
+</section>
+
+<!-- ================= Sec3 — Secure, Analytical Data Lake ================= -->
+<section class="sec3" id="challenge">
+  <div class="sec3-grid">
+    <div>
+      <h2 class="t2 reveal">Building a Secure, Analytical Data Lake</h2>
+      <div class="checklist">
+        <div class="check-item reveal d1">
+          <div class="check-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="tick" d="M6 12.5 L10 16.5 L18 7.5"/></svg></div>
+          <p class="c2">Create a Data Lake that consolidates data from various sources.</p>
+        </div>
+        <div class="check-item reveal d2">
+          <div class="check-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="tick" d="M6 12.5 L10 16.5 L18 7.5"/></svg></div>
+          <p class="c2">Provide a unified platform for data access, querying, and analysis.</p>
+        </div>
+        <div class="check-item reveal d3">
+          <div class="check-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="tick" d="M6 12.5 L10 16.5 L18 7.5"/></svg></div>
+          <p class="c2">Offer an analytical platform compatible with analysis tools like Tableau and Power BI.</p>
+        </div>
+        <div class="check-item reveal d4">
+          <div class="check-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="tick" d="M6 12.5 L10 16.5 L18 7.5"/></svg></div>
+          <p class="c2">Ensure data privacy and compliance.</p>
+        </div>
+      </div>
+    </div>
+    <div class="secure-visual reveal d2">
+      <svg class="wave-svg" viewBox="0 0 638 480" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <defs>
+          <linearGradient id="waveGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#93DCEC"/>
+            <stop offset=".5" stop-color="#2CD1C1"/>
+            <stop offset="1" stop-color="#93DCEC"/>
+          </linearGradient>
+        </defs>
+        <g id="waveGroup"></g>
+      </svg>
+      <div class="shield"><img src="uploads/datalake/secure_shield.svg" alt="Security shield with check mark"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Sec4 — Technical Architecture ================= -->
+<section class="sec4" id="architecture">
+  <div class="sec-head">
+    <h2 class="t2 reveal">Technical Architecture</h2>
+    <p class="c2 reveal d1">The Data Lake is built on AWS cloud infrastructure, leveraging the following AWS services</p>
+  </div>
+  <div class="arch-grid">
+    <div class="arch-card reveal">
+      <div class="ripple"><img src="uploads/datalake/ripple.svg" alt=""></div>
+      <div class="tile flat t-s3" style="width:88px;height:88px"><div class="tile-core"><img src="uploads/datalake/glyph_s3.svg" alt=""></div></div>
+      <h3>AWS S3</h3>
+      <p>Serves as the main storage layer for the Data Lake, divided into three zones: Landing Zone, Raw Zone, and Analysis Bucket.</p>
+    </div>
+    <div class="arch-card reveal d1">
+      <div class="ripple"><img src="uploads/datalake/ripple.svg" alt=""></div>
+      <div class="tile flat t-glue" style="width:88px;height:88px"><div class="tile-core"><img src="uploads/datalake/glyph_glue.svg" alt=""></div></div>
+      <h3>AWS Glue</h3>
+      <p>Used for data transformation, cleansing, and formatting to integrate data from various sources.</p>
+    </div>
+    <div class="arch-card reveal d2">
+      <div class="ripple"><img src="uploads/datalake/ripple.svg" alt=""></div>
+      <div class="tile flat t-lambda" style="width:88px;height:88px"><div class="tile-core"><img src="uploads/datalake/glyph_lambda.svg" alt=""></div></div>
+      <h3>AWS Lambda</h3>
+      <p>Serves as the main storage layer for the Data Lake, divided into three zones: Landing Zone, Raw Zone, and Analysis Bucket.</p>
+    </div>
+    <div class="arch-card reveal d3">
+      <div class="ripple"><img src="uploads/datalake/ripple.svg" alt=""></div>
+      <div class="tile flat t-athena" style="width:88px;height:88px"><div class="tile-core"><img src="uploads/datalake/glyph_athena.svg" alt=""></div></div>
+      <h3>Amazon Athena</h3>
+      <p>Provides querying capabilities, allowing analysis tools to directly access the data within the Analysis Bucket.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Sec5–7 — Data Processing Workflow ================= -->
+<section id="workflow">
+  <h2 class="t2 workflow-title reveal">Data Processing Workflow</h2>
+
+  <!-- Step 1 : Data Ingestion -->
+  <div class="wf-row">
+    <div class="wf-text reveal">
+      <h3 class="step-label">Data Ingestion</h3>
+      <p class="c3">The client’s IT personnel export data from various sources like ERP, MES, POS, and consumer information and upload it to the Landing Zone.</p>
+    </div>
+    <div class="wf-diagram reveal d1">
+      <div class="sources-cluster">
+        <div class="tile glass t-db s-db"><div class="tile-core"><img src="uploads/datalake/glyph_db.svg" alt=""></div></div>
+        <div class="tile glass t-src s-mes"><div class="tile-core"><span>MES</span></div></div>
+        <div class="tile glass t-erp s-erp"><div class="tile-core"><span>ERP</span></div></div>
+        <span class="clu-lbl">Various sources</span>
+      </div>
+      <svg class="flow-arrow" width="72" height="12" viewBox="0 0 72 12" aria-hidden="true">
+        <line class="dash" x1="0" y1="6" x2="60" y2="6"/>
+        <path d="M60 1 L71 6 L60 11 Z" fill="var(--primary)"/>
+      </svg>
+      <div class="wf-node">
+        <div class="tile glass t-s3"><div class="tile-core"><img src="uploads/datalake/glyph_s3.svg" alt=""></div></div>
+        <span class="lbl">Landing</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2 : ETL Processing -->
+  <div class="wf-row">
+    <div class="wf-text reveal">
+      <h3 class="step-label">ETL Processing</h3>
+      <div class="wf-sub">
+        <p class="c3 sub-t">Data De-identification</p>
+        <p class="c3">AWS Lambda executes custom scripts to perform real-time data de-identification on the incoming data in the Landing Zone, removing or masking personally identifiable information (PII) and converting it into anonymized unique identifiers.</p>
+      </div>
+      <div class="wf-sub">
+        <p class="c3 sub-t">Data Transformation and Integration</p>
+        <p class="c3">After data de-identification, AWS Glue extracts data from the Landing Zone for further cleansing, formatting, and transformation before moving it to the Analysis Bucket.</p>
+      </div>
+    </div>
+    <div class="wf-diagram reveal d1">
+      <div class="wf-col">
+        <span class="col-lbl">Data<br>Cleansing</span>
+        <div class="wf-node"><div class="tile glass t-s3"><div class="tile-core"><img src="uploads/datalake/glyph_s3.svg" alt=""></div></div><span class="lbl">Landing</span></div>
+        <div class="wf-node"><div class="tile glass t-glue"><div class="tile-core"><img src="uploads/datalake/glyph_glue.svg" alt=""></div></div><span class="lbl">Glue ETL</span></div>
+      </div>
+      <svg class="flow-arrow" width="48" height="12" viewBox="0 0 48 12" aria-hidden="true"><line class="dash" x1="0" y1="6" x2="36" y2="6"/><path d="M36 1 L47 6 L36 11 Z" fill="var(--primary)"/></svg>
+      <div class="wf-col">
+        <span class="col-lbl">Data<br>Transformation</span>
+        <div class="wf-node"><div class="tile glass t-s3"><div class="tile-core"><img src="uploads/datalake/glyph_s3.svg" alt=""></div></div><span class="lbl">Raw</span></div>
+        <div class="wf-node"><div class="tile glass t-glue"><div class="tile-core"><img src="uploads/datalake/glyph_glue.svg" alt=""></div></div><span class="lbl">Glue ETL</span></div>
+      </div>
+      <svg class="flow-arrow" width="48" height="12" viewBox="0 0 48 12" aria-hidden="true"><line class="dash" x1="0" y1="6" x2="36" y2="6"/><path d="M36 1 L47 6 L36 11 Z" fill="var(--primary)"/></svg>
+      <div class="wf-col">
+        <span class="col-lbl">Data<br>Enrichment</span>
+        <div class="wf-node"><div class="tile glass t-s3"><div class="tile-core"><img src="uploads/datalake/glyph_s3.svg" alt=""></div></div><span class="lbl">Staged</span></div>
+        <div class="wf-node"><div class="tile glass t-glue"><div class="tile-core"><img src="uploads/datalake/glyph_glue.svg" alt=""></div></div><span class="lbl">Glue ETL</span></div>
+      </div>
+      <svg class="flow-arrow" width="48" height="12" viewBox="0 0 48 12" aria-hidden="true"><line class="dash" x1="0" y1="6" x2="36" y2="6"/><path d="M36 1 L47 6 L36 11 Z" fill="var(--primary)"/></svg>
+      <div class="wf-col">
+        <span class="col-lbl">Processed<br>Data</span>
+        <div class="wf-node"><div class="tile glass t-s3"><div class="tile-core"><img src="uploads/datalake/glyph_s3.svg" alt=""></div></div><span class="lbl">Analytic</span></div>
+        <div class="wf-node"><div class="tile glass t-athena"><div class="tile-core"><img src="uploads/datalake/glyph_athena.svg" alt=""></div></div><span class="lbl">Athena</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3 : Data Analysis -->
+  <div class="wf-row">
+    <div class="wf-text reveal">
+      <h3 class="step-label">Data Analysis</h3>
+      <p class="c3">The processed data is stored in the Analysis Bucket. Through Amazon Athena, analytical tools like Tableau and Power BI can query and access this data for in-depth business analysis.</p>
+    </div>
+    <div class="wf-diagram reveal d1">
+      <div class="bi-logos">
+        <a class="bi" href="https://www.tableau.com" target="_blank" rel="noopener" title="Tableau"><img src="uploads/datalake/logo_tableau.svg" alt="Tableau" style="width:180px"></a>
+        <a class="bi" href="https://powerbi.microsoft.com" target="_blank" rel="noopener" title="Power BI"><img src="uploads/datalake/logo_powerbi.svg" alt="Microsoft Power BI" style="width:150px"></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Sec8 — Solution summary ================= -->
+<section class="sec8" id="solution">
+  <div class="sec8-photo" aria-hidden="true"></div>
+  <div class="sec8-bg" aria-hidden="true">
+    <div class="map"></div>
+    <div class="tint"></div>
+  </div>
+  <div class="sec8-content">
+    <h2 class="t2 reveal">Enhancing Business Intelligence<br>through a Secure <span class="grad-text">Data Lake</span> Solution</h2>
+    <p class="c2 reveal d1">This Data Lake solution consolidated multiple systems, centralizing data access and analysis. It uses AWS Lambda and Glue for de-identification, ensuring privacy and compliance. Ultimately, this allows the client to efficiently analyze data with tools like Tableau and Power BI, enhancing decision-making and operational efficiency.</p>
+  </div>
+</section>
+
+</div><!-- /page-bg -->
+
+<!-- ================= Voices ================= -->
+<section class="voices" id="voices">
+  <div class="voices-bg" aria-hidden="true"></div>
+  <div class="voices-inner">
+    <h2 class="reveal">Voices of<br>our customers</h2>
+    <div class="quote-card reveal d1">
+      <img class="qmark" src="uploads/datalake/quote.svg" alt="" aria-hidden="true">
+      <blockquote>The BCT team showed a great balance between app development while ensuring the app was developed with real life adaptation.</blockquote>
+      <div>
+        <p class="q-name">Rasmus Yu Limschou</p>
+        <p class="q-role">Global Head of Digital Transformation, Giant Group</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Let's connect ================= -->
+<!-- ── OUR WORKS ── -->
+<section class="our-works" id="works">
+  <div class="works-inner">
+    <div class="works-header reveal">
+      <div>
+        <h2 class="works-title">Our works</h2>
+        <p class="works-sub">We design systems and experiences that elevate how people connect, work, and grow.</p>
+      </div>
+      <a href="BCT Taipei Dark.html#cases" class="works-view-all" style="display:none">View all projects &rarr;</a>
+    </div>
+    <div class="cases-grid reveal">
+      <a class="case-card" href="https://dev.bct-nova.net/" target="_blank" rel="noopener noreferrer">
+        <div class="case-img"><img src="uploads/NOVA.png" alt="NOVA Platform"></div>
+        <div class="case-info">
+          <div class="case-tag">AI &middot; Web</div>
+          <div class="case-name">NOVA</div>
+          <span class="case-go">Explore more &rarr;</span>
+        </div>
+      </a>
+      <div class="cases-right">
+        <a class="case-card" href="fitting.html" style="text-decoration:none;display:flex;flex-direction:column;">
+          <div class="case-img" style="min-height:150px"><img src="assets/case_dcf.png" alt="Dynamic Cycling Fit" loading="lazy"></div>
+          <div class="case-info">
+            <div class="case-tag">Fitness &amp; Health &middot; App</div>
+            <div class="case-name">Dynamic Cycling Fit</div>
+            <span class="case-go">Explore more &rarr;</span>
+          </div>
+        </a>
+        <a class="case-card" href="../flir/flir.html" style="text-decoration:none;display:flex;flex-direction:column;">
+          <div class="case-img" style="min-height:150px"><img src="uploads/FLIR.svg" alt="FLIR" loading="lazy"></div>
+          <div class="case-info">
+            <div class="case-tag">Digital Sensors &middot; App</div>
+            <div class="case-name">FLIR</div>
+            <span class="case-go">Explore more &rarr;</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<script>
+/* ============================================================
+   Hero — build drifting icon rows
+   ============================================================ */
+(function buildIconField(){
+  var field = document.getElementById('iconField');
+  var glyphs = {
+    s3:    'uploads/datalake/glyph_s3.svg',
+    glue:  'uploads/datalake/glyph_glue.svg',
+    lambda:'uploads/datalake/glyph_lambda.svg',
+    athena:'uploads/datalake/glyph_athena.svg',
+    db:    'uploads/datalake/glyph_db.svg'
+  };
+  // src tile renders as a colored chip without glyph (POS-style source)
+  var baseRows = [
+    ['src','db','s3','lambda','glue','db','lambda','s3','db','lambda','src','glue','s3','lambda','db','src'],
+    ['lambda','src','glue','db','s3','src','s3','db','athena','db','lambda','src','glue','s3','lambda','glue'],
+    ['athena','db','s3','athena','lambda','db','athena','lambda','db','s3','glue','athena','src','lambda','db','s3'],
+    ['src','glue','s3','lambda','glue','src','db','s3','lambda','glue','athena','db','s3','src','lambda','glue'],
+    ['glue','s3','athena','db','src','glue','db','lambda','s3','athena','glue','s3','db','lambda','src','athena']
+  ];
+  // Each tile is exactly 120px (88px width + 32px margin-right).
+  // Doubling the set and translating -50% moves exactly one set's width → seamless.
+  // 16 tiles × 120px = 1920px covers any screen without gaps.
+  baseRows.forEach(function(row, i){
+    var el = document.createElement('div');
+    el.className = 'icon-row' + (i % 2 ? ' rev' : '');
+    el.style.animationDuration = (60 + i * 8) + 's';
+    var html = '';
+    [0,1].forEach(function(){
+      row.forEach(function(t){
+        if (t === 'src') {
+          html += '<div class="tile glass t-src"><div class="tile-core"><span style="font-size:13px">SRC</span></div></div>';
+        } else {
+          html += '<div class="tile glass t-' + t + '"><div class="tile-core"><img src="' + glyphs[t] + '" alt="" loading="lazy"></div></div>';
+        }
+      });
+    });
+    el.innerHTML = html;
+    field.insertBefore(el, field.firstChild.nextSibling);
+  });
+})();
+
+/* ============================================================
+   Sec3 — generate layered wave paths
+   ============================================================ */
+(function buildWaves(){
+  var g = document.getElementById('waveGroup');
+  var paths = '';
+  var N = 14;
+  for (var i = 0; i < N; i++){
+    var yBase = 200 + i * 6;
+    var amp   = 36 + i * 3;
+    var phase = i * 18;
+    var d = 'M-20 ' + yBase;
+    for (var x = 0; x <= 660; x += 60){
+      var y1 = yBase + Math.sin((x + phase) / 95) * amp;
+      var y2 = yBase + Math.sin((x + 60 + phase) / 95) * amp;
+      d += ' C ' + (x + 20) + ' ' + y1.toFixed(1) + ', ' + (x + 40) + ' ' + y2.toFixed(1) + ', ' + (x + 60) + ' ' + y2.toFixed(1);
+    }
+    paths += '<path d="' + d + '" style="animation:waveShift ' + (7 + i * .6) + 's ease-in-out infinite alternate;animation-delay:-' + i * .4 + 's"/>';
+  }
+  g.innerHTML = paths;
+  var style = document.createElement('style');
+  style.textContent = '@keyframes waveShift{from{transform:translateY(-12px)}to{transform:translateY(12px)}}';
+  document.head.appendChild(style);
+})();
+
+/* ============================================================
+   Reveal on scroll
+   ============================================================ */
+(function(){
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:.18});
+  document.querySelectorAll('.reveal,.check-item').forEach(function(el){ io.observe(el); });
+})();
+
+/* ============================================================
+   Sec2 — scroll-driven chip convergence into the database tile
+   ============================================================ */
+(function(){
+  var stage = document.getElementById('sec2Stage');
+  var db    = document.getElementById('sec2Db');
+  var chips = Array.prototype.slice.call(stage.querySelectorAll('.chip'));
+  var ticking = false;
+
+  function layout(){
+    var rect = stage.getBoundingClientRect();
+    var vh = window.innerHeight;
+    // progress 0 → 1 while the section travels through the viewport
+    var p = (vh * 0.85 - rect.top) / (rect.height * 0.75);
+    p = Math.max(0, Math.min(1, p));
+    var ease = p * p * (3 - 2 * p); // smoothstep
+
+    var dbX = rect.width / 2;
+    var dbY = 142 + 40;
+
+    chips.forEach(function(chip){
+      var sx = parseFloat(chip.dataset.x) / 100 * rect.width;
+      var sy = parseFloat(chip.dataset.y) / 100 * rect.height;
+      var r  = parseFloat(chip.dataset.r);
+      var cx = sx + (dbX - sx - 36) * ease;
+      var cy = sy + (dbY - sy - 36) * ease;
+      var sc = 1 - 0.55 * ease;
+      var op = ease < 0.75 ? 1 : Math.max(0, 1 - (ease - 0.75) / 0.2);
+      chip.style.transform = 'translate(' + cx + 'px,' + cy + 'px) rotate(' + (r * (1 - ease)) + 'deg) scale(' + sc + ')';
+      chip.style.opacity = op;
+    });
+    db.classList.toggle('absorb', ease > 0.8);
+    ticking = false;
+  }
+  function onScroll(){
+    if (!ticking){ ticking = true; requestAnimationFrame(layout); }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  layout();
+})();
+
+/* ============================================================
+   Nav scroll + dropdown + back-to-top + smooth anchor buttons
+   ============================================================ */
+(function(){
+  var nav   = document.getElementById('nav');
+  // Nav bg on scroll
+  window.addEventListener('scroll', function(){
+    var scrolled = window.scrollY > 80;
+    nav.classList.toggle('scrolled', scrolled);
+    document.documentElement.style.setProperty('--nav-bg', scrolled ? 'rgba(4,5,13,0.85)' : 'rgba(4,5,13,0.6)');
+  }, {passive:true});
+
+  // Work dropdown
+  var navWorkWrap = document.getElementById('navWorkWrap');
+  navWorkWrap.querySelector('.nav-work-btn').addEventListener('click', function(e){
+    e.stopPropagation();
+    var open = navWorkWrap.classList.toggle('open');
+    navWorkWrap.querySelector('.nav-work-btn').setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', function(){
+    navWorkWrap.classList.remove('open');
+    navWorkWrap.querySelector('.nav-work-btn').setAttribute('aria-expanded', false);
+  });
+
+document.querySelectorAll('[data-scroll]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var target = document.querySelector(btn.dataset.scroll);
+      if (target) target.scrollIntoView({behavior:'smooth'});
+    });
+  });
+
+  document.querySelector('.btn-grad').addEventListener('click', function(){
+    window.location.href = 'mailto:hello@bct.com.tw?subject=Project%20Inquiry';
+  });
+})();
+</script>
+
+<!-- ================= Footer ================= -->
+<footer data-orig-hidden style="display:none!important">
+  <div class="footer-grid">
+    <div>
+      <div class="f-brand"><img src="uploads/ic_bct_logo_white.png" alt="Bahwan CyberTek" style="height:28px;width:auto;opacity:0.7"></div>
+      <p class="f-desc">Global digital transformation. Delivering innovative technology since 1999.</p>
+    </div>
+    <div class="f-col"><h4>Services</h4><ul class="f-links">
+      <li><a href="BCT Taipei Dark.html#services">AI Application</a></li>
+      <li><a href="BCT Taipei Dark.html#services">Data Platform</a></li>
+      <li><a href="BCT Taipei Dark.html#services">Cloud Services</a></li>
+      <li><a href="BCT Taipei Dark.html#services">UI / UX Design</a></li>
+      <li><a href="BCT Taipei Dark.html#services">Mobile &amp; Web Apps</a></li>
+    </ul></div>
+    <div class="f-col"><h4>Company</h4><ul class="f-links">
+      <li><a href="BCT Taipei Dark.html#about">About Us</a></li>
+      <li><a href="BCT Taipei Dark.html#process">Our Process</a></li>
+      <li><a href="BCT Taipei Dark.html#cases">Case Studies</a></li>
+      <li style="display:none"><a href="#">Careers</a></li>
+    </ul></div>
+    <div class="f-col"><h4>Contact</h4><ul class="f-links">
+      <li><a href="#">hello@bcttaipei.com</a></li>
+      <li><a href="#">LinkedIn</a></li>
+      <li><a href="#">Taipei, Taiwan</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-btm">
+    <div class="f-copy">© 2026 BCT Taipei. All rights reserved.</div>
+    <div class="f-parent">Bahwan CyberTek Group</div>
+  </div>
+</footer>
+<footer id="bctftr">© 2026 BCT Taipei. All rights reserved. · Bahwan CyberTek Group</footer>
+</body>
+</html>

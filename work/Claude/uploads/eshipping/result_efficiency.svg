@@ -1,0 +1,43 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_235_16035)">
+<circle cx="120" cy="120" r="120" fill="white"/>
+<rect x="56.5" y="104.5" width="127" height="159" rx="0.5" fill="url(#paint0_linear_235_16035)" stroke="#E2EAF0"/>
+<rect opacity="0.6" x="68" y="116" width="104" height="32" rx="1" fill="#E2EAF0"/>
+<rect opacity="0.6" x="100" y="160" width="72" height="2" rx="1" fill="#E2EAF0"/>
+<rect opacity="0.6" x="68" y="170" width="104" height="2" rx="1" fill="#E2EAF0"/>
+<rect opacity="0.6" x="68" y="180" width="104" height="2" rx="1" fill="#E2EAF0"/>
+<rect opacity="0.6" x="68" y="190" width="104" height="2" rx="1" fill="#E2EAF0"/>
+<rect opacity="0.6" x="68" y="200" width="104" height="2" rx="1" fill="#E2EAF0"/>
+<rect opacity="0.6" x="68" y="210" width="104" height="2" rx="1" fill="#E2EAF0"/>
+<g filter="url(#filter0_d_235_16035)">
+<rect x="96" y="134" width="48" height="48" rx="24" fill="white"/>
+<rect x="96.5" y="134.5" width="47" height="47" rx="23.5" stroke="#E2EAF0"/>
+</g>
+<path d="M164 84L120 40L76 84H98V128H142V84H164Z" fill="url(#paint1_linear_235_16035)"/>
+<path d="M132 150L116 166L108 158" stroke="#005FB8" stroke-width="4" stroke-linejoin="round"/>
+</g>
+<defs>
+<filter id="filter0_d_235_16035" x="84" y="130" width="72" height="72" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feMorphology radius="4" operator="erode" in="SourceAlpha" result="effect1_dropShadow_235_16035"/>
+<feOffset dy="8"/>
+<feGaussianBlur stdDeviation="8"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.0705882 0 0 0 0 0.0705882 0 0 0 0 0.0705882 0 0 0 0.05 0"/>
+<feBlend mode="multiply" in2="BackgroundImageFix" result="effect1_dropShadow_235_16035"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_235_16035" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_235_16035" x1="120" y1="104" x2="120" y2="494.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="#E2EAF0"/>
+</linearGradient>
+<linearGradient id="paint1_linear_235_16035" x1="120" y1="40" x2="120" y2="128" gradientUnits="userSpaceOnUse">
+<stop stop-color="#0E8FEA"/>
+<stop offset="1" stop-color="#8CC6F4" stop-opacity="0"/>
+</linearGradient>
+<clipPath id="clip0_235_16035">
+<rect width="240" height="240" rx="120" fill="white"/>
+</clipPath>
+</defs>
+</svg>
