@@ -286,9 +286,10 @@
   /* case studies — NOVA hero appears big, grid of projects materialises around it (ref 0:30–0:34) */
   /* NOVA reveals big & centred, shrinks in place, then the six project cards burst out
      from behind it to surround it on all sides (ref 0:30→0:34) */
-  #cases2{position:relative;height:200vh}
+  #cases2{position:relative;height:150vh}
   #cases2 .c2pin{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden}
   #cases2 .wrap{width:min(1180px,92vw);margin:0 auto;position:relative;text-align:center}
+  #cases2 .lead{margin-inline:auto}   /* the 62ch lead is a left-hugging block by default; centre it under the h2 */
   .casestage{position:relative;height:min(64vh,560px);margin-top:20px}
   .cgrid{display:contents}                          /* cards become direct satellites of casestage */
   .chero{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:330px;text-align:left;
@@ -320,8 +321,10 @@
   .ccard.c-ship{background:#93c07f}
   .ccard.c-bike{background:#e3c065}
   .ccard.c-acct{background:#e493a4;color:#fff}
-  /* narrow / portrait: no ring choreography — plain stacked NOVA + 2-col grid (threshold 1100 so more windows still get the ring) */
-  @media (max-width:1099.98px), (orientation:portrait){
+  /* narrow / portrait: no ring choreography — plain stacked NOVA + 2-col grid.
+     Threshold matches #svc's stacked breakpoint (1279.98) so cases2 never keeps the tall
+     150vh ring while the rest of Act 2 is already stacked — that mismatch left a big empty gap. */
+  @media (max-width:1279.98px), (orientation:portrait){
     #cases2{height:auto!important}
     #cases2 .c2pin{position:static!important;height:auto;display:block;padding:60px 0;overflow:visible}
     #cases2 .casestage{position:static;height:auto;margin-top:22px}
@@ -651,7 +654,7 @@
     border-bottom:1px solid rgba(255,255,255,.35);padding-bottom:2px;transition:color .2s,border-color .2s}
   #cta2 .again:hover{color:#fff;border-color:#fff}
   #cta2 a:focus-visible{outline-color:#fff}
-  footer{border-top:1px solid #e6e1d8;padding:22px 6vw 26px;font-size:14px;color:#4a5462}
+  footer{border-top:1px solid #e6e1d8;padding:13px 6vw;font-size:14px;color:#4a5462}
   footer .cols{max-width:1080px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between}
   footer h4{font-size:13px;letter-spacing:.08em;color:var(--ink);margin-bottom:10px}
   footer a{display:block;color:#4a5462;text-decoration:none;margin:6px 0}
@@ -1847,7 +1850,7 @@ document.querySelectorAll("#nav [data-target]").forEach(a=>{
   const hero=sec.querySelector(".chero");
   const cards=[...sec.querySelectorAll(".ccard")];
   if(!hero) return;
-  const wideLandscape = matchMedia("(min-width:1100px) and (orientation:landscape)").matches;
+  const wideLandscape = matchMedia("(min-width:1280px) and (orientation:landscape)").matches;   /* match the CSS stacked breakpoint + #svc's gate */
   if(MOBILE||REDUCE||!wideLandscape){ cards.forEach(c=>c.classList.add("in")); return; }  /* narrow/portrait: plain stacked grid */
   /* heading + subtitle: take them over from the .rv reveal so they arrive LAST, after the cards */
   const head=[...sec.querySelectorAll(".rv")];
@@ -1860,15 +1863,29 @@ document.querySelectorAll("#nav [data-target]").forEach(a=>{
     [-372,  30],[ 372,  30],   /* left, right */
     [-256, 216],[ 256, 216]    /* bottom-left, bottom-right */
   ];
-  /* NOVA entrance: the hero rise is SCROLL-LINKED — the big card peeks up from the
-     bottom as you reach Work, then rises to centre while shrinking as you scroll.
-     Once it's centred, the cards + heading play on a fixed ~1.4s timeline so they
-     never blow past before you look. Scrolling back up resets it so it replays. */
-  function applyHero(p){
-    const a=eO(clamp(p/0.5,0,1));                  /* rise over the first half of the pin */
-    const y=((1-a)*0.42*innerHeight).toFixed(1);   /* big & ~42vh low → centred */
-    const sc=(1.5-0.5*a).toFixed(3);               /* ×1.5 → ×1.0 */
-    hero.style.transform=`translate(-50%,-50%) translate(0,${y}px) scale(${sc})`;
+  /* NOVA reveal. Two phases:
+     APPROACH (section sliding up, scroll-linked) → the big card's TOP EDGE climbs from the very
+       bottom edge, a sliver at first, held large the whole way up (reads cleanly, never a clipped
+       mid-slab). natCenter is recovered from the live rect each frame (rect centre minus the
+       translate we applied) so it's correct whether the sticky pin is engaged or not.
+     DOCK (section reaches the pin) → a SELF-PLAYING ~1s timeline shrinks the card in place to its
+       natural centre and the six project cards burst out — it finishes on its own, no need to keep
+       scrolling. Scrolling back up above the pin resets it so it can replay. */
+  let heroY=0, heroS=1, docked=false, dockAnim=null;
+  function setHero(Y,S){ hero.style.transform=`translate(-50%,-50%) translate(0,${Y.toFixed(1)}px) scale(${S.toFixed(3)})`; heroY=Y; heroS=S; }
+  function applyHeroApproach(r){                   /* scroll-linked rise, held big */
+    const H=innerHeight, hr=hero.getBoundingClientRect();
+    const natCenter=(hr.top+hr.height/2)-heroY, baseH=hr.height/heroS;
+    const S=2.2;                                  /* held large the whole way up — only ever shrinks at the dock */
+    const top=H-(0.90*H)*Math.pow(clamp((H-r)/H,0,1),2.2);  /* slow start → only a little peeks early */
+    setHero((top+baseH*S/2)-natCenter, S);
+  }
+  function dockHero(){                             /* self-playing shrink in place → natural centre */
+    cancelAnimationFrame(dockAnim);
+    const sY=heroY, sS=heroS, t0=performance.now();
+    (function step(now){ const e=eO(clamp((now-t0)/1000,0,1));
+      setHero(sY+(0-sY)*e, sS+(1-sS)*e);
+      if(e<1) dockAnim=requestAnimationFrame(step); })(t0);
   }
   function applyReveal(k){
     cards.forEach((c,i)=>{
@@ -1881,9 +1898,8 @@ document.querySelectorAll("#nav [data-target]").forEach(a=>{
     const h=eO(clamp((k-0.72)/0.28,0,1));            /* heading + subtitle last */
     head.forEach(el=>{ el.style.opacity=h.toFixed(3); el.style.transform=`translateY(${((1-h)*18).toFixed(1)}px)`; });
   }
-  applyHero(0); applyReveal(0);
-  const targP=()=>{ const total=sec.offsetHeight-innerHeight; return total>0?clamp(-sec.getBoundingClientRect().top/total,0,1):0; };
-  let cp=0, raf=null, revealPlaying=false, revAnim=null;
+  applyHeroApproach(sec.getBoundingClientRect().top); applyReveal(0);
+  let raf=null, revAnim=null, lastR=null;
   function playReveal(){
     cancelAnimationFrame(revAnim);
     const t0=performance.now();
@@ -1891,14 +1907,38 @@ document.querySelectorAll("#nav [data-target]").forEach(a=>{
   }
   function loop(){
     raf=null;
-    const t=targP(); cp+=(t-cp)*0.18;
-    if(Math.abs(t-cp)>0.0015) raf=requestAnimationFrame(loop); else cp=t;
-    applyHero(cp);
-    if(cp>=0.5 && !revealPlaying){ revealPlaying=true; playReveal(); }
-    else if(cp<0.42 && revealPlaying){ revealPlaying=false; cancelAnimationFrame(revAnim); applyReveal(0); }
+    const r=Math.round(sec.getBoundingClientRect().top), H=innerHeight;
+    if(!docked){
+      if(r<=0){ docked=true; dockHero(); playReveal(); lastR=r; return; }  /* reached the pin → self-finish (shrink + cards) */
+      applyHeroApproach(r);
+      if(r<H && r!==lastR) raf=requestAnimationFrame(loop);        /* animate the rise only while actually moving */
+    }else if(r>H*0.12){                                            /* scrolled back up above the pin → reset to replay */
+      docked=false; cancelAnimationFrame(dockAnim); cancelAnimationFrame(revAnim);
+      applyReveal(0); applyHeroApproach(r);
+    }
+    lastR=r;
   }
   function kick(){ if(!raf) raf=requestAnimationFrame(loop); }
-  addEventListener("scroll",kick,{passive:true});
+  /* Assist: scroll DOWN into Work and stop just short of the pin → glide the last bit so the reveal
+     auto-plays on its own (no need to nudge it exactly onto the pin). Up-scroll never snaps, so you
+     can always leave. The reveal itself (shrink + cards) is self-playing once the pin is reached. */
+  let snapT=null, prevY=scrollY;
+  function onScroll(){
+    const down=scrollY>prevY; prevY=scrollY;
+    kick();
+    clearTimeout(snapT);
+    if(docked||!down) return;
+    snapT=setTimeout(()=>{
+      if(docked) return;
+      const r=sec.getBoundingClientRect().top, H=innerHeight;
+      if(r>0 && r<H*0.40){                       /* parked, mostly risen → finish the approach for them */
+        const target=Math.round(scrollY+r);
+        if(lenis&&lenis.scrollTo) lenis.scrollTo(target,{duration:0.5});
+        else scrollTo({top:target,behavior:"smooth"});
+      }
+    },150);
+  }
+  addEventListener("scroll",onScroll,{passive:true});
   addEventListener("resize",kick);
   new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting) kick(); })).observe(sec);
   kick();
