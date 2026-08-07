@@ -578,6 +578,10 @@
 <link rel="stylesheet" href="../../bct-system.css">
 <script src="../../bct-system.js" defer></script>
 <style id="bctpage-css">
+/* "Start from a tablet" (SEC2 h3) matches "How we design" (.sec3-title) */
+.sec2-slide h3{font-size:36px!important;font-weight:700!important;line-height:1.2!important}
+/* deliver photos: square corners to match the rest of the design language */
+.deliver-img-main,.deliver-img-small,.deliver-img-main img,.deliver-img-small img{border-radius:0!important}
 /* sec4 mockup: cover the wrap's gradient edge (sub-pixel seam showed as a white line) */
 .sec4-ipad-wrap img.ipad-img{height:calc(100% + 2px)!important;width:calc(100% + 2px)!important;margin:-1px!important}
 
@@ -586,6 +590,7 @@
 /* fitting.html — mobile layout fixes (stack / scale / relocate) */
 @media(max-width:768px){
   /* SEC2 body copy calmer */
+  .sec2-slide h3{font-size:30px!important}
   .sec2-slide p{font-size:16px!important;line-height:1.6!important}
   /* DELIVER: same 6vw gutter as every other section (was stuck at the desktop 80px) */
   .deliver-inner{padding:0 6vw!important}
