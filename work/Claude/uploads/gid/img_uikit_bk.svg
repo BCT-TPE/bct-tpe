@@ -1,0 +1,34 @@
+<svg width="1440" height="780" viewBox="0 0 1440 780" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1440" height="780" fill="#3E3E3E"/>
+<g id="Desktop" clip-path="url(#clip0_0_1)">
+<rect width="1440" height="7341" transform="translate(0 -3576)" fill="white"/>
+<g id="Case Study - Giant ID_Mockup B">
+<rect width="1440" height="7341" transform="translate(0 -3576)" fill="white"/>
+<g id="uikit">
+<g id="img_uikit_bk" clip-path="url(#clip1_0_1)">
+<g id="btn_avatar_male">
+<g clip-path="url(#clip2_0_1)">
+<rect y="-910" width="1920" height="1920" rx="960" fill="#7E9EEB"/>
+<path id="Union" d="M451.659 873.498C305.005 794.358 109.616 602.989 -40.3393 236.757C-223.13 -209.67 -136.812 -522.369 -70.8044 -622.916C167.839 -723.462 693.87 -921.538 888.847 -909.473C950.561 -905.654 921.443 -889.263 859.117 -854.18C675.307 -750.711 202.659 -484.653 919.312 101.022C946.381 123.144 1010.89 192.764 1010.89 192.764C1010.89 192.764 1163.51 343.5 1163.51 527.382C1163.51 768.939 965.732 964.759 721.764 964.759C620.034 964.759 526.336 930.712 451.659 873.498Z" fill="url(#paint0_linear_0_1)"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_1" x1="1013.82" y1="734.796" x2="90.9582" y2="-335.318" gradientUnits="userSpaceOnUse">
+<stop stop-color="#005EB8"/>
+<stop offset="1" stop-color="#005EB8" stop-opacity="0"/>
+</linearGradient>
+<clipPath id="clip0_0_1">
+<rect width="1440" height="7341" fill="white" transform="translate(0 -3576)"/>
+</clipPath>
+<clipPath id="clip1_0_1">
+<rect width="1440" height="780" fill="white"/>
+</clipPath>
+<clipPath id="clip2_0_1">
+<rect y="-910" width="1920" height="1920" rx="960" fill="white"/>
+</clipPath>
+</defs>
+</svg>
