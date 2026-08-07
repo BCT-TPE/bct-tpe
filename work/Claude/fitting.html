@@ -578,6 +578,10 @@
 <link rel="stylesheet" href="../../bct-system.css">
 <script src="../../bct-system.js" defer></script>
 <style id="bctpage-css">
+/* SEC2 iPad: fill the frame interior with near-black so letterboxing/sub-pixel
+   gaps between the frame PNG and the video read as bezel, not white page. */
+.ipad-device::before{content:'';position:absolute;inset:2.5% 3.2%;background:#0c0c0c;border-radius:4%/6%;z-index:0}
+.sec2-video{background:#0c0c0c}
 /* "Start from a tablet" (SEC2 h3) matches "How we design" (.sec3-title) */
 .sec2-slide h3{font-size:36px!important;font-weight:700!important;line-height:1.2!important}
 /* deliver photos: square corners to match the rest of the design language */
