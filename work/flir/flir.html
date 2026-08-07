@@ -637,9 +637,14 @@
   /* FEATURES: phone image on top (fixed frame width so it can't collapse), copy below */
   .feat-anim-layout{grid-template-columns:1fr!important;gap:22px!important}
   .feat-phone-anim{order:-1!important;width:100%!important;max-width:none!important;margin:0!important}
-  .feat-svg-frame{width:250px!important;margin:0 auto!important}
-  .feat-progress-track{width:250px!important;margin-left:auto!important;margin-right:auto!important}
+  .feat-svg-frame{width:330px!important;max-width:88vw!important;margin:0 auto!important}
+  .feat-progress-track{display:none!important}
   .feat-steps-info{order:0!important}
+  /* active step flows statically so the dots hug the copy (no 220px reserved box) */
+  .feat-steps-body{min-height:0!important}
+  .feat-step-item{position:static!important;display:none!important}
+  .feat-step-item.active{display:block!important;opacity:1!important;transform:none!important}
+  .feat-step-dots{margin-top:16px!important}
   /* DOWNLOADS: stack; avatar above text */
   .stats-combined{grid-template-columns:1fr!important;min-height:0!important}
   .sq-left,.sq-right{padding-left:6vw!important;padding-right:6vw!important;text-align:center}
