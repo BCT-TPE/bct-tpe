@@ -1,0 +1,122 @@
+/* ============================================================================
+   BCT Taipei — shared design system for the case-study pages.
+   Source of truth: the homepage (index.html). The homepage does NOT link this
+   file; it is the reference the tokens are extracted from. NOVA (BCT Taipei
+   Dark.html) intentionally does not link it either.
+
+   Layers:
+   1. Tokens            — colors / font stack / gutter from the homepage
+   2. Shared header     — #bctnav (clone of the homepage nav; .on-dark variant)
+   3. Shared footer     — #bctftr (+ dark variant via body.bct-dark)
+   4. Font unification  — General Sans everywhere (webfont loaded per page)
+   5. Type scale        — opt-in via body.bct-scale (h1 40 / h2 30 / h3 22 /
+                          h4-6 18 / body 16); pages with hand-tuned sizes
+                          (fitting) omit the class
+   6. Mobile safety     — overflow guard + known 2-col stacks
+   ========================================================================== */
+
+/* ---- 1. Tokens (from the homepage) ---- */
+:root{
+  --bct-blue:#0a7bc4;
+  --bct-blue-deep:#0b5a91;
+  --bct-ink:#1a1a1a;
+  --bct-paper:#f7f4ef;
+  --bct-muted:#5d6673;
+  --bct-nav-text:#4a5462;
+  --bct-gutter:6vw;
+  --bct-font:"General Sans",-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,"PingFang TC","Noto Sans TC",sans-serif;
+  --bct-ease:cubic-bezier(.22,.61,.36,1);
+}
+
+/* ---- 2. Shared header (homepage #nav 1:1) ---- */
+#bctnav{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:auto!important;display:block!important;
+  z-index:99999;transform:none!important;filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  perspective:none!important;will-change:auto!important;contain:none!important;
+  margin:0!important;border-radius:0!important;width:auto!important;border:0!important;box-shadow:none!important;
+  max-width:none!important;min-width:0!important;height:auto!important;padding:20px var(--bct-gutter);background:transparent!important;
+  font-family:var(--bct-font)}
+#bctnav,#bctnav *{box-sizing:border-box}
+#bctnav .bar{display:flex;align-items:center;gap:18px;position:relative;z-index:2}
+#bctnav a{font-family:inherit}
+#bctnav .logo{display:block}
+#bctnav .logo img{height:32px;width:auto;display:block}
+#bctnav .burger{width:28px;height:22px;display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:0;flex-shrink:0}
+#bctnav .burger span{display:block;height:2px;width:24px;background:var(--bct-ink);border-radius:2px;transition:transform .3s var(--bct-ease),opacity .2s var(--bct-ease)}
+#bctnav.open .burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+#bctnav.open .burger span:nth-child(2){opacity:0}
+#bctnav.open .burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+#bctnav .menu{display:flex;gap:36px;margin:0 auto}
+#bctnav .menu>a,#bctnav .droptrig{font-size:14px;font-weight:600;color:var(--bct-nav-text);text-decoration:none;transition:color .2s var(--bct-ease)}
+#bctnav .menu>a:hover,#bctnav .droptrig:hover{color:var(--bct-ink)}
+#bctnav .navdrop{position:relative;display:flex;align-items:center}
+#bctnav .droptrig{display:inline-flex;align-items:center;gap:5px;cursor:pointer}
+#bctnav .caret{display:block;transition:transform .28s var(--bct-ease)}
+#bctnav .navdrop:hover .caret,#bctnav .navdrop:focus-within .caret{transform:rotate(180deg)}
+#bctnav .dropmenu{position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%) translateY(-8px);min-width:236px;
+  background:rgba(255,255,255,.72);backdrop-filter:blur(22px) saturate(1.6);-webkit-backdrop-filter:blur(22px) saturate(1.6);
+  border:1px solid rgba(255,255,255,.7);border-radius:20px;padding:11px;box-shadow:0 24px 60px rgba(20,40,60,.16);
+  display:flex;flex-direction:column;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .26s var(--bct-ease),transform .32s var(--bct-ease),visibility .26s}
+#bctnav .dropmenu::before{content:"";position:absolute;top:-16px;left:0;right:0;height:16px}
+#bctnav .navdrop:hover .dropmenu,#bctnav .navdrop:focus-within .dropmenu{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+#bctnav .dropmenu a{color:#3b4552;font-size:13px;font-weight:500;text-align:center;padding:10px 18px;border-radius:12px;white-space:nowrap;text-decoration:none;transition:color .18s var(--bct-ease),background .18s var(--bct-ease)}
+#bctnav .dropmenu a:hover{color:var(--bct-blue-deep);background:rgba(20,40,60,.06)}
+#bctnav .cta{font-size:12.5px;font-weight:700;color:#fff;background:var(--bct-blue);text-decoration:none;padding:7px 15px;border-radius:999px;white-space:nowrap;transition:transform .18s var(--bct-ease),box-shadow .18s var(--bct-ease)}
+#bctnav .cta:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(10,123,196,.35)}
+#bctnav .navmenu{display:none}
+/* dark-page theme: white bar text/logo */
+#bctnav.on-dark .menu>a,#bctnav.on-dark .droptrig{color:rgba(255,255,255,.82)}
+#bctnav.on-dark .menu>a:hover,#bctnav.on-dark .droptrig:hover{color:#fff}
+#bctnav.on-dark .burger span{background:#fff}
+@media(max-width:760px){
+  #bctnav .menu{display:none}
+  #bctnav .burger{display:flex}
+  #bctnav .bar{justify-content:space-between}
+  #bctnav .logo{position:absolute;left:50%;transform:translateX(-50%)}
+  #bctnav .navmenu{display:flex;position:fixed;inset:0;z-index:1;background:var(--bct-paper);flex-direction:column;justify-content:flex-start;gap:2px;padding:15vh 10vw 0;opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .35s var(--bct-ease),transform .4s var(--bct-ease),visibility .35s}
+  #bctnav.open .navmenu{opacity:1;visibility:visible;transform:none}
+  #bctnav .navmenu>a,#bctnav .nm-worktrig{font-size:clamp(44px,11vw,72px);font-weight:700;color:var(--bct-ink);text-decoration:none;letter-spacing:-.02em;line-height:1.28;width:max-content;background:none;border:none;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:14px}
+  #bctnav .navmenu>a:hover,#bctnav .nm-worktrig:hover{color:var(--bct-blue)}
+  #bctnav .nm-work{display:flex;flex-direction:column}
+  #bctnav .nm-caret{transition:transform .3s var(--bct-ease)}
+  #bctnav .nm-work.open .nm-caret{transform:rotate(180deg)}
+  #bctnav .nm-sub{display:flex;flex-direction:column;max-height:0;overflow:hidden;padding-left:2px;transition:max-height .45s var(--bct-ease)}
+  #bctnav .nm-work.open .nm-sub{max-height:70vh}
+  #bctnav .nm-sub a{font-size:clamp(16px,4.4vw,21px);font-weight:500;color:#5a6470;text-decoration:none;padding:8px 0;line-height:1.2}
+  #bctnav .nm-sub a:hover{color:var(--bct-blue)}
+  /* dark-page theme: dark full-screen overlay + white items */
+  #bctnav.on-dark .navmenu{background:#0b0e16}
+  #bctnav.on-dark .navmenu>a,#bctnav.on-dark .nm-worktrig{color:#fff}
+  #bctnav.on-dark .nm-sub a{color:rgba(255,255,255,.62)}
+}
+
+/* ---- 3. Shared footer (homepage footer; !important so page footer{} rules can't restyle it) ---- */
+#bctftr{background:var(--bct-paper)!important;border:0!important;border-top:1px solid #e6e1d8!important;
+  padding:13px var(--bct-gutter)!important;margin:0!important;text-align:center!important;color:var(--bct-muted)!important;
+  font-size:12.5px!important;line-height:1.6!important;letter-spacing:normal!important;font-weight:400!important;
+  width:auto!important;max-width:none!important;position:static!important;display:block!important;
+  font-family:var(--bct-font)!important}
+#bctftr *{color:inherit!important;font:inherit!important;background:none!important;margin:0!important;padding:0!important}
+/* dark-header pages: dark footer to match */
+body.bct-dark #bctftr{background:#1a1a1a!important;border-top:1px solid #2a2a2a!important;color:rgba(255,255,255,.72)!important}
+
+/* ---- 4. Font unification (webfont link lives in each page's <head>) ---- */
+html body{font-family:var(--bct-font)!important}
+html body *:not(svg):not(svg *){font-family:var(--bct-font)!important}
+
+/* ---- 5. Type scale (opt-in) ---- */
+body.bct-scale h1{font-size:40px!important;line-height:1.15!important}
+body.bct-scale h2{font-size:30px!important;line-height:1.2!important}
+body.bct-scale h3{font-size:22px!important;line-height:1.3!important}
+body.bct-scale h4,body.bct-scale h5,body.bct-scale h6{font-size:18px!important;line-height:1.35!important}
+body.bct-scale p,body.bct-scale li{font-size:16px!important;line-height:1.6!important}
+/* the shared chrome keeps its own sizes regardless of the scale */
+#bctnav .menu>a,#bctnav .droptrig{font-size:14px!important}
+#bctnav .cta{font-size:12.5px!important}
+#bctftr{font-size:12.5px!important}
+
+/* ---- 6. Mobile safety ---- */
+@media(max-width:768px){
+  html,body{overflow-x:hidden!important;max-width:100%!important}
+  body pre{max-width:100%!important;overflow-x:auto!important}
+  .voices-inner{grid-template-columns:1fr!important}
+}
