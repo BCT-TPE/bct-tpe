@@ -578,18 +578,24 @@
 <link rel="stylesheet" href="../../bct-system.css">
 <script src="../../bct-system.js" defer></script>
 <style id="bctpage-css">
+/* sec4 mockup: cover the wrap's gradient edge (sub-pixel seam showed as a white line) */
+.sec4-ipad-wrap img.ipad-img{height:calc(100% + 2px)!important;width:calc(100% + 2px)!important;margin:-1px!important}
+
 /* "Deliver..." + "Voices..." headings match the How-we-design heading style */
 .deliver-title,.voices h2{font-weight:700!important;letter-spacing:-.01em!important;line-height:1.15!important}
 /* fitting.html — mobile layout fixes (stack / scale / relocate) */
 @media(max-width:768px){
   /* SEC2 body copy calmer */
   .sec2-slide p{font-size:16px!important;line-height:1.6!important}
+  /* DELIVER: same 6vw gutter as every other section (was stuck at the desktop 80px) */
+  .deliver-inner{padding:0 6vw!important}
   /* SEC3 "How we design": stack text over the UI-kit / demo images */
   .sec3{padding:56px 6vw!important}
   .sec3-inner{display:block!important;column-gap:0!important}
   .sec3-text{margin-bottom:26px}
   .sec3-title{font-size:30px!important;line-height:1.15!important}
-  .uikit-img,.demos-img{width:100%!important;margin-top:18px}
+  .uikit-img{width:100%!important;margin-top:18px}
+  .demos-img{width:100%!important;margin-top:48px}
   /* SEC4 technology: stack the two columns, calm the type down */
   .sec4-top{display:block!important;min-height:0!important}
   .sec4-right-col{padding:52px 6vw 40px!important}
@@ -780,7 +786,7 @@
 
   <div class="sec4-bottom">
     <div class="sec4-ipad-wrap">
-      <img class="ipad-img" src="uploads/fitting/img_dcf_mockup.webp" alt="iPad device" loading="lazy" decoding="async">
+      <img class="ipad-img" src="uploads/fitting/img_dcf_mockup.webp" alt="iPad device" fetchpriority="high">
     </div>
     <div class="sec4-joint-wrap">
       <video src="uploads/fitting/fitting_joint.mp4" autoplay loop muted playsinline></video>
