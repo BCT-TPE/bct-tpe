@@ -124,7 +124,7 @@
     }
     .hero-bg {
       position: absolute; inset: 0;
-      background: url('uploads/fitting/fitting_hero_bg.png') center center / cover no-repeat;
+      background: url('uploads/fitting/fitting_hero_bg.webp') center center / cover no-repeat;
     }
     .hero-content {
       position: relative; z-index: 2;
@@ -681,7 +681,7 @@
   /* saddle image -> dim background behind the stat numbers (relocated per request) */
   .sec4-left-col{display:none!important}
   .sec4-stats{position:relative!important;gap:44px!important;padding:34px 20px!important;min-height:252px!important;border-radius:16px;overflow:hidden;
-    background:#111 url('uploads/fitting/img_bike_seat.png') center 44%/cover}
+    background:#111 url('uploads/fitting/img_bike_seat.webp') center 44%/cover}
   .sec4-stats::before{content:'';position:absolute;inset:0;background:rgba(1,1,1,.5);z-index:0}
   .sec4-stats>div{position:relative;z-index:1}
   /* SEC4 bottom: stack the mockup + joint video */
@@ -708,7 +708,7 @@ html body *:not(svg):not(svg *){font-family:"General Sans",-apple-system,BlinkMa
 <!-- NAV -->
 <nav data-orig-hidden style="display:none!important" id="nav">
   <a href="BCT Taipei Dark.html" class="nav-logo">
-    <img src="uploads/ic_bct_logo_white.png" alt="Bahwan CyberTek" style="height:34px;width:auto;display:block">
+    <img src="uploads/ic_bct_logo_white.png" alt="Bahwan CyberTek" style="height:34px;width:auto;display:block" loading="lazy" decoding="async">
   </a>
   <div class="nav-links">
     <a href="BCT Taipei Dark.html#about">About</a>
@@ -737,7 +737,7 @@ html body *:not(svg):not(svg *){font-family:"General Sans",-apple-system,BlinkMa
 <nav id="bctnav" class="on-dark">
   <div class="bar">
     <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
-    <a class="logo" href="../../index.html"><img src="../../logo_white.svg" alt="BahwanCyberTek"></a>
+    <a class="logo" href="../../index.html"><img src="../../logo_white.svg" alt="BahwanCyberTek" loading="lazy" decoding="async"></a>
     <div class="menu">
       <a href="../../index.html">Services</a>
       <div class="navdrop">
@@ -779,7 +779,7 @@ html body *:not(svg):not(svg *){font-family:"General Sans",-apple-system,BlinkMa
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-content">
-    <img class="hero-logo" src="uploads/fitting/fitting_hero_logo.png" alt="Dynamic Cycling Fit — Revolutionizing Bicycle Fitting with Machine Learning">
+    <img class="hero-logo" src="uploads/fitting/fitting_hero_logo.webp" alt="Dynamic Cycling Fit — Revolutionizing Bicycle Fitting with Machine Learning">
   </div>
 </section>
 
@@ -812,10 +812,10 @@ html body *:not(svg):not(svg *){font-family:"General Sans",-apple-system,BlinkMa
     <!-- iPad with videos -->
     <div class="sec2-visual">
       <div class="ipad-device">
-        <video class="sec2-video" data-idx="0" src="uploads/fitting/fitting_flow1.mp4" muted playsinline preload="auto"></video>
-        <video class="sec2-video" data-idx="1" src="uploads/fitting/fitting_flow2.mp4" muted playsinline preload="auto"></video>
-        <video class="sec2-video" data-idx="2" src="uploads/fitting/fitting_flow3.mp4" muted playsinline preload="auto"></video>
-        <img class="ipad-frame" src="uploads/fitting/iPad.png" alt="">
+        <video class="sec2-video" data-idx="0" src="uploads/fitting/fitting_flow1.mp4" muted playsinline preload="metadata"></video>
+        <video class="sec2-video" data-idx="1" src="uploads/fitting/fitting_flow2.mp4" muted playsinline preload="metadata"></video>
+        <video class="sec2-video" data-idx="2" src="uploads/fitting/fitting_flow3.mp4" muted playsinline preload="metadata"></video>
+        <img class="ipad-frame" src="uploads/fitting/iPad.png" alt="" loading="lazy" decoding="async">
       </div>
     </div>
 
@@ -832,8 +832,8 @@ html body *:not(svg):not(svg *){font-family:"General Sans",-apple-system,BlinkMa
       <p class="sec3-body">We focused on creating an intuitive and easy-to-use interface, ensuring that both professional technicians and first-time users can quickly get started.</p>
     </div>
 
-    <img class="uikit-img reveal" src="uploads/fitting/img_uikit.svg" alt="UI Kit — colour palette and typography">
-    <img class="demos-img reveal" src="uploads/fitting/img_demos.svg" alt="App screens">
+    <img class="uikit-img reveal" src="uploads/fitting/img_uikit.svg" alt="UI Kit — colour palette and typography" loading="lazy" decoding="async">
+    <img class="demos-img reveal" src="uploads/fitting/img_demos.svg" alt="App screens" loading="lazy" decoding="async">
 
   </div>
 </section>
@@ -845,7 +845,7 @@ html body *:not(svg):not(svg *){font-family:"General Sans",-apple-system,BlinkMa
   <div class="sec4-top">
     <div class="sec4-left-col">
       <div class="sec4-bike-img">
-        <img src="uploads/fitting/img_bike_seat.png" alt="Bike saddle close-up">
+        <img src="uploads/fitting/img_bike_seat.webp" alt="Bike saddle close-up" loading="lazy" decoding="async">
       </div>
     </div>
     <div class="sec4-right-col reveal">
@@ -867,7 +867,7 @@ html body *:not(svg):not(svg *){font-family:"General Sans",-apple-system,BlinkMa
 
   <div class="sec4-bottom">
     <div class="sec4-ipad-wrap">
-      <img class="ipad-img" src="uploads/fitting/img_dcf_mockup.png" alt="iPad device">
+      <img class="ipad-img" src="uploads/fitting/img_dcf_mockup.webp" alt="iPad device" loading="lazy" decoding="async">
     </div>
     <div class="sec4-joint-wrap">
       <video src="uploads/fitting/fitting_joint.mp4" autoplay loop muted playsinline></video>
@@ -883,17 +883,17 @@ html body *:not(svg):not(svg *){font-family:"General Sans",-apple-system,BlinkMa
 <!-- ── DELIVER ── -->
 <section class="deliver">
   <div class="deliver-inner">
-    <img class="deliver-bk-logo" src="uploads/fitting/img_dcf_bk_logo.svg" alt="">
+    <img class="deliver-bk-logo" src="uploads/fitting/img_dcf_bk_logo.svg" alt="" loading="lazy" decoding="async">
     <h2 class="deliver-title reveal">Deliver on time<br>with a confident smile</h2>
     <div class="deliver-img-main reveal">
-      <img src="uploads/fitting/img_dcf_pic1.png" alt="Delivery in action">
+      <img src="uploads/fitting/img_dcf_pic1.webp" alt="Delivery in action" loading="lazy" decoding="async">
     </div>
     <div class="deliver-img-row">
       <div class="deliver-img-small reveal">
-        <img src="uploads/fitting/img_dcf_pic2.png" alt="Cyclist fitting session">
+        <img src="uploads/fitting/img_dcf_pic2.webp" alt="Cyclist fitting session" loading="lazy" decoding="async">
       </div>
       <div class="deliver-img-small reveal">
-        <img src="uploads/fitting/img_dcf_pic3.png" alt="DCF app in use">
+        <img src="uploads/fitting/img_dcf_pic3.webp" alt="DCF app in use" loading="lazy" decoding="async">
       </div>
     </div>
   </div>
@@ -905,7 +905,7 @@ html body *:not(svg):not(svg *){font-family:"General Sans",-apple-system,BlinkMa
   <div class="voices-inner">
     <h2 class="reveal">Voices of<br>our customers</h2>
     <div class="quote-card reveal">
-      <img class="qmark" src="uploads/datalake/quote.svg" alt="" aria-hidden="true">
+      <img class="qmark" src="uploads/datalake/quote.svg" alt="" aria-hidden="true" loading="lazy" decoding="async">
       <blockquote>The BCT team showed a great balance between app development while ensuring the app was developed with real life adaptation.</blockquote>
       <div>
         <p class="q-name">Rasmus Yu Limschou</p>
@@ -927,7 +927,7 @@ html body *:not(svg):not(svg *){font-family:"General Sans",-apple-system,BlinkMa
   </div>
   <div class="cases-grid reveal">
     <a class="case-card" href="https://dev.bct-nova.net/" target="_blank" rel="noopener noreferrer">
-      <div class="case-img"><img src="uploads/NOVA.png" alt="NOVA Platform"></div>
+      <div class="case-img"><img src="uploads/NOVA.png" alt="NOVA Platform" loading="lazy" decoding="async"></div>
       <div class="case-info">
         <div class="case-tag">AI · Web</div>
         <div class="case-name">NOVA</div>
@@ -960,7 +960,7 @@ html body *:not(svg):not(svg *){font-family:"General Sans",-apple-system,BlinkMa
 <footer data-orig-hidden style="display:none!important">
   <div class="footer-grid">
     <div>
-      <div class="f-brand"><img src="uploads/ic_bct_logo_white.png" alt="Bahwan CyberTek" style="height:28px;width:auto;opacity:0.7"></div>
+      <div class="f-brand"><img src="uploads/ic_bct_logo_white.png" alt="Bahwan CyberTek" style="height:28px;width:auto;opacity:0.7" loading="lazy" decoding="async"></div>
       <p class="f-desc">Global digital transformation. Delivering innovative technology since 1999.</p>
     </div>
     <div class="f-col"><h4>Services</h4><ul class="f-links">
