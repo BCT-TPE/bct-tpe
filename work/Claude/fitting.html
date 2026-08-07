@@ -654,6 +654,8 @@
 }
 </style>
 <style id="bctpage-css">
+/* "Deliver..." + "Voices..." headings match the How-we-design heading style */
+.deliver-title,.voices h2{font-weight:700!important;letter-spacing:-.01em!important;line-height:1.15!important}
 /* fitting.html — mobile layout fixes (stack / scale / relocate) */
 @media(max-width:768px){
   /* SEC2 body copy calmer */
@@ -676,13 +678,17 @@
   .stat-value{font-size:52px!important;line-height:1.05!important}
   /* saddle image -> dim background behind the stat numbers (relocated per request) */
   .sec4-left-col{display:none!important}
-  .sec4-stats{position:relative!important;gap:18px!important;padding:26px 20px!important;border-radius:16px;overflow:hidden;
-    background:#111 url('uploads/fitting/img_bike_seat.png') center/cover}
+  .sec4-stats{position:relative!important;gap:44px!important;padding:34px 20px!important;min-height:252px!important;border-radius:16px;overflow:hidden;
+    background:#111 url('uploads/fitting/img_bike_seat.png') center 44%/cover}
   .sec4-stats::before{content:'';position:absolute;inset:0;background:rgba(1,1,1,.5);z-index:0}
   .sec4-stats>div{position:relative;z-index:1}
   /* SEC4 bottom: stack the mockup + joint video */
-  .sec4-bottom{display:block!important}
-  .sec4-ipad-wrap,.sec4-joint-wrap{height:auto!important;min-height:210px}
+  .sec4-bottom{display:grid!important;grid-template-columns:1fr 1fr!important;gap:0!important;align-items:stretch!important}
+  .sec4-ipad-wrap,.sec4-joint-wrap{height:auto!important;min-height:240px!important}
+  /* AutoFit block moved below the two mockups */
+  .sec4>.sec4-autofit{padding:40px 22px 4px!important;margin-top:0!important}
+  /* voices quote calmer */
+  .quote-card blockquote{font-size:18px!important;line-height:1.5!important}
 }
 </style>
 </head>
@@ -845,10 +851,6 @@
           <div class="stat-value">154</div>
         </div>
       </div>
-      <div class="sec4-autofit reveal">
-        <h2 class="sec4-autofit-title">Seamless experience<br>with AutoFit</h2>
-        <p class="sec4-autofit-body">AutoFit is an innovative technology integrates with the bicycle hardware, automatically adjusting the seat and handlebar position to achieve a fully automated fitting process.</p>
-      </div>
     </div>
   </div>
 
@@ -860,6 +862,11 @@
       <video src="uploads/fitting/fitting_joint.mp4" autoplay loop muted playsinline></video>
     </div>
   </div>
+
+      <div class="sec4-autofit reveal">
+        <h2 class="sec4-autofit-title">Seamless experience<br>with AutoFit</h2>
+        <p class="sec4-autofit-body">AutoFit is an innovative technology integrates with the bicycle hardware, automatically adjusting the seat and handlebar position to achieve a fully automated fitting process.</p>
+      </div>
 </section>
 
 <!-- ── DELIVER ── -->
