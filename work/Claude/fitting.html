@@ -918,6 +918,7 @@
     const videos    = Array.from(document.querySelectorAll('.sec2-video'));
     let current   = 0;
     let started   = false;
+    let advanceTimer = null;
     const SLIDE_DURATION = 500; // ms — matches CSS transition
 
     function enterSlide(idx) {
@@ -939,10 +940,10 @@
         ipadDevice.classList.add('zoom-enter');
         ipadDevice.addEventListener('animationend', () => ipadDevice.classList.remove('zoom-enter'), { once: true });
         v.classList.add('active');
-        v.play();
+        v.play().catch(() => {});
       } else {
         v.classList.add('active');
-        v.play();
+        v.play().catch(() => {});
       }
     }
 
@@ -966,8 +967,19 @@
         playVideo(nextIdx, true);
       }
 
-      // Auto-advance when this video ends
-      videos[nextIdx].addEventListener('ended', () => {
+      // Auto-advance when this video ends; timer fallback for phones that
+      // refuse programmatic playback (low-power / data-saver), where 'ended'
+      // never fires and the carousel would stall on 01.
+      const v = videos[nextIdx];
+      const arm = () => {
+        clearTimeout(advanceTimer);
+        const ms = (isFinite(v.duration) && v.duration > 0) ? v.duration * 1000 + 1600 : 9000;
+        advanceTimer = setTimeout(() => switchTo((nextIdx + 1) % videos.length, false), ms);
+      };
+      if (isFinite(v.duration) && v.duration > 0) arm();
+      else { arm(); v.addEventListener('loadedmetadata', arm, { once: true }); }
+      v.addEventListener('ended', () => {
+        clearTimeout(advanceTimer);
         switchTo((nextIdx + 1) % videos.length, false);
       }, { once: true });
     }
