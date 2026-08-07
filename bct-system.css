@@ -115,7 +115,7 @@ body.bct-scale p,body.bct-scale li{font-size:16px!important;line-height:1.6!impo
 #bctftr{font-size:12.5px!important}
 
 /* ---- 5b. Eyebrow labels (source of truth: fitting "Design & UX") ---- */
-.sec3-eyebrow,.sec4-feature-label,.sec-label,.features .sec-h2{
+body .sec3-eyebrow,body .sec4-feature-label,body .sec-label,body p.sec-label,body .features .sec-h2{
   font-size:12px!important;font-weight:600!important;letter-spacing:2px!important;
   text-transform:uppercase!important;color:#aaa!important}
 
