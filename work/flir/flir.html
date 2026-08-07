@@ -700,36 +700,40 @@ body p,body li{font-size:16px!important;line-height:1.6!important}
 </style>
 <style id="bctpage-css">
 /* flir.html — mobile layout fixes */
-/* eyebrow labels -> muted grey (like fitting "Design & UX"); headings -> How-we-design weight */
-.sec-label{color:#9aa0a6!important;letter-spacing:.16em!important}
+/* eyebrow labels site-style (= fitting "Design & UX"): 12px/600/2px/uppercase/grey */
+.label,.sec-label{font-size:12px!important;font-weight:600!important;letter-spacing:2px!important;text-transform:uppercase!important;color:#9aa0a6!important}
 .sec-h2{font-weight:700!important;letter-spacing:-.01em!important}
-/* Features section text -> brand accent (teal-green) */
-.features .sec-h2,.features .feat-h3{color:var(--graph)!important}
+/* Features: heading gets the eyebrow treatment; step titles stay white */
+.features .sec-h2{font-size:12px!important;font-weight:600!important;letter-spacing:2px!important;text-transform:uppercase!important;color:#9aa0a6!important;margin-bottom:28px!important}
+.features .feat-h3{color:#fff!important}
 @media(max-width:768px){
   .wrap{padding-left:22px!important;padding-right:22px!important}
-  /* HERO: large device image on top, text below */
-  .hero{grid-template-columns:1fr!important;grid-template-rows:auto auto!important;align-items:start!important;justify-items:center!important;min-height:0!important;height:auto!important;padding:96px 16px 40px!important;text-align:center}
-  .hero-right{order:-1!important;margin:0 auto 6px!important;max-width:none!important;width:100%!important;height:auto!important}
-  .hero-right .device-wrap,.hero-right .device-img{max-height:none!important;max-width:100%!important;width:100%!important;height:auto!important;margin:0 auto!important}
-  .hero-left{order:0!important;height:auto!important;max-width:600px}
-  .label{font-size:.6rem!important;letter-spacing:.16em!important}
-  .hero-h1{font-size:clamp(21px,5.6vw,26px)!important;line-height:1.2!important}
+  /* HERO: full-bleed device image on top; text like the homepage "Welcome to our world" (left aligned) */
+  .hero{grid-template-columns:1fr!important;grid-template-rows:auto auto!important;align-items:start!important;justify-items:stretch!important;min-height:0!important;height:auto!important;padding:92px 22px 40px!important;text-align:left}
+  .hero-right{order:-1!important;width:100vw!important;max-width:none!important;margin:0 0 6px calc(50% - 50vw)!important;height:auto!important}
+  .hero-right .device-wrap{width:100%!important;margin:0!important;padding:0!important}
+  .hero-right .device-img{width:100%!important;height:auto!important;max-height:none!important;transform:scale(1.14);transform-origin:center top}
+  .hero-left{order:0!important;height:auto!important;max-width:560px}
+  .hero-h1{font-size:clamp(26px,7vw,30px)!important;line-height:1.18!important;font-weight:700!important}
   .hero-h1 br{display:none!important}
-  .hero-sub{max-width:none!important;margin-left:auto!important;margin-right:auto!important;font-size:15px!important;line-height:1.7!important}
-  .hero-chips{justify-content:center!important;flex-wrap:wrap}
+  .hero-sub{max-width:none!important;margin:14px 0 0!important;font-size:16px!important;line-height:1.7!important;color:#9aa0a6!important}
+  .hero-chips{justify-content:flex-start!important;flex-wrap:wrap}
   /* tighter section rhythm */
-  .section{padding:56px 0!important}
+  .section{padding:48px 0!important}
   /* MISSION: two cards -> one column */
   .mission-grid{grid-template-columns:1fr!important;gap:16px!important;min-height:0!important}
   .m-card{min-height:0!important}
-  /* SERVICE CONCEPT: wrap heading; stack pill */
+  /* SERVICE CONCEPT: wrap heading; stack pill tightly */
   .service .sec-h2{white-space:normal!important;font-size:26px!important;line-height:1.28!important}
-  .pill{grid-template-columns:1fr!important;width:100%!important;max-width:none!important;padding:36px 24px!important;border-radius:32px!important;gap:6px!important}
-  .pill-sep-wrap{flex-direction:row!important;width:100%!important;margin:12px 0!important}
+  .pill{grid-template-columns:1fr!important;grid-auto-rows:auto!important;align-items:start!important;width:100%!important;max-width:none!important;padding:34px 24px!important;border-radius:28px!important;gap:0!important}
+  .pill>div{min-height:0!important;height:auto!important;justify-content:flex-start!important;padding:8px 0!important}
+  .pill-sep-wrap{flex-direction:row!important;width:100%!important;height:auto!important;min-height:0!important;margin:8px 0!important;align-items:center!important}
   .pill-line{width:44px!important;height:1px!important;min-height:0!important;flex:0 0 auto!important}
-  /* FEATURES: phone image on top (smaller), copy below */
-  .feat-anim-layout{grid-template-columns:1fr!important;gap:24px!important}
-  .feat-phone-anim{order:-1!important;max-width:280px!important;margin:0 auto!important}
+  /* FEATURES: phone image on top (fixed frame width so it can't collapse), copy below */
+  .feat-anim-layout{grid-template-columns:1fr!important;gap:22px!important}
+  .feat-phone-anim{order:-1!important;width:100%!important;max-width:none!important;margin:0!important}
+  .feat-svg-frame{width:250px!important;margin:0 auto!important}
+  .feat-progress-track{width:250px!important;margin-left:auto!important;margin-right:auto!important}
   .feat-steps-info{order:0!important}
   /* DOWNLOADS: stack; avatar above text */
   .stats-combined{grid-template-columns:1fr!important;min-height:0!important}
