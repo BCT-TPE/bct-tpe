@@ -1139,16 +1139,19 @@ section{position:relative}
     var dbX = w / 2;
     var dbY = 142 + 40;
 
-    chips.forEach(function(chip){
+    // chips settle AROUND the database tile (they stay visible at the end)
+    var OFF = [[-78, -62], [62, -70], [-92, 24], [70, 32]];
+    chips.forEach(function(chip, i){
       var sx = parseFloat(chip.dataset.x) / 100 * w;
       var sy = parseFloat(chip.dataset.y) / 100 * h;
       var r  = parseFloat(chip.dataset.r);
-      var cx = sx + (dbX - sx - 36) * ease;
-      var cy = sy + (dbY - sy - 36) * ease;
-      var sc = 1 - 0.55 * ease;
-      var op = ease < 0.75 ? 1 : Math.max(0, 1 - (ease - 0.75) / 0.2);
+      var o  = OFF[i % OFF.length];
+      var tx = dbX - 36 + o[0], ty = dbY - 36 + o[1];
+      var cx = sx + (tx - sx) * ease;
+      var cy = sy + (ty - sy) * ease;
+      var sc = 1 - 0.28 * ease;
       chip.style.transform = 'translate(' + cx + 'px,' + cy + 'px) rotate(' + (r * (1 - ease)) + 'deg) scale(' + sc + ')';
-      chip.style.opacity = op;
+      chip.style.opacity = 1;
     });
     db.classList.toggle('absorb', ease > 0.8);
     ticking = false;
