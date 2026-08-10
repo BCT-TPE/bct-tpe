@@ -342,16 +342,16 @@ section{position:relative}
   88%{opacity:.5}
   100%{transform:translateY(-1150px);opacity:0}
 }
-/* center bubble: rises once and stays behind #sec2Db */
+/* center bubble: sits centred behind #sec2Db (only the small bubbles drift) */
 .bubble-main{
   left:calc(50% - 200px);
+  top:-18px;bottom:auto;
   z-index:0;
-  animation:rise-stop 3.5s ease-out forwards;
+  animation:bubble-settle 1.4s ease-out forwards;
 }
-@keyframes rise-stop{
-  0%  {transform:translateY(0);opacity:0}
-  15% {opacity:.55}
-  100%{transform:translateY(-847px);opacity:.5}
+@keyframes bubble-settle{
+  0%  {opacity:0;transform:translateY(26px) scale(.92)}
+  100%{opacity:.5;transform:none}
 }
 
 .sec2-content{
@@ -654,8 +654,8 @@ section{position:relative}
   /* sec3: shield visual above the checklist, sized to its content (the fixed
      480px svg box left ~150px of dead space above the heading) */
   .sec3-grid{grid-template-columns:1fr!important;gap:20px!important}
-  .sec3-grid .secure-visual{order:-1!important;height:auto!important}
-  .sec3-grid .secure-visual svg{height:auto!important;aspect-ratio:638/480;max-height:270px}
+  .sec3-grid .secure-visual{order:-1!important;height:auto!important;aspect-ratio:638/480;max-height:270px;margin:0 auto}
+  .sec3-grid .secure-visual .shield{width:82px!important}
   /* ETL / workflow diagrams: keep one row, scale everything down to fit full width */
   .wf-diagram{flex-wrap:nowrap!important;height:auto!important;min-height:0!important;gap:6px!important;justify-content:space-between!important;width:100%!important}
   .wf-col{gap:10px!important;flex:0 1 auto!important}
