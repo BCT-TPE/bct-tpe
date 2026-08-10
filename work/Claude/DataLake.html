@@ -442,6 +442,11 @@ section{position:relative}
 .arch-card h3{font-size:20px;font-weight:700;line-height:32px;letter-spacing:.4px;color:var(--deep)}
 .arch-card p{font-size:16px;line-height:24px;color:var(--deep)}
 
+/* whole-tile icon artwork (ic_aws_*, ic_mes, ic_erp already include the glass tile) */
+.ic-tile{display:block;width:72px;height:72px;object-fit:contain}
+.sources-cluster .ic-tile{position:absolute}
+.chip .ic-tile{width:52px;height:52px}
+
 /* water surface separating Data Ingestion from ETL Processing */
 .wf-surface{
   position:relative;z-index:0;pointer-events:none;
@@ -701,6 +706,7 @@ section{position:relative}
   .wf-col .col-lbl{font-size:10.5px!important;line-height:14px!important;min-height:28px!important}
   .wf-node{gap:6px!important}
   .wf-node .tile{width:44px!important;height:44px!important;border-radius:14px!important}
+  .wf-node .ic-tile{width:44px!important;height:44px!important}
   .wf-node .lbl{font-size:11px!important;line-height:14px!important}
   .flow-arrow{width:22px!important;height:10px!important}
   .sources-cluster{transform:scale(.72);transform-origin:center}
@@ -824,8 +830,8 @@ section{position:relative}
       <div class="tile flat t-db"><div class="tile-core"><img src="uploads/datalake/glyph_db.svg" alt=""></div></div>
     </div>
     <!-- floating system chips (converge on scroll) -->
-    <div class="chip" data-x="11" data-y="34" data-r="-25"><div class="chip-bob"><div class="tile flat t-src"><div class="tile-core"><span>MES</span></div></div></div></div>
-    <div class="chip" data-x="86" data-y="6"  data-r="10"><div class="chip-bob" style="animation-delay:-1.6s"><div class="tile flat t-erp"><div class="tile-core"><span>ERP</span></div></div></div></div>
+    <div class="chip" data-x="11" data-y="34" data-r="-25"><div class="chip-bob"><img class="ic-tile chip-ic" src="uploads/datalake/ic_mes.svg" alt="MES"></div></div>
+    <div class="chip" data-x="86" data-y="6"  data-r="10"><div class="chip-bob" style="animation-delay:-1.6s"><img class="ic-tile chip-ic" src="uploads/datalake/ic_erp.svg" alt="ERP"></div></div>
     <div class="chip" data-x="22" data-y="9"  data-r="14"><div class="chip-bob" style="animation-delay:-3s"><div class="tile flat t-pos"><div class="tile-core"><span>POS</span></div></div></div></div>
     <div class="chip" data-x="74" data-y="40" data-r="-12"><div class="chip-bob" style="animation-delay:-2.2s"><div class="tile flat t-glue"><div class="tile-core"><span>CRM</span></div></div></div></div>
     <!-- rising bubbles -->
@@ -927,8 +933,8 @@ section{position:relative}
     <div class="wf-diagram reveal d1">
       <div class="sources-cluster">
         <div class="tile glass t-db s-db"><div class="tile-core"><img src="uploads/datalake/glyph_db.svg" alt=""></div></div>
-        <div class="tile glass t-src s-mes"><div class="tile-core"><span>MES</span></div></div>
-        <div class="tile glass t-erp s-erp"><div class="tile-core"><span>ERP</span></div></div>
+        <img class="ic-tile s-mes" src="uploads/datalake/ic_mes.svg" alt="MES">
+        <img class="ic-tile s-erp" src="uploads/datalake/ic_erp.svg" alt="ERP">
         <span class="clu-lbl">Various sources</span>
       </div>
       <svg class="flow-arrow" width="72" height="12" viewBox="0 0 72 12" aria-hidden="true">
@@ -960,26 +966,26 @@ section{position:relative}
     <div class="wf-diagram reveal d1">
       <div class="wf-col">
         <span class="col-lbl">Data<br>Cleansing</span>
-        <div class="wf-node"><div class="tile glass t-s3"><div class="tile-core"><img src="uploads/datalake/ic_aws_s3.svg" alt=""></div></div><span class="lbl">Landing</span></div>
-        <div class="wf-node"><div class="tile glass t-glue"><div class="tile-core"><img src="uploads/datalake/ic_aws_glue.svg" alt=""></div></div><span class="lbl">Glue ETL</span></div>
+        <div class="wf-node"><img class="ic-tile" src="uploads/datalake/ic_aws_s3.svg" alt=""><span class="lbl">Landing</span></div>
+        <div class="wf-node"><img class="ic-tile" src="uploads/datalake/ic_aws_glue.svg" alt=""><span class="lbl">Glue ETL</span></div>
       </div>
       <svg class="flow-arrow" width="48" height="12" viewBox="0 0 48 12" aria-hidden="true"><line class="dash" x1="0" y1="6" x2="36" y2="6"/><path d="M36 1 L47 6 L36 11 Z" fill="var(--primary)"/></svg>
       <div class="wf-col">
         <span class="col-lbl">Data<br>Transformation</span>
-        <div class="wf-node"><div class="tile glass t-s3"><div class="tile-core"><img src="uploads/datalake/ic_aws_s3.svg" alt=""></div></div><span class="lbl">Raw</span></div>
-        <div class="wf-node"><div class="tile glass t-glue"><div class="tile-core"><img src="uploads/datalake/ic_aws_glue.svg" alt=""></div></div><span class="lbl">Glue ETL</span></div>
+        <div class="wf-node"><img class="ic-tile" src="uploads/datalake/ic_aws_s3.svg" alt=""><span class="lbl">Raw</span></div>
+        <div class="wf-node"><img class="ic-tile" src="uploads/datalake/ic_aws_glue.svg" alt=""><span class="lbl">Glue ETL</span></div>
       </div>
       <svg class="flow-arrow" width="48" height="12" viewBox="0 0 48 12" aria-hidden="true"><line class="dash" x1="0" y1="6" x2="36" y2="6"/><path d="M36 1 L47 6 L36 11 Z" fill="var(--primary)"/></svg>
       <div class="wf-col">
         <span class="col-lbl">Data<br>Enrichment</span>
-        <div class="wf-node"><div class="tile glass t-s3"><div class="tile-core"><img src="uploads/datalake/ic_aws_s3.svg" alt=""></div></div><span class="lbl">Staged</span></div>
-        <div class="wf-node"><div class="tile glass t-glue"><div class="tile-core"><img src="uploads/datalake/ic_aws_glue.svg" alt=""></div></div><span class="lbl">Glue ETL</span></div>
+        <div class="wf-node"><img class="ic-tile" src="uploads/datalake/ic_aws_s3.svg" alt=""><span class="lbl">Staged</span></div>
+        <div class="wf-node"><img class="ic-tile" src="uploads/datalake/ic_aws_glue.svg" alt=""><span class="lbl">Glue ETL</span></div>
       </div>
       <svg class="flow-arrow" width="48" height="12" viewBox="0 0 48 12" aria-hidden="true"><line class="dash" x1="0" y1="6" x2="36" y2="6"/><path d="M36 1 L47 6 L36 11 Z" fill="var(--primary)"/></svg>
       <div class="wf-col">
         <span class="col-lbl">Processed<br>Data</span>
-        <div class="wf-node"><div class="tile glass t-s3"><div class="tile-core"><img src="uploads/datalake/ic_aws_s3.svg" alt=""></div></div><span class="lbl">Analytic</span></div>
-        <div class="wf-node"><div class="tile glass t-athena"><div class="tile-core"><img src="uploads/datalake/ic_aws_athena.svg" alt=""></div></div><span class="lbl">Athena</span></div>
+        <div class="wf-node"><img class="ic-tile" src="uploads/datalake/ic_aws_s3.svg" alt=""><span class="lbl">Analytic</span></div>
+        <div class="wf-node"><img class="ic-tile" src="uploads/datalake/ic_aws_athena.svg" alt=""><span class="lbl">Athena</span></div>
       </div>
     </div>
   </div>
