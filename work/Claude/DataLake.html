@@ -1124,17 +1124,21 @@ section{position:relative}
   function layout(){
     var rect = stage.getBoundingClientRect();
     var vh = window.innerHeight;
+    // layout-space size (NOT rect): the mobile scale() shrinks the rect, but the
+    // chips' translate() pixels live in the untransformed layout space — mixing
+    // the two scattered the chips and aimed them at the wrong absorb point.
+    var w = stage.offsetWidth, h = stage.offsetHeight;
     // progress 0 → 1 while the section travels through the viewport
-    var p = (vh * 0.85 - rect.top) / (Math.max(rect.height, 700) * 0.75);
+    var p = (vh * 0.85 - rect.top) / (Math.max(h, 700) * 0.75);
     p = Math.max(0, Math.min(1, p));
     var ease = p * p * (3 - 2 * p); // smoothstep
 
-    var dbX = rect.width / 2;
+    var dbX = w / 2;
     var dbY = 142 + 40;
 
     chips.forEach(function(chip){
-      var sx = parseFloat(chip.dataset.x) / 100 * rect.width;
-      var sy = parseFloat(chip.dataset.y) / 100 * rect.height;
+      var sx = parseFloat(chip.dataset.x) / 100 * w;
+      var sy = parseFloat(chip.dataset.y) / 100 * h;
       var r  = parseFloat(chip.dataset.r);
       var cx = sx + (dbX - sx - 36) * ease;
       var cy = sy + (dbY - sy - 36) * ease;
