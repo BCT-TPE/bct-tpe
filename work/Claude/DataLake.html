@@ -485,10 +485,10 @@ section{position:relative}
 /* ============================================================
    Sec8 — Solution summary
    ============================================================ */
-.sec8{height:980px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.sec8{height:620px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
 .sec8-photo{
-  position:absolute;left:0;right:0;bottom:0;height:890px;
-  pointer-events:none;z-index:0;opacity:.5;
+  position:absolute;left:0;right:0;bottom:0;height:100%;
+  pointer-events:none;z-index:0;opacity:.3;
   background:url('uploads/datalake/solution_img.webp') center bottom/cover no-repeat;
 }
 .sec8-photo::after{
@@ -496,7 +496,7 @@ section{position:relative}
   background:linear-gradient(to bottom,#f4fbfd 0%,rgba(244,251,253,0) 100%);
 }
 .sec8-bg{
-  position:absolute;left:0;right:0;top:192px;height:890px;opacity:.75;
+  position:absolute;left:0;right:0;top:120px;height:100%;opacity:.45;
   pointer-events:none;
 }
 .sec8-bg .map{
@@ -515,7 +515,7 @@ section{position:relative}
 .sec8-content{
   position:relative;z-index:1;width:846px;max-width:90vw;text-align:center;
   display:flex;flex-direction:column;gap:40px;align-items:center;
-  transform:translateY(60px);
+  transform:translateY(30px);
 }
 .sec8-content p{width:720px;max-width:100%}
 
@@ -665,11 +665,11 @@ section{position:relative}
   .sec3-grid .secure-visual{order:-1!important;height:auto!important;width:100%!important;aspect-ratio:638/420;margin:0 auto}
   .sec3-grid .secure-visual .shield{width:26vw!important;max-width:118px!important}
   /* sec8: copy sits ON the artwork (shorter section, image fills it) */
-  .sec8{height:520px!important;padding-top:0!important;padding-bottom:0!important}
-  .sec8-photo{height:100%!important;opacity:.55!important}
-  .sec8-bg{top:70px!important;height:100%!important;opacity:.7!important}
+  .sec8{height:430px!important;padding-top:0!important;padding-bottom:0!important}
+  .sec8-photo{height:100%!important;opacity:.32!important}
+  .sec8-bg{top:60px!important;height:100%!important;opacity:.42!important}
   .sec8-bg .map{inset:0!important;height:100%!important}
-  .sec8-content{transform:translateY(20px)!important;gap:20px!important}
+  .sec8-content{transform:translateY(10px)!important;gap:18px!important}
   /* ---- uniform section rhythm ---- */
   .sec3,.sec4,.our-works,.sec8,.voices{padding-top:64px!important;padding-bottom:64px!important}
   .workflow-title{padding:64px 6vw 0!important}
