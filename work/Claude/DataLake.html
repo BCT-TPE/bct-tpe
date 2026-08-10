@@ -640,12 +640,12 @@ section{position:relative}
   .voices-inner{padding:48px 6vw!important}
   .works-inner{padding:0 6vw!important}
   .sec4{padding-left:6vw!important;padding-right:6vw!important}
-  .hero-title{padding:0 6vw!important}
+  .hero-title{padding:0 6vw!important;font-size:clamp(26px,7vw,30px)!important;line-height:1.18!important;font-weight:700!important}
   /* hero: scale the floating icon field + water icon down, pull the title up */
-  .hero{height:660px!important}
+  .hero{height:632px!important}
   .icon-field{top:44px!important;height:300px!important;transform:scale(.78);transform-origin:top center}
   .hero-icon{top:150px!important;transform:translateX(-50%) scale(.8)!important}
-  .hero-title{top:396px!important}
+  .hero-title{top:380px!important}
   /* sec2 intro animation stage: scale the oversized bubble scene down */
   .sec2{height:760px!important;overflow:hidden!important}
   .sec2-stage{transform:scale(.62);transform-origin:top center}
@@ -653,6 +653,18 @@ section{position:relative}
   /* sec3: shield visual above the checklist */
   .sec3-grid{grid-template-columns:1fr!important}
   .sec3-grid .secure-visual{order:-1!important}
+  /* ETL / workflow diagrams: keep one row, scale everything down to fit full width */
+  .wf-diagram{flex-wrap:nowrap!important;height:auto!important;min-height:0!important;gap:6px!important;justify-content:space-between!important;width:100%!important}
+  .wf-col{gap:10px!important;flex:0 1 auto!important}
+  .wf-col .col-lbl{font-size:10.5px!important;line-height:14px!important;min-height:28px!important}
+  .wf-node{gap:6px!important}
+  .wf-node .tile{width:44px!important;height:44px!important;border-radius:14px!important}
+  .wf-node .lbl{font-size:11px!important;line-height:14px!important}
+  .flow-arrow{width:22px!important;height:10px!important}
+  .sources-cluster{transform:scale(.72);transform-origin:center}
+  /* BI logos row was 402px wide (fixed inline widths) and stretched the whole row */
+  .bi-logos{gap:26px!important;justify-content:center!important;width:100%!important}
+  .bi-logos .bi img{width:40vw!important;max-width:160px!important}
   /* sec4 subtitle: no orphan word like "services" */
   .sec4 .sec-head .c2{text-wrap:balance!important}
   /* architecture cards: icon+title left, description right */
