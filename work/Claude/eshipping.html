@@ -835,6 +835,41 @@ footer {
 </style>
 <link rel="stylesheet" href="../../bct-system.css">
 <script src="../../bct-system.js" defer></script>
+<style id="bctpage-css">
+/* eshipping — mobile layout */
+@media(max-width:768px){
+  /* section gutter: desktop 80px squeezed the content column to 230px */
+  .sec-inner,.challenge-inner{padding-left:6vw!important;padding-right:6vw!important}
+  /* 1) hero: just the table + Departure chip + parcel (drop the side floats) */
+  .hero{min-height:0!important;padding-bottom:24px}
+  .hero-float-left,.hero-float-right{display:none!important}
+
+  /* 2) Inefficiencies: photo on top, copy below */
+  .challenge-inner{flex-direction:column!important;min-height:0!important;gap:24px}
+  .challenge-photo{width:100%!important;height:220px!important}
+  .challenge-content{padding:0 6vw!important}
+
+  /* 3) Seamless: visual under the heading, only the active step's copy below it */
+  .flow-wrap{display:flex!important;flex-direction:column!important;gap:20px!important}
+  .flow-wrap .flow-visual,.flow-wrap .flow-stage-wrap{order:-1}
+  .flow-nav{flex-direction:column!important;flex-wrap:nowrap!important;gap:0!important}
+  .flow-nav .flow-step{display:none!important}
+  .flow-nav .flow-step.active{display:flex!important}
+
+  /* 4) Leveraging AWS Cloud: the 628px visual was pushed off-screen; stack it under the title */
+  .solution-body{flex-direction:column!important;gap:24px!important}
+  .solution-visual{order:-1!important;flex:0 0 auto!important;width:100%!important;height:auto!important;aspect-ratio:628/471}
+  .solution-list{flex:0 0 auto!important;width:100%!important}
+
+  /* 5) Streamlined Shipment: icon left, title + copy right */
+  .results-grid{grid-template-columns:1fr!important;gap:18px!important}
+  .result-card{flex-direction:row!important;align-items:center!important;text-align:left!important;
+    gap:16px!important;padding:0!important}
+  .result-circle{width:92px!important;height:92px!important}
+  .result-text{flex:1 1 auto}
+  .result-text h3{margin-bottom:6px}
+}
+</style>
 </head>
 <body class="bct-scale">
 <div class="page-wrap">

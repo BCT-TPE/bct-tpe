@@ -479,7 +479,7 @@ section{position:relative}
 }
 .wf-text{display:flex;flex-direction:column;gap:24px}
 .wf-sub{display:flex;flex-direction:column;gap:8px}
-.wf-sub .sub-t{font-weight:500}
+.wf-sub .sub-t{font-weight:700}
 .wf-diagram{
   position:relative;height:320px;
   display:flex;align-items:center;justify-content:center;gap:28px;
@@ -515,7 +515,7 @@ section{position:relative}
 .sec8{height:620px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
 .sec8-photo{
   position:absolute;left:0;right:0;bottom:0;height:100%;
-  pointer-events:none;z-index:0;opacity:.3;
+  pointer-events:none;z-index:0;opacity:.18;
   background:url('uploads/datalake/solution_img.webp') center bottom/cover no-repeat;
 }
 .sec8-photo::after{
@@ -523,7 +523,7 @@ section{position:relative}
   background:linear-gradient(to bottom,#f4fbfd 0%,rgba(244,251,253,0) 100%);
 }
 .sec8-bg{
-  position:absolute;left:0;right:0;top:120px;height:100%;opacity:.45;
+  position:absolute;left:0;right:0;top:120px;height:100%;opacity:.26;
   pointer-events:none;
 }
 .sec8-bg .map{
@@ -679,7 +679,7 @@ section{position:relative}
   .hero-title{padding:0 6vw!important;font-size:clamp(26px,7vw,30px)!important;line-height:1.18!important;font-weight:700!important}
   /* hero: scale the floating icon field + water icon down, pull the title up */
   .hero{height:632px!important}
-  .icon-field{top:44px!important;height:300px!important;transform:scale(.78);transform-origin:top center}
+  .icon-field{top:40px!important;height:452px!important;transform:scale(.78);transform-origin:top center}
   .hero-icon{top:150px!important;transform:translateX(-50%) scale(.8)!important}
   .hero-title{top:380px!important}
   /* sec2 intro animation stage: scale the oversized bubble scene down */
@@ -693,14 +693,15 @@ section{position:relative}
   .sec3-grid .secure-visual .shield{width:26vw!important;max-width:118px!important}
   /* sec8: copy sits ON the artwork (shorter section, image fills it) */
   .sec8{height:430px!important;padding-top:0!important;padding-bottom:0!important}
-  .sec8-photo{height:100%!important;opacity:.32!important}
-  .sec8-bg{top:60px!important;height:100%!important;opacity:.42!important}
+  .sec8-photo{height:100%!important;opacity:.2!important}
+  .sec8-bg{top:60px!important;height:100%!important;opacity:.24!important}
   .sec8-bg .map{inset:0!important;height:100%!important}
   .sec8-content{transform:translateY(10px)!important;gap:18px!important}
   .wf-surface{height:120px!important;margin:8px 0 -26px!important;background-position:center 34%!important}
   .wf-surface::after{height:90px!important}
   /* ---- uniform section rhythm ---- */
   .sec3,.sec4,.our-works,.sec8,.voices{padding-top:64px!important;padding-bottom:64px!important}
+  .sec3{padding-top:8px!important}
   .workflow-title{padding:64px 6vw 0!important}
   .wf-row{padding:40px 6vw!important}
   /* ---- all section headings centred ---- */
@@ -710,8 +711,10 @@ section{position:relative}
   /* checklist stays left-aligned so the ticks line up and the lines stay scannable */
   .checklist,.check-item{text-align:left!important}
   /* Data Ingestion has only two nodes: keep them together instead of spread apart */
-  #workflow .wf-row:first-of-type .wf-diagram{justify-content:center!important;gap:4px!important}
-  #workflow .wf-row:first-of-type .sources-cluster{margin-right:-14px}
+  #workflow .wf-row:first-of-type .wf-diagram{justify-content:center!important;gap:14px!important;align-items:center!important}
+  #workflow .wf-row:first-of-type .sources-cluster{margin:0 0 0 -18px!important;transform:scale(.72) translateY(-16px)!important}
+  #workflow .wf-row:first-of-type .flow-arrow{margin:0 26px 0 0!important}
+  #workflow .wf-row:first-of-type .clu-lbl{bottom:10px!important}
   /* ETL / workflow diagrams: keep one row, scale everything down to fit full width */
   .wf-diagram{flex-wrap:nowrap!important;height:auto!important;min-height:0!important;gap:6px!important;justify-content:space-between!important;width:100%!important}
   .wf-col{gap:10px!important;flex:0 1 auto!important}
