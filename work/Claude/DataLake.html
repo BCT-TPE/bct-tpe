@@ -830,14 +830,14 @@ section{position:relative}
 <section class="sec4" id="architecture">
   <div class="sec-head">
     <h2 class="t2 reveal">Technical Architecture</h2>
-    <p class="c2 reveal d1">The Data Lake is built on AWS cloud infrastructure, leveraging the following AWS services</p>
+    <p class="c2 reveal d1">Built on AWS, using the following services.</p>
   </div>
   <div class="arch-grid">
     <div class="arch-card reveal">
       <div class="ripple"><img src="uploads/datalake/ripple.svg" alt=""></div>
       <div class="tile flat t-s3" style="width:88px;height:88px"><div class="tile-core"><img src="uploads/datalake/glyph_s3.svg" alt=""></div></div>
       <h3>AWS S3</h3>
-      <p>Serves as the main storage layer for the Data Lake, divided into three zones: Landing Zone, Raw Zone, and Analysis Bucket.</p>
+      <p>The main storage layer, divided into three zones: Landing, Raw and Analysis.</p>
     </div>
     <div class="arch-card reveal d1">
       <div class="ripple"><img src="uploads/datalake/ripple.svg" alt=""></div>
@@ -849,7 +849,7 @@ section{position:relative}
       <div class="ripple"><img src="uploads/datalake/ripple.svg" alt=""></div>
       <div class="tile flat t-lambda" style="width:88px;height:88px"><div class="tile-core"><img src="uploads/datalake/glyph_lambda.svg" alt=""></div></div>
       <h3>AWS Lambda</h3>
-      <p>Serves as the main storage layer for the Data Lake, divided into three zones: Landing Zone, Raw Zone, and Analysis Bucket.</p>
+      <p>Runs custom scripts that de-identify data in real time as it enters the Landing Zone.</p>
     </div>
     <div class="arch-card reveal d3">
       <div class="ripple"><img src="uploads/datalake/ripple.svg" alt=""></div>
@@ -868,7 +868,7 @@ section{position:relative}
   <div class="wf-row">
     <div class="wf-text reveal">
       <h3 class="step-label">Data Ingestion</h3>
-      <p class="c3">The client’s IT personnel export data from various sources like ERP, MES, POS, and consumer information and upload it to the Landing Zone.</p>
+      <p class="c3">IT teams export data from ERP, MES, POS and consumer sources into the Landing Zone.</p>
     </div>
     <div class="wf-diagram reveal d1">
       <div class="sources-cluster">
@@ -894,11 +894,11 @@ section{position:relative}
       <h3 class="step-label">ETL Processing</h3>
       <div class="wf-sub">
         <p class="c3 sub-t">Data De-identification</p>
-        <p class="c3">AWS Lambda executes custom scripts to perform real-time data de-identification on the incoming data in the Landing Zone, removing or masking personally identifiable information (PII) and converting it into anonymized unique identifiers.</p>
+        <p class="c3">AWS Lambda de-identifies incoming data in real time, masking PII and converting it into anonymized identifiers.</p>
       </div>
       <div class="wf-sub">
         <p class="c3 sub-t">Data Transformation and Integration</p>
-        <p class="c3">After data de-identification, AWS Glue extracts data from the Landing Zone for further cleansing, formatting, and transformation before moving it to the Analysis Bucket.</p>
+        <p class="c3">AWS Glue then cleanses, formats and transforms the data before moving it to the Raw Zone.</p>
       </div>
     </div>
     <div class="wf-diagram reveal d1">
@@ -932,7 +932,7 @@ section{position:relative}
   <div class="wf-row">
     <div class="wf-text reveal">
       <h3 class="step-label">Data Analysis</h3>
-      <p class="c3">The processed data is stored in the Analysis Bucket. Through Amazon Athena, analytical tools like Tableau and Power BI can query and access this data for in-depth business analysis.</p>
+      <p class="c3">Processed data lands in the Analysis Bucket, where Tableau and Power BI query it directly through Amazon Athena.</p>
     </div>
     <div class="wf-diagram reveal d1">
       <div class="bi-logos">
@@ -952,7 +952,7 @@ section{position:relative}
   </div>
   <div class="sec8-content">
     <h2 class="t2 reveal">Enhancing Business Intelligence<br>through a Secure <span class="grad-text">Data Lake</span> Solution</h2>
-    <p class="c2 reveal d1">This Data Lake solution consolidated multiple systems, centralizing data access and analysis. It uses AWS Lambda and Glue for de-identification, ensuring privacy and compliance. Ultimately, this allows the client to efficiently analyze data with tools like Tableau and Power BI, enhancing decision-making and operational efficiency.</p>
+    <p class="c2 reveal d1">This solution consolidated multiple systems into one governed Data Lake: de-identified by Lambda and Glue, compliant with data-privacy regulations, and query-ready for BI tools.</p>
   </div>
 </section>
 
