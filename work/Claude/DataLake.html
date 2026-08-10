@@ -350,6 +350,9 @@ section{position:relative}
   position:absolute;left:50%;top:571px;transform:translateX(-50%);
   width:846px;max-width:90vw;text-align:center;
 }
+@media(min-width:769px){
+  .arch-card .tile{width:74px!important;height:74px!important}
+}
 /* desktop: split layout — animation on the left, copy on the right */
 @media(min-width:769px){
   .sec2{height:640px}
@@ -388,10 +391,10 @@ section{position:relative}
 .secure-visual{position:relative;height:480px;display:flex;align-items:center;justify-content:center}
 .wave-svg{position:absolute;inset:0;width:100%;height:100%}
 .wave-svg path{
-  fill:none;stroke:url(#waveGrad);stroke-width:1.2;opacity:.5;
+  fill:none;stroke:url(#waveGrad);stroke-width:1;opacity:.28;
 }
 .shield{
-  position:relative;width:140px;z-index:2;
+  position:relative;width:190px;z-index:2;
   filter:drop-shadow(0 16px 30px rgba(35,187,197,.3));
   animation:bob 6s ease-in-out infinite;
 }
@@ -512,7 +515,7 @@ section{position:relative}
 .sec8-content{
   position:relative;z-index:1;width:846px;max-width:90vw;text-align:center;
   display:flex;flex-direction:column;gap:40px;align-items:center;
-  transform:translateY(-120px);
+  transform:translateY(60px);
 }
 .sec8-content p{width:720px;max-width:100%}
 
@@ -661,6 +664,12 @@ section{position:relative}
   .sec3-grid{grid-template-columns:1fr!important;gap:20px!important}
   .sec3-grid .secure-visual{order:-1!important;height:auto!important;width:100%!important;aspect-ratio:638/420;margin:0 auto}
   .sec3-grid .secure-visual .shield{width:26vw!important;max-width:118px!important}
+  /* sec8: copy sits ON the artwork (shorter section, image fills it) */
+  .sec8{height:520px!important;padding-top:0!important;padding-bottom:0!important}
+  .sec8-photo{height:100%!important;opacity:.55!important}
+  .sec8-bg{top:70px!important;height:100%!important;opacity:.7!important}
+  .sec8-bg .map{inset:0!important;height:100%!important}
+  .sec8-content{transform:translateY(20px)!important;gap:20px!important}
   /* ---- uniform section rhythm ---- */
   .sec3,.sec4,.our-works,.sec8,.voices{padding-top:64px!important;padding-bottom:64px!important}
   .workflow-title{padding:64px 6vw 0!important}
