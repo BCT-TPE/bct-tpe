@@ -650,9 +650,11 @@ section{position:relative}
   .sec2{height:760px!important;overflow:hidden!important}
   .sec2-stage{transform:scale(.62);transform-origin:top center}
   .sec2-content{top:350px!important}
-  /* sec3: shield visual above the checklist */
-  .sec3-grid{grid-template-columns:1fr!important}
-  .sec3-grid .secure-visual{order:-1!important}
+  /* sec3: shield visual above the checklist, sized to its content (the fixed
+     480px svg box left ~150px of dead space above the heading) */
+  .sec3-grid{grid-template-columns:1fr!important;gap:20px!important}
+  .sec3-grid .secure-visual{order:-1!important;height:auto!important}
+  .sec3-grid .secure-visual svg{height:auto!important;aspect-ratio:638/480;max-height:270px}
   /* ETL / workflow diagrams: keep one row, scale everything down to fit full width */
   .wf-diagram{flex-wrap:nowrap!important;height:auto!important;min-height:0!important;gap:6px!important;justify-content:space-between!important;width:100%!important}
   .wf-col{gap:10px!important;flex:0 1 auto!important}
