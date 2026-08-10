@@ -350,6 +350,19 @@ section{position:relative}
   position:absolute;left:50%;top:571px;transform:translateX(-50%);
   width:846px;max-width:90vw;text-align:center;
 }
+/* desktop: split layout — animation on the left, copy on the right */
+@media(min-width:769px){
+  .sec2{height:640px}
+  .sec2-stage{left:0;right:auto;width:50%}
+  .sec2-db{top:calc(50% - 40px)}
+  .bubble-main{top:calc(50% - 200px)}
+  .sec2-content{
+    left:50%;right:0;top:50%;bottom:auto;
+    transform:translateY(-50%);
+    width:auto;max-width:none;padding:0 80px 0 24px;text-align:left;
+  }
+  .sec2-content p{max-width:34em}
+}
 .sec2-content h2{font-size:40px;font-weight:700;line-height:52px;color:var(--deep)}
 .sec2-content p{margin-top:36px;font-size:20px;font-weight:500;line-height:28px}
 
@@ -1139,7 +1152,7 @@ section{position:relative}
     var ease = p * p * (3 - 2 * p); // smoothstep
 
     var dbX = w / 2;
-    var dbY = 142 + 40;
+    var dbY = db.offsetTop + db.offsetHeight / 2;
 
     // chips settle AROUND the database tile (they stay visible at the end)
     var OFF = [[-78, -62], [62, -70], [-92, 24], [70, 32]];
