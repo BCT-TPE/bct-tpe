@@ -839,15 +839,17 @@ footer {
 /* eshipping — mobile layout */
 @media(max-width:768px){
   /* section gutter: desktop 80px squeezed the content column to 230px */
-  .sec-inner,.challenge-inner{padding-left:6vw!important;padding-right:6vw!important}
-  /* 1) hero: just the table + Departure chip + parcel (drop the side floats) */
-  .hero{min-height:0!important;padding-bottom:24px}
+  .sec-inner,.challenge-inner,.app-showcase-inner,.voices-inner,.hero-text,.works-inner{padding-left:6vw!important;padding-right:6vw!important}
+  /* 1) hero: drop the side floats, scale the 1280px dashboard down to full width */
+  .hero{min-height:0!important;padding-bottom:24px;overflow-x:hidden}
   .hero-float-left,.hero-float-right{display:none!important}
+  .hero-inner{padding:96px 0 0!important;max-width:none!important}
+  .hero-dashboard{width:1280px!important;max-width:none!important}
 
   /* 2) Inefficiencies: photo on top, copy below */
   .challenge-inner{flex-direction:column!important;min-height:0!important;gap:24px}
   .challenge-photo{width:100%!important;height:220px!important}
-  .challenge-content{padding:0 6vw!important}
+  .challenge-content{padding:0!important}
 
   /* 3) Seamless: visual under the heading, only the active step's copy below it */
   .flow-wrap{display:flex!important;flex-direction:column!important;gap:20px!important}
@@ -1417,5 +1419,18 @@ window.addEventListener('scroll', revealAnims, { passive: true });
 </script>
 </div><!-- /.page-wrap -->
 <footer id="bctftr">© 2026 BCT Taipei. All rights reserved. · Bahwan CyberTek Group</footer>
+<script>
+/* eshipping hero: scale the fixed 1280px dashboard to the phone width */
+(function(){
+  function fit(){
+    var d=document.querySelector('.hero-dashboard');
+    if(!d) return;
+    if(innerWidth>768){ d.style.zoom=''; return; }
+    /* zoom (not transform): the .fade-up reveal animation owns `transform` */
+    d.style.zoom = innerWidth/1280;
+  }
+  addEventListener('resize',fit); addEventListener('orientationchange',fit); addEventListener('load',fit); fit();
+})();
+</script>
 </body>
 </html>
