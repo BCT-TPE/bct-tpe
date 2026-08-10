@@ -439,7 +439,7 @@ section{position:relative}
   50%{transform:scale(1.05);opacity:1}
 }
 .arch-card .tile{width:88px;height:88px}
-.arch-card h3{font-size:20px;font-weight:700;line-height:32px;letter-spacing:.4px;color:var(--deep)}
+.arch-card h3{font-size:17px;font-weight:700;line-height:26px;letter-spacing:.3px;color:var(--deep)}
 .arch-card p{font-size:16px;line-height:24px;color:var(--deep)}
 
 /* whole-tile icon artwork (ic_aws_*, ic_mes, ic_erp already include the glass tile) */
@@ -709,6 +709,9 @@ section{position:relative}
   .wf-text .sub-t{margin-top:14px}
   /* checklist stays left-aligned so the ticks line up and the lines stay scannable */
   .checklist,.check-item{text-align:left!important}
+  /* Data Ingestion has only two nodes: keep them together instead of spread apart */
+  #workflow .wf-row:first-of-type .wf-diagram{justify-content:center!important;gap:4px!important}
+  #workflow .wf-row:first-of-type .sources-cluster{margin-right:-14px}
   /* ETL / workflow diagrams: keep one row, scale everything down to fit full width */
   .wf-diagram{flex-wrap:nowrap!important;height:auto!important;min-height:0!important;gap:6px!important;justify-content:space-between!important;width:100%!important}
   .wf-col{gap:10px!important;flex:0 1 auto!important}
@@ -731,8 +734,9 @@ section{position:relative}
   .arch-card .ripple{display:none!important}   /* translucent ripple art was washing out the copy */
   .arch-card .tile{position:absolute!important;left:16px!important;top:22px!important;width:58px!important;height:58px!important;margin:0!important}
   .arch-card .tile img{width:58%!important;height:58%!important}
-  body .arch-card h3{position:absolute!important;left:10px!important;top:90px!important;width:82px!important;margin:0!important;
-    text-align:left!important;font-size:16px!important;line-height:1.18!important}
+  body .arch-card h3{position:absolute!important;left:6px!important;top:88px!important;width:78px!important;margin:0!important;
+    text-align:center!important;font-size:13px!important;line-height:1.3!important}
+  body .arch-card h3 span{display:block}
   body .arch-card p{position:relative!important;z-index:1!important;margin:0!important;text-align:left!important;color:#17313b!important}
 }
 </style>
@@ -905,25 +909,25 @@ section{position:relative}
     <div class="arch-card reveal">
       <div class="ripple"><img src="uploads/datalake/ripple.svg" alt=""></div>
       <div class="tile flat t-s3" style="width:88px;height:88px"><div class="tile-core"><img src="uploads/datalake/glyph_s3.svg" alt=""></div></div>
-      <h3>AWS S3</h3>
+      <h3><span>AWS</span> <span>S3</span></h3>
       <p>The main storage layer, divided into three zones: Landing, Raw and Analysis.</p>
     </div>
     <div class="arch-card reveal d1">
       <div class="ripple"><img src="uploads/datalake/ripple.svg" alt=""></div>
       <div class="tile flat t-glue" style="width:88px;height:88px"><div class="tile-core"><img src="uploads/datalake/glyph_glue.svg" alt=""></div></div>
-      <h3>AWS Glue</h3>
+      <h3><span>AWS</span> <span>Glue</span></h3>
       <p>Used for data transformation, cleansing, and formatting to integrate data from various sources.</p>
     </div>
     <div class="arch-card reveal d2">
       <div class="ripple"><img src="uploads/datalake/ripple.svg" alt=""></div>
       <div class="tile flat t-lambda" style="width:88px;height:88px"><div class="tile-core"><img src="uploads/datalake/glyph_lambda.svg" alt=""></div></div>
-      <h3>AWS Lambda</h3>
+      <h3><span>AWS</span> <span>Lambda</span></h3>
       <p>Runs custom scripts that de-identify data in real time as it enters the Landing Zone.</p>
     </div>
     <div class="arch-card reveal d3">
       <div class="ripple"><img src="uploads/datalake/ripple.svg" alt=""></div>
       <div class="tile flat t-athena" style="width:88px;height:88px"><div class="tile-core"><img src="uploads/datalake/glyph_athena.svg" alt=""></div></div>
-      <h3>Amazon Athena</h3>
+      <h3><span>Amazon</span> <span>Athena</span></h3>
       <p>Provides querying capabilities, allowing analysis tools to directly access the data within the Analysis Bucket.</p>
     </div>
   </div>
