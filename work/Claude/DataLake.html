@@ -641,6 +641,11 @@ section{position:relative}
   .works-inner{padding:0 6vw!important}
   .sec4{padding-left:6vw!important;padding-right:6vw!important}
   .hero-title{padding:0 6vw!important}
+  /* hero: scale the floating icon field + water icon down, pull the title up */
+  .hero{height:660px!important}
+  .icon-field{top:44px!important;height:300px!important;transform:scale(.78);transform-origin:top center}
+  .hero-icon{top:150px!important;transform:translateX(-50%) scale(.8)!important}
+  .hero-title{top:396px!important}
   /* sec2 intro animation stage: scale the oversized bubble scene down */
   .sec2{height:760px!important;overflow:hidden!important}
   .sec2-stage{transform:scale(.62);transform-origin:top center}
@@ -777,7 +782,7 @@ section{position:relative}
 
   <div class="sec2-content">
     <h2 class="reveal"><span class="grad-text">Data Integration</span> for<br>Bicycle Manufacturer</h2>
-    <p class="reveal d1">The client is a large bicycle manufacturer with extensive data spread across multiple systems, including ERP, MES, POS, and a vast amount of consumer-related information. With data dispersed across various systems, the client aims to establish a unified Data Lake for centralized data access, querying, and analysis to support business decision-making.</p>
+    <p class="reveal d1">A large bicycle manufacturer had data scattered across ERP, MES, POS and consumer systems. We built a unified Data Lake that centralizes access, querying and analysis for better business decisions.</p>
   </div>
 </section>
 
@@ -1108,7 +1113,7 @@ section{position:relative}
     var rect = stage.getBoundingClientRect();
     var vh = window.innerHeight;
     // progress 0 → 1 while the section travels through the viewport
-    var p = (vh * 0.85 - rect.top) / (rect.height * 0.75);
+    var p = (vh * 0.85 - rect.top) / (Math.max(rect.height, 700) * 0.75);
     p = Math.max(0, Math.min(1, p));
     var ease = p * p * (3 - 2 * p); // smoothstep
 
