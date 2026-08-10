@@ -447,10 +447,19 @@ section{position:relative}
 .sources-cluster .ic-tile{position:absolute}
 .chip .ic-tile{width:52px;height:52px}
 
+/* align the sources cluster with the Landing node on its right */
+@media(min-width:769px){
+  .sources-cluster{transform:translateY(-26px)}
+  .wf-diagram .sources-cluster .clu-lbl{bottom:-6px}
+}
+
+/* Data Ingestion sits low, close to the water line */
+#workflow .wf-row:first-of-type{padding-top:96px;padding-bottom:8px}
+
 /* water surface separating Data Ingestion from ETL Processing */
 .wf-surface{
   position:relative;z-index:0;pointer-events:none;
-  height:230px;margin:24px 0 -46px;
+  height:230px;margin:-6px 0 -46px;
   background:url('uploads/datalake/img_surface_bk.webp') center 32%/cover no-repeat;
   mix-blend-mode:multiply;opacity:.42;
 }
