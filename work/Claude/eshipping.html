@@ -675,7 +675,7 @@ section { width: 100%; }
   background: radial-gradient(circle at 50% 60%, #E0F4FF 0%, #EAF6FF 70%, #E2EAF0 100%);
 }
 .result-text h3 {
-  font-size: 20px; font-weight: 700; line-height: 1.6;
+  font-size: 20px; font-weight: 600; line-height: 1.6;
   color: var(--dark); letter-spacing: 0.4px;
   margin-bottom: 8px;
 }
@@ -863,57 +863,44 @@ footer {
   .hero-inner{flex:1 1 auto!important;min-height:0!important;padding:0!important;margin:0!important;max-width:none!important;width:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important}
   .hero-dashboard{width:1280px!important;max-width:none!important}
   .hero-text{padding-top:20px!important;padding-bottom:44px!important;flex:0 0 auto!important}
+  /* the <br> between "...System" and "Shipment..." forced a line break even
+     when there's room for them to share a line - let it wrap naturally and
+     restore the space the markup dropped across the removed <br> */
+  .hero-text h1 br{display:none!important}
+  .hero-text h1 span::before{content:" "}
+  /* the status pill's text/icon were sized for the desktop dashboard and
+     scale 1:1 with its zoom - shrink the source size so it reads smaller
+     relative to the box even after zooming, not just clamped to fit it */
+  .hd-tag{font-size:14px!important;padding:4px 18px 4px 14px!important;gap:6px!important}
+  .hd-icon{width:32px!important;height:32px!important}
+  .hd-icon svg{width:20px!important;height:20px!important}
 
   /* 2) Inefficiencies: photo on top, copy below; keep the copy off the next
         section's tinted background instead of butting straight up against it */
-  .challenge-inner{flex-direction:column!important;min-height:0!important;gap:24px}
-  .challenge-photo{width:100%!important;height:220px!important}
-  .challenge-content{padding:0!important}
+  .challenge-inner{flex-direction:column!important;min-height:0!important;gap:16px}
+  /* .challenge-inner carries the 6vw gutter above, so width:100% still left
+     a 6vw margin either side - break the photo out to true full-bleed */
+  .challenge-photo{width:100vw!important;max-width:none!important;height:220px!important;margin-left:calc(50% - 50vw)!important}
+  .challenge-content{padding:0!important;gap:12px!important}
   .challenge{padding-bottom:36px!important}
 
-  /* 3) Seamless: the step caption sits as an overlay on the card's own bottom
-        edge (dark scrim + white text, like a photo caption) instead of living
-        below it. .flow-nav is pulled out of flow and pinned to the card's
-        bottom - .flow-wrap's height then comes purely from .flow-stage-area,
-        so the caption lines up with the actual card edge with no gap math.
-        A bit of extra card height (520 vs the desktop 460 min) keeps the
-        scrim from creeping up over each stage's own UI (the progress bar in
-        step 01, the table rows in step 05, etc). */
-  .flow-wrap{position:relative!important}
-  .flow-stage-area{min-height:520px!important}
-  .flow-nav{position:absolute!important;left:0!important;right:0!important;bottom:0!important;flex-direction:column!important;flex-wrap:nowrap!important;gap:0!important;z-index:5}
+  /* 3) Seamless: the overlay/scrim treatment covered the animated graphic
+        itself - back to a flat caption below the card (image on top, step
+        text below it, nothing overlapping). .flow-stage-area keeps order:-1
+        so it renders first; .flow-nav stays in normal flow after it. */
+  .flow-wrap{display:flex!important;flex-direction:column!important;gap:20px!important}
+  .flow-stage-area{order:-1;min-height:480px!important}
+  .flow-nav{flex-direction:column!important;flex-wrap:nowrap!important;gap:0!important}
   .flow-nav .flow-step{display:none!important}
-  .flow-nav .flow-step.active{
-    display:flex!important;align-items:center!important;text-align:left!important;
-    /* px stops (not %) so the scrim's reach stays ~170px regardless of how
-       tall this box gets when a longer description wraps to 3 lines -
-       otherwise a tall box stretches the fade proportionally and it creeps
-       up over the card's own content further than intended */
-    background:linear-gradient(to top,rgba(15,23,32,.85) 0,rgba(15,23,32,.55) 90px,rgba(15,23,32,0) 170px)!important;
-    border-radius:0 0 20px 20px!important;box-shadow:none!important;
-    padding:64px 22px 22px!important;
-  }
-  .flow-nav .flow-step.active .fs-num{background:rgba(255,255,255,.2)!important;color:#fff!important}
-  .flow-nav .flow-step.active .fs-title{color:#fff!important}
-  .flow-nav .flow-step.active .fs-desc{color:rgba(255,255,255,.8)!important}
-  /* every stage is vertically centered inside .flow-stage (inset:0 on the
-     520px card) - give it a big bottom padding so the centered content sits
-     clear of the ~170px caption zone instead of getting covered by it. */
-  .flow-stage{padding:28px 20px 180px!important;gap:20px!important}
+  .flow-nav .flow-step.active{display:flex!important;align-items:center!important;background:none!important;box-shadow:none!important;padding:0 4px!important}
+  .flow-nav .flow-step.active .fs-num{background:#E7EDF2!important;color:var(--mid-gray)!important}
+  .flow-stage{padding:28px 20px!important;gap:20px!important}
   .up-zone{width:100%!important;max-width:300px!important;padding:28px 20px!important}
   /* stage 02 was the worst offender: doc preview + 4 stacked chips ran to
-     ~570px tall on a narrow column, well past the 520px card, so "Container"
-     and "Vendor" ended up hidden under the caption scrim (see reference
-     screenshot). 2-up grid roughly halves the chip stack's height. */
+     ~570px tall on a narrow column, past even the enlarged 480px card.
+     2-up grid roughly halves the chip stack's height. */
   .scan-fields{width:100%!important;max-width:280px!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
   .doc{width:170px!important;padding:14px 12px!important}
-  /* these two are absolutely positioned against .flow-stage's own box (not
-     the centered flex content), so the padding trick above doesn't move
-     them - without this they sit at bottom:30-46px, squarely behind the
-     caption, same failure as stage 02's chips. Cleared past the 170px scrim
-     reach with a margin. */
-  .sync-return{bottom:190px!important}
-  .upd-toast{bottom:190px!important;right:16px!important}
   /* stage 05's 4-column table (BOL / Carrier / ETA / Status) was tuned for a
      560px desktop card - at ~290px it had no per-column gap, so the long BOL
      number ran into "Carrier", and the status pill ran past the card edge
@@ -925,13 +912,16 @@ footer {
   .upd-row .bol{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
   .upd-badge{font-size:10px!important;padding:3px 8px!important;gap:4px!important;white-space:nowrap!important}
 
-  /* 4) Leveraging AWS Cloud: the 628px visual was pushed off-screen; stack it under the title */
+  /* 4) Leveraging AWS Cloud: the 628px visual was pushed off-screen; stack it under
+        the title. .sec-title's 64px margin-bottom (tuned for the desktop layout)
+        left a big gap above the now-first visual - tighten it for mobile. */
+  .solution .sec-title{margin-bottom:24px!important}
   .solution-body{flex-direction:column!important;gap:24px!important}
   .solution-visual{order:-1!important;flex:0 0 auto!important;width:100%!important;height:auto!important;aspect-ratio:628/471}
   .solution-list{flex:0 0 auto!important;width:100%!important}
 
   /* 5) Streamlined Shipment: icon left, title + copy right */
-  .results-grid{grid-template-columns:1fr!important;gap:18px!important}
+  .results-grid{grid-template-columns:1fr!important;gap:28px!important}
   .result-card{flex-direction:row!important;align-items:center!important;text-align:left!important;
     gap:16px!important;padding:0!important}
   .result-circle{width:92px!important;height:92px!important}
