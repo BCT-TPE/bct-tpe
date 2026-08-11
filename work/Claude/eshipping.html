@@ -886,7 +886,7 @@ footer {
      - correct regardless of what the parent's box model is doing. */
   .challenge-photo{width:calc(100% + 12vw)!important;max-width:none!important;height:220px!important;margin-left:-6vw!important;margin-right:-6vw!important}
   .challenge-content{padding:0!important;gap:20px!important}
-  .challenge{padding-bottom:36px!important}
+  .challenge{padding-bottom:56px!important}
 
   /* 3) Seamless: one card, not two - the illustration on top and the step
         caption below it, sharing the same white surface/rounded corners/
@@ -900,7 +900,12 @@ footer {
   .flow-stage-area{order:-1;min-height:400px!important;border-radius:0!important;box-shadow:none!important}
   .flow-nav{flex-direction:column!important;flex-wrap:nowrap!important;gap:0!important}
   .flow-nav .flow-step{display:none!important}
-  .flow-nav .flow-step.active{display:flex!important;align-items:flex-start!important;background:none!important;box-shadow:none!important;padding:22px 22px 26px!important}
+  /* a leftover .flow-step{flex:1 1 260px} from the 960px tablet breakpoint
+     (written for a horizontal-wrapping row of pills) was leaking through
+     here unopposed - flex-grow:1 stretched this box to fill .flow-nav's
+     leftover height, leaving ~150px of dead space below the caption text
+     before the card's bottom edge. */
+  .flow-nav .flow-step.active{display:flex!important;flex:0 0 auto!important;align-items:flex-start!important;background:none!important;box-shadow:none!important;padding:22px 22px 26px!important}
   .flow-nav .flow-step.active .fs-num{background:#E7EDF2!important;color:var(--mid-gray)!important}
   .flow-stage{padding:28px 20px!important;gap:20px!important}
   .up-zone{width:100%!important;max-width:300px!important;padding:28px 20px!important}
@@ -931,7 +936,7 @@ footer {
      not section/card headers - the shared h3 scale (22px) read too heavy
      here, so step down to the h4-h6 tier (18px) instead of inventing a
      one-off size */
-  .sol-title h3{font-size:18px!important}
+  .sol-title h3{font-size:16px!important}
 
   /* 5) Streamlined Shipment: icon left, title + copy right */
   .results-grid{grid-template-columns:1fr!important;gap:36px!important}
@@ -939,7 +944,7 @@ footer {
     gap:16px!important;padding:0!important}
   .result-circle{width:76px!important;height:76px!important}
   .result-text{flex:1 1 auto}
-  .result-text h3{font-size:18px!important;margin-bottom:6px}
+  .result-text h3{font-size:16px!important;margin-bottom:6px}
 }
 </style>
 </head>
