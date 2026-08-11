@@ -871,28 +871,36 @@ footer {
   /* the status pill's text/icon were sized for the desktop dashboard and
      scale 1:1 with its zoom - shrink the source size so it reads smaller
      relative to the box even after zooming, not just clamped to fit it */
-  .hd-tag{font-size:14px!important;padding:4px 18px 4px 14px!important;gap:6px!important}
+  .hd-tag{font-size:14px!important;padding:4px 18px 4px 14px!important;gap:6px!important;top:66px!important}
   .hd-icon{width:32px!important;height:32px!important}
   .hd-icon svg{width:20px!important;height:20px!important}
 
-  /* 2) Inefficiencies: photo on top, copy below; keep the copy off the next
-        section's tinted background instead of butting straight up against it */
-  .challenge-inner{flex-direction:column!important;min-height:0!important;gap:16px}
-  /* .challenge-inner carries the 6vw gutter above, so width:100% still left
-     a 6vw margin either side - break the photo out to true full-bleed */
-  .challenge-photo{width:100vw!important;max-width:none!important;height:220px!important;margin-left:calc(50% - 50vw)!important}
-  .challenge-content{padding:0!important;gap:12px!important}
+  /* 2) Inefficiencies: photo on top, copy below; more air around the block
+        (photo-to-heading, heading-to-paragraph), and still clear of the next
+        section's tinted background below */
+  .challenge-inner{flex-direction:column!important;min-height:0!important;gap:28px}
+  /* .challenge-inner carries the 6vw gutter, so width:100vw + the old
+     margin-left:calc(50%-50vw) trick was computed against the wrong
+     containing block (a padded flex child, not the true viewport) and left
+     a gap on the right. Cancel exactly the parent's own 6vw padding instead
+     - correct regardless of what the parent's box model is doing. */
+  .challenge-photo{width:calc(100% + 12vw)!important;max-width:none!important;height:220px!important;margin-left:-6vw!important;margin-right:-6vw!important}
+  .challenge-content{padding:0!important;gap:20px!important}
   .challenge{padding-bottom:36px!important}
 
-  /* 3) Seamless: the overlay/scrim treatment covered the animated graphic
-        itself - back to a flat caption below the card (image on top, step
-        text below it, nothing overlapping). .flow-stage-area keeps order:-1
-        so it renders first; .flow-nav stays in normal flow after it. */
-  .flow-wrap{display:flex!important;flex-direction:column!important;gap:20px!important}
-  .flow-stage-area{order:-1;min-height:480px!important}
+  /* 3) Seamless: one card, not two - the illustration on top and the step
+        caption below it, sharing the same white surface/rounded corners/
+        shadow, so the card just grows taller instead of the caption either
+        overlaying the art (tried, covered it) or floating separately below
+        it (tried, read as disconnected). .flow-wrap becomes the visible
+        card; .flow-stage-area is just its (rounded-top-only, shadowless)
+        animation region, and .flow-nav is the caption region under it. */
+  .flow-wrap{display:flex!important;flex-direction:column!important;gap:0!important;
+    background:#fff!important;border-radius:20px!important;box-shadow:0 24px 64px rgba(46,56,65,.12)!important;overflow:hidden!important}
+  .flow-stage-area{order:-1;min-height:400px!important;border-radius:0!important;box-shadow:none!important}
   .flow-nav{flex-direction:column!important;flex-wrap:nowrap!important;gap:0!important}
   .flow-nav .flow-step{display:none!important}
-  .flow-nav .flow-step.active{display:flex!important;align-items:center!important;background:none!important;box-shadow:none!important;padding:0 4px!important}
+  .flow-nav .flow-step.active{display:flex!important;align-items:flex-start!important;background:none!important;box-shadow:none!important;padding:22px 22px 26px!important}
   .flow-nav .flow-step.active .fs-num{background:#E7EDF2!important;color:var(--mid-gray)!important}
   .flow-stage{padding:28px 20px!important;gap:20px!important}
   .up-zone{width:100%!important;max-width:300px!important;padding:28px 20px!important}
@@ -919,14 +927,19 @@ footer {
   .solution-body{flex-direction:column!important;gap:24px!important}
   .solution-visual{order:-1!important;flex:0 0 auto!important;width:100%!important;height:auto!important;aspect-ratio:628/471}
   .solution-list{flex:0 0 auto!important;width:100%!important}
+  /* these are compact list-row titles (icon + title + one-line description),
+     not section/card headers - the shared h3 scale (22px) read too heavy
+     here, so step down to the h4-h6 tier (18px) instead of inventing a
+     one-off size */
+  .sol-title h3{font-size:18px!important}
 
   /* 5) Streamlined Shipment: icon left, title + copy right */
-  .results-grid{grid-template-columns:1fr!important;gap:28px!important}
+  .results-grid{grid-template-columns:1fr!important;gap:36px!important}
   .result-card{flex-direction:row!important;align-items:center!important;text-align:left!important;
     gap:16px!important;padding:0!important}
-  .result-circle{width:92px!important;height:92px!important}
+  .result-circle{width:76px!important;height:76px!important}
   .result-text{flex:1 1 auto}
-  .result-text h3{margin-bottom:6px}
+  .result-text h3{font-size:18px!important;margin-bottom:6px}
 }
 </style>
 </head>
