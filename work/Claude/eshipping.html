@@ -862,12 +862,16 @@ footer {
   .challenge-content{padding:0!important}
   .challenge{padding-bottom:36px!important}
 
-  /* 3) Seamless: visual under the heading, only the active step's copy below it */
+  /* 3) Seamless: animated visual on top, only the active step's copy below it.
+        (the order rule targeted .flow-visual/.flow-stage-wrap, classes that don't
+        exist on this markup - the real visual is .flow-stage-area, so it was
+        never actually promoted above the text) */
   .flow-wrap{display:flex!important;flex-direction:column!important;gap:20px!important}
-  .flow-wrap .flow-visual,.flow-wrap .flow-stage-wrap{order:-1}
+  .flow-stage-area{order:-1}
   .flow-nav{flex-direction:column!important;flex-wrap:nowrap!important;gap:0!important}
   .flow-nav .flow-step{display:none!important}
-  .flow-nav .flow-step.active{display:flex!important}
+  .flow-nav .flow-step.active{display:flex!important;background:none!important;box-shadow:none!important;padding:0 4px!important}
+  .flow-nav .flow-step.active .fs-num{background:#E7EDF2!important;color:var(--mid-gray)!important}
 
   /* 4) Leveraging AWS Cloud: the 628px visual was pushed off-screen; stack it under the title */
   .solution-body{flex-direction:column!important;gap:24px!important}
