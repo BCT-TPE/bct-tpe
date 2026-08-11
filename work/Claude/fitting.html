@@ -125,6 +125,14 @@
     .hero-bg {
       position: absolute; inset: 0;
       background: url('uploads/fitting/fitting_hero_bg.webp') center center / cover no-repeat;
+      animation: heroBgZoom 20s ease-out forwards;
+    }
+    @keyframes heroBgZoom {
+      from { transform: scale(1); }
+      to   { transform: scale(1.12); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-bg { animation: none; }
     }
     .hero-content {
       position: relative; z-index: 2;

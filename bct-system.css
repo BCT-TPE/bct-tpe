@@ -72,21 +72,28 @@
   #bctnav .burger{display:flex}
   #bctnav .bar{justify-content:space-between}
   #bctnav .logo{position:absolute;left:50%;transform:translateX(-50%)}
-  #bctnav .navmenu{display:flex;position:fixed;inset:0;z-index:1;background:var(--bct-paper);flex-direction:column;justify-content:flex-start;gap:2px;padding:15vh 10vw 0;opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .35s var(--bct-ease),transform .4s var(--bct-ease),visibility .35s}
+  #bctnav .navmenu{display:flex;position:fixed;inset:0;z-index:1;background:var(--bct-paper);flex-direction:column;justify-content:flex-start;gap:10px;padding:15vh 10vw 0;opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .35s var(--bct-ease),transform .4s var(--bct-ease),visibility .35s}
   #bctnav.open .navmenu{opacity:1;visibility:visible;transform:none}
-  #bctnav .navmenu>a,#bctnav .nm-worktrig{font-size:clamp(44px,11vw,72px);font-weight:700;color:var(--bct-ink);text-decoration:none;letter-spacing:-.02em;line-height:1.28;width:max-content;background:none;border:none;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:14px}
+  #bctnav .navmenu>a,#bctnav .nm-worktrig{font-size:clamp(32px,9vw,56px);font-weight:700;color:var(--bct-ink);text-decoration:none;letter-spacing:-.02em;line-height:1.28;width:max-content;background:none;border:none;cursor:pointer;padding:6px 0;display:inline-flex;align-items:center;gap:14px}
   #bctnav .navmenu>a:hover,#bctnav .nm-worktrig:hover{color:var(--bct-blue)}
   #bctnav .nm-work{display:flex;flex-direction:column}
   #bctnav .nm-caret{transition:transform .3s var(--bct-ease)}
   #bctnav .nm-work.open .nm-caret{transform:rotate(180deg)}
   #bctnav .nm-sub{display:flex;flex-direction:column;max-height:0;overflow:hidden;padding-left:2px;transition:max-height .45s var(--bct-ease)}
   #bctnav .nm-work.open .nm-sub{max-height:70vh}
-  #bctnav .nm-sub a{font-size:clamp(16px,4.4vw,21px);font-weight:500;color:#5a6470;text-decoration:none;padding:8px 0;line-height:1.2}
+  #bctnav .nm-sub a{font-size:clamp(16px,4.4vw,21px);font-weight:500;color:#5a6470;text-decoration:none;padding:14px 0;line-height:1.2}
   #bctnav .nm-sub a:hover{color:var(--bct-blue)}
-  /* dark-page theme: dark full-screen overlay + white items */
+  /* dark-page theme: dark full-screen overlay + white items. Hover/tap colour
+     is overridden here too - the light rules above turn text var(--bct-blue)
+     on :hover, and on touch devices a tap leaves :hover "stuck" until the
+     next tap elsewhere, so without this override a dark-page menu would
+     flash the same light-mode blue on tap. Dark stays dark: brighten
+     slightly instead of recolouring. */
   #bctnav.on-dark .navmenu{background:#0b0e16}
   #bctnav.on-dark .navmenu>a,#bctnav.on-dark .nm-worktrig{color:#fff}
+  #bctnav.on-dark .navmenu>a:hover,#bctnav.on-dark .nm-worktrig:hover{color:#fff}
   #bctnav.on-dark .nm-sub a{color:rgba(255,255,255,.62)}
+  #bctnav.on-dark .nm-sub a:hover{color:#fff}
 }
 
 /* ---- 3. Shared footer (homepage footer; !important so page footer{} rules can't restyle it) ---- */
