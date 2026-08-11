@@ -1502,9 +1502,16 @@ window.addEventListener('scroll', revealAnims, { passive: true });
     stages.forEach((s, n) => s.classList.toggle('active', n === i));
     dots.forEach((d, n) => d.classList.toggle('active', n === i));
   }
+  // one full play-through of each stage's own animation, not a uniform
+  // guess: stage 0 upFill 2.4s, stage 1's last staggered chip finishes at
+  // 1.7s delay + 2.6s = 4.3s, stage 2's last packet at 1.4s + 2.4s = 3.8s,
+  // stage 3's ship lands at 3.5s, stage 4's badge/toast cycle is 3.4s -
+  // each padded slightly so the finished state is visible for a beat
+  // before advancing, rather than cutting away the instant it lands.
+  const DURATIONS = [2600, 4500, 4000, 3800, 3600];
   function play() {
-    clearInterval(timer);
-    timer = setInterval(() => activate((idx + 1) % steps.length), 5000);
+    clearTimeout(timer);
+    timer = setTimeout(() => { activate((idx + 1) % steps.length); play(); }, DURATIONS[idx]);
   }
   steps.forEach((s, i) => s.addEventListener('click', () => { activate(i); play(); }));
   dots.forEach((d, i) => d.addEventListener('click', () => { activate(i); play(); }));
@@ -1528,7 +1535,7 @@ window.addEventListener('scroll', revealAnims, { passive: true });
   const section = document.querySelector('.app-showcase');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if (e.isIntersecting) { play(); } else { clearInterval(timer); }
+      if (e.isIntersecting) { play(); } else { clearTimeout(timer); }
     });
   }, { threshold: 0.25 });
   if (section) io.observe(section);
