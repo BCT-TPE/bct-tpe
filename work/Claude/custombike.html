@@ -117,7 +117,11 @@ nav#nav.scrolled{border-color:rgba(255,255,255,0.12)}
    ============================================================ */
 section{position:relative}
 .wrap{max-width:var(--inner-w);margin:0 auto;padding:0 var(--px)}
-.eyebrow{font-size:20px;font-weight:700;line-height:32px;letter-spacing:.4px;color:var(--blue)}
+/* eyebrow kicker uses the shared bct-system.css treatment (12px/600/uppercase/2px tracking);
+   colour is the one thing pages are allowed to override to match their own accent (FLIR does the
+   same with its amber). Do not resize/re-weight it here - that's the drift the shared rule exists
+   to prevent. */
+body .sec-label{color:var(--blue)!important}
 .h-sec{font-size:28px;font-weight:500;line-height:44px;letter-spacing:.28px;color:var(--white)}
 .t2{font-size:40px;font-weight:600;line-height:52px;color:var(--white)}
 
@@ -525,7 +529,7 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
         </div>
       </div>
       <div class="goal-copy">
-        <p class="eyebrow reveal">Project Goal</p>
+        <p class="sec-label reveal">Project Goal</p>
         <h2 class="h-sec reveal d1">Craft Your Dream Bike<br>with Seamless Global Support</h2>
         <form class="goal-form reveal d2" id="goalForm" autocomplete="off" onsubmit="return false">
           <div class="gform-head">
@@ -596,7 +600,7 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
           <p class="kp-label">Powerful Management System</p>
           <h3 class="kp-title">Streamlines the Process of<br>Managing Bicycle Models and Parts</h3>
         </div>
-        <div class="mgmt-anim" role="img" aria-label="Management system UI — part table with Snapshot, Brand and Level columns, a bike preview and snapshot cards">
+        <div class="mgmt-anim" role="img" aria-label="Management system UI, part table with Snapshot, Brand and Level columns, a bike preview and snapshot cards">
           <div class="mgmt-win"></div>
           <div class="mgmt-dots" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="mgmt-card mgmt-c1"><img src="uploads/custombike/mgmt_card1.png" width="520" height="362" loading="lazy" alt=""></div>
@@ -610,7 +614,7 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
           <p class="kp-label">Efficiency of Global Orders Handling</p>
           <h3 class="kp-title">Supports Global Pricing and Logistics<br>Management</h3>
         </div>
-        <div class="orders-anim" role="img" aria-label="Global orders UI — multi-currency selector (USA Dollar, EU, GBP, KRW) with pricing fields">
+        <div class="orders-anim" role="img" aria-label="Global orders UI, multi-currency selector (USA Dollar, EU, GBP, KRW) with pricing fields">
           <img class="oa-bg" src="uploads/custombike/orders_bg.png" width="1018" height="700" loading="lazy" alt="">
           <img class="oa-panel" src="uploads/custombike/orders_panel.png" width="947" height="680" loading="lazy" alt="">
           <div class="oa-tag oa-pill oa-us"><img src="uploads/custombike/flag_us.png" width="128" height="128" loading="lazy" alt="">USA (Dollar)

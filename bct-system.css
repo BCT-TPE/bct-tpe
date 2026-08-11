@@ -106,7 +106,7 @@ html body *:not(svg):not(svg *){font-family:var(--bct-font)!important}
 /* ---- 5. Type scale (opt-in) ---- */
 body.bct-scale h1{font-size:40px!important;line-height:1.15!important}
 body.bct-scale h2{font-size:30px!important;line-height:1.2!important}
-body.bct-scale h3{font-size:22px!important;line-height:1.3!important}
+body.bct-scale h3{font-size:22px!important;line-height:1.3!important;font-weight:600!important}
 body.bct-scale h4,body.bct-scale h5,body.bct-scale h6{font-size:18px!important;line-height:1.35!important}
 body.bct-scale p,body.bct-scale li{font-size:16px!important;line-height:1.6!important}
 /* the shared chrome keeps its own sizes regardless of the scale */

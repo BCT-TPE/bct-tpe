@@ -628,6 +628,21 @@ footer{
 </style>
 <link rel="stylesheet" href="../../bct-system.css">
 <script src="../../bct-system.js" defer></script>
+<style id="bctpage-css">
+/* gac — mobile layout (first pass; this page hadn't had one) */
+@media(max-width:768px){
+  /* this page's own breakpoints bottom out at a fixed 32px side padding,
+     never the shared 6vw gutter every other case-study page uses */
+  .wrap,.works-inner,.voices-inner{padding-left:6vw!important;padding-right:6vw!important}
+  /* "...of a<br><span>Consumer Account System</span>" forces a break right
+     before the coloured span even though "of a" already wraps on its own at
+     this width - same failure eshipping's hero title had. Let it wrap
+     naturally and restore the space the markup dropped across the <br>. */
+  .hero .t1 br{display:none!important}
+  .hero .t1 span::before{content:" "}
+}
+</style>
+
 </head>
 <body class="bct-scale">
 
