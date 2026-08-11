@@ -298,8 +298,8 @@ section { width: 100%; }
   color: var(--dark);
 }
 .challenge-content p {
-  font-size: 20px; font-weight: 500; line-height: 1.4;
-  color: var(--dark);
+  font-size: 20px; font-weight: 400; line-height: 1.6;
+  color: var(--deep-blue);
 }
 
 /* ── APP SHOWCASE ── */
@@ -840,16 +840,27 @@ footer {
 @media(max-width:768px){
   /* section gutter: desktop 80px squeezed the content column to 230px */
   .sec-inner,.challenge-inner,.app-showcase-inner,.voices-inner,.hero-text,.works-inner{padding-left:6vw!important;padding-right:6vw!important}
-  /* 1) hero: drop the side floats, scale the 1280px dashboard down to full width */
+  /* 1) hero: drop the side floats, scale the 1280px dashboard down to full width.
+        the ::before glow photo used a fixed 200px inset for the desktop vignette;
+        at phone widths that ate the whole box (200*2 > viewport) and the photo
+        vanished. Also size the dashboard up ~20% and let it overflow-crop evenly
+        (flex-centered) instead of shrinking to fit, so it isn't lost in whitespace. */
   .hero{min-height:0!important;padding-bottom:24px;overflow-x:hidden}
+  /* the 200px inset was relative to the whole .hero box (dashboard + heading);
+     at phone width that's negative space (photo gone) or, sized down naively,
+     bleeds the photo up under the heading text. Pin it to just the dashboard's
+     own footprint instead. */
+  .hero::before{inset:auto!important;top:76px!important;left:16px!important;right:16px!important;height:240px!important}
   .hero-float-left,.hero-float-right{display:none!important}
-  .hero-inner{padding:96px 0 0!important;max-width:none!important}
+  .hero-inner{padding:28px 0 0!important;max-width:none!important;display:flex!important;justify-content:center!important}
   .hero-dashboard{width:1280px!important;max-width:none!important}
 
-  /* 2) Inefficiencies: photo on top, copy below */
+  /* 2) Inefficiencies: photo on top, copy below; keep the copy off the next
+        section's tinted background instead of butting straight up against it */
   .challenge-inner{flex-direction:column!important;min-height:0!important;gap:24px}
   .challenge-photo{width:100%!important;height:220px!important}
   .challenge-content{padding:0!important}
+  .challenge{padding-bottom:36px!important}
 
   /* 3) Seamless: visual under the heading, only the active step's copy below it */
   .flow-wrap{display:flex!important;flex-direction:column!important;gap:20px!important}
@@ -1426,8 +1437,10 @@ window.addEventListener('scroll', revealAnims, { passive: true });
     var d=document.querySelector('.hero-dashboard');
     if(!d) return;
     if(innerWidth>768){ d.style.zoom=''; return; }
-    /* zoom (not transform): the .fade-up reveal animation owns `transform` */
-    d.style.zoom = innerWidth/1280;
+    /* zoom (not transform): the .fade-up reveal animation owns `transform`.
+       zoom ~20% past the exact-fit ratio so the box/tags read bigger; .hero-inner
+       flex-centers the now-overflowing dashboard so it crops evenly on both sides */
+    d.style.zoom = (innerWidth/1280) * 1.2;
   }
   addEventListener('resize',fit); addEventListener('orientationchange',fit); addEventListener('load',fit); fit();
 })();
