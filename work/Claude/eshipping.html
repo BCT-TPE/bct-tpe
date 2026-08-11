@@ -840,20 +840,29 @@ footer {
 @media(max-width:768px){
   /* section gutter: desktop 80px squeezed the content column to 230px */
   .sec-inner,.challenge-inner,.app-showcase-inner,.voices-inner,.hero-text,.works-inner{padding-left:6vw!important;padding-right:6vw!important}
-  /* 1) hero: drop the side floats, scale the 1280px dashboard down to full width.
-        the ::before glow photo used a fixed 200px inset for the desktop vignette;
-        at phone widths that ate the whole box (200*2 > viewport) and the photo
-        vanished. Also size the dashboard up ~20% and let it overflow-crop evenly
-        (flex-centered) instead of shrinking to fit, so it isn't lost in whitespace. */
-  .hero{min-height:0!important;padding-bottom:24px;overflow-x:hidden}
+  /* 1) hero: fills the screen height - the graphic takes whatever room is left
+        above the title, the title sits pinned to the bottom. .hero-inner is
+        flex:1 with min-height:0 so its size comes purely from the flex
+        distribution (viewport height minus the title block), not from the
+        dashboard's own content - that lets bctpage.js size the dashboard zoom
+        to fill that space without a circular measure-then-resize loop. The
+        dashboard overflow-crops evenly (flex-centered, .hero-inner clips it)
+        instead of shrinking to fit, so it reads as full-bleed art, not a
+        small mockup adrift in whitespace. */
+  .hero{min-height:100svh!important;display:flex!important;flex-direction:column!important;padding-bottom:0!important;overflow-x:hidden}
   /* the 200px inset was relative to the whole .hero box (dashboard + heading);
-     at phone width that's negative space (photo gone) or, sized down naively,
-     bleeds the photo up under the heading text. Pin it to just the dashboard's
-     own footprint instead. */
-  .hero::before{inset:auto!important;top:76px!important;left:16px!important;right:16px!important;height:240px!important}
+     at phone width that's negative space (photo gone). Pin it to the
+     .hero-inner graphic band instead, sized to match via --hi-h (set by
+     bctpage.js each time the dashboard is refit). */
+  .hero::before{inset:auto!important;top:100px!important;left:16px!important;right:16px!important;height:calc(var(--hi-h, 240px) - 24px)!important}
   .hero-float-left,.hero-float-right{display:none!important}
-  .hero-inner{padding:28px 0 0!important;max-width:none!important;display:flex!important;justify-content:center!important}
+  /* the desktop rule's `margin:0 auto` gives .hero-inner an auto cross-axis
+     margin, which per the flexbox spec disables stretch even though .hero
+     never set align-self otherwise - it was sizing to fit its zoomed (and
+     now much wider) child instead of clipping at the viewport width. */
+  .hero-inner{flex:1 1 auto!important;min-height:0!important;padding:0!important;margin:0!important;max-width:none!important;width:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important}
   .hero-dashboard{width:1280px!important;max-width:none!important}
+  .hero-text{padding-top:20px!important;padding-bottom:44px!important;flex:0 0 auto!important}
 
   /* 2) Inefficiencies: photo on top, copy below; keep the copy off the next
         section's tinted background instead of butting straight up against it */
@@ -862,16 +871,59 @@ footer {
   .challenge-content{padding:0!important}
   .challenge{padding-bottom:36px!important}
 
-  /* 3) Seamless: animated visual on top, only the active step's copy below it.
-        (the order rule targeted .flow-visual/.flow-stage-wrap, classes that don't
-        exist on this markup - the real visual is .flow-stage-area, so it was
-        never actually promoted above the text) */
-  .flow-wrap{display:flex!important;flex-direction:column!important;gap:20px!important}
-  .flow-stage-area{order:-1}
-  .flow-nav{flex-direction:column!important;flex-wrap:nowrap!important;gap:0!important}
+  /* 3) Seamless: the step caption sits as an overlay on the card's own bottom
+        edge (dark scrim + white text, like a photo caption) instead of living
+        below it. .flow-nav is pulled out of flow and pinned to the card's
+        bottom - .flow-wrap's height then comes purely from .flow-stage-area,
+        so the caption lines up with the actual card edge with no gap math.
+        A bit of extra card height (520 vs the desktop 460 min) keeps the
+        scrim from creeping up over each stage's own UI (the progress bar in
+        step 01, the table rows in step 05, etc). */
+  .flow-wrap{position:relative!important}
+  .flow-stage-area{min-height:520px!important}
+  .flow-nav{position:absolute!important;left:0!important;right:0!important;bottom:0!important;flex-direction:column!important;flex-wrap:nowrap!important;gap:0!important;z-index:5}
   .flow-nav .flow-step{display:none!important}
-  .flow-nav .flow-step.active{display:flex!important;background:none!important;box-shadow:none!important;padding:0 4px!important}
-  .flow-nav .flow-step.active .fs-num{background:#E7EDF2!important;color:var(--mid-gray)!important}
+  .flow-nav .flow-step.active{
+    display:flex!important;align-items:center!important;text-align:left!important;
+    /* px stops (not %) so the scrim's reach stays ~170px regardless of how
+       tall this box gets when a longer description wraps to 3 lines -
+       otherwise a tall box stretches the fade proportionally and it creeps
+       up over the card's own content further than intended */
+    background:linear-gradient(to top,rgba(15,23,32,.85) 0,rgba(15,23,32,.55) 90px,rgba(15,23,32,0) 170px)!important;
+    border-radius:0 0 20px 20px!important;box-shadow:none!important;
+    padding:64px 22px 22px!important;
+  }
+  .flow-nav .flow-step.active .fs-num{background:rgba(255,255,255,.2)!important;color:#fff!important}
+  .flow-nav .flow-step.active .fs-title{color:#fff!important}
+  .flow-nav .flow-step.active .fs-desc{color:rgba(255,255,255,.8)!important}
+  /* every stage is vertically centered inside .flow-stage (inset:0 on the
+     520px card) - give it a big bottom padding so the centered content sits
+     clear of the ~170px caption zone instead of getting covered by it. */
+  .flow-stage{padding:28px 20px 180px!important;gap:20px!important}
+  .up-zone{width:100%!important;max-width:300px!important;padding:28px 20px!important}
+  /* stage 02 was the worst offender: doc preview + 4 stacked chips ran to
+     ~570px tall on a narrow column, well past the 520px card, so "Container"
+     and "Vendor" ended up hidden under the caption scrim (see reference
+     screenshot). 2-up grid roughly halves the chip stack's height. */
+  .scan-fields{width:100%!important;max-width:280px!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+  .doc{width:170px!important;padding:14px 12px!important}
+  /* these two are absolutely positioned against .flow-stage's own box (not
+     the centered flex content), so the padding trick above doesn't move
+     them - without this they sit at bottom:30-46px, squarely behind the
+     caption, same failure as stage 02's chips. Cleared past the 170px scrim
+     reach with a margin. */
+  .sync-return{bottom:190px!important}
+  .upd-toast{bottom:190px!important;right:16px!important}
+  /* stage 05's 4-column table (BOL / Carrier / ETA / Status) was tuned for a
+     560px desktop card - at ~290px it had no per-column gap, so the long BOL
+     number ran into "Carrier", and the status pill ran past the card edge
+     and got clipped ("Arri...", "In Progr..."). Give columns breathing room
+     and let the long values truncate instead of overflowing. */
+  .upd-head,.upd-row{grid-template-columns:1.3fr .8fr 1fr 1.1fr!important;gap:6px!important;padding:10px 12px!important}
+  .upd-head{font-size:9px!important}
+  .upd-row{font-size:11px!important}
+  .upd-row .bol{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+  .upd-badge{font-size:10px!important;padding:3px 8px!important;gap:4px!important;white-space:nowrap!important}
 
   /* 4) Leveraging AWS Cloud: the 628px visual was pushed off-screen; stack it under the title */
   .solution-body{flex-direction:column!important;gap:24px!important}
@@ -1435,16 +1487,26 @@ window.addEventListener('scroll', revealAnims, { passive: true });
 </div><!-- /.page-wrap -->
 <footer id="bctftr">© 2026 BCT Taipei. All rights reserved. · Bahwan CyberTek Group</footer>
 <script>
-/* eshipping hero: scale the fixed 1280px dashboard to the phone width */
+/* eshipping hero: scale the fixed 1280px dashboard to fill the space above the title */
 (function(){
   function fit(){
     var d=document.querySelector('.hero-dashboard');
+    var inner=document.querySelector('.hero-inner');
+    var hero=document.querySelector('.hero');
     if(!d) return;
-    if(innerWidth>768){ d.style.zoom=''; return; }
+    if(innerWidth>768){ d.style.zoom=''; if(hero) hero.style.removeProperty('--hi-h'); return; }
     /* zoom (not transform): the .fade-up reveal animation owns `transform`.
-       zoom ~20% past the exact-fit ratio so the box/tags read bigger; .hero-inner
-       flex-centers the now-overflowing dashboard so it crops evenly on both sides */
-    d.style.zoom = (innerWidth/1280) * 1.2;
+       .hero-inner is flex:1/min-height:0/overflow:hidden, so its clientHeight
+       comes from the flex split (viewport minus the title block) regardless
+       of how big the dashboard renders - no measure/resize feedback loop.
+       Fill that height, but cap how far the 560px shipment box can overflow
+       the viewport so it doesn't get cropped down to an unrecognizable sliver. */
+    var availH = inner ? inner.clientHeight : 0;
+    var widthFit = innerWidth/1280;
+    var heightFit = availH>0 ? availH/412 : widthFit*1.2;
+    var boxCap = (innerWidth*1.15)/560;
+    d.style.zoom = Math.max(widthFit*1.2, Math.min(heightFit, boxCap));
+    if(hero && availH>0) hero.style.setProperty('--hi-h', availH+'px');
   }
   addEventListener('resize',fit); addEventListener('orientationchange',fit); addEventListener('load',fit); fit();
 })();
