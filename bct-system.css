@@ -83,17 +83,15 @@
   #bctnav .nm-work.open .nm-sub{max-height:70vh}
   #bctnav .nm-sub a{font-size:clamp(16px,4.4vw,21px);font-weight:500;color:#5a6470;text-decoration:none;padding:14px 0;line-height:1.2}
   #bctnav .nm-sub a:hover{color:var(--bct-blue)}
-  /* dark-page theme: dark full-screen overlay + white items. Hover/tap colour
-     is overridden here too - the light rules above turn text var(--bct-blue)
-     on :hover, and on touch devices a tap leaves :hover "stuck" until the
-     next tap elsewhere, so without this override a dark-page menu would
-     flash the same light-mode blue on tap. Dark stays dark: brighten
-     slightly instead of recolouring. */
+  /* dark-page theme: dark full-screen overlay + white items, same blue
+     hover/tap accent as the light menu (var(--bct-blue) reads fine against
+     the dark navy background - it's the same colour already used on the
+     Contact Us pill in the dark header). */
   #bctnav.on-dark .navmenu{background:#0b0e16}
   #bctnav.on-dark .navmenu>a,#bctnav.on-dark .nm-worktrig{color:#fff}
-  #bctnav.on-dark .navmenu>a:hover,#bctnav.on-dark .nm-worktrig:hover{color:#fff}
+  #bctnav.on-dark .navmenu>a:hover,#bctnav.on-dark .nm-worktrig:hover{color:var(--bct-blue)}
   #bctnav.on-dark .nm-sub a{color:rgba(255,255,255,.62)}
-  #bctnav.on-dark .nm-sub a:hover{color:#fff}
+  #bctnav.on-dark .nm-sub a:hover{color:var(--bct-blue)}
 }
 
 /* ---- 3. Shared footer (homepage footer; !important so page footer{} rules can't restyle it) ---- */

@@ -385,6 +385,12 @@ section { width: 100%; }
   transition: opacity .5s ease;
 }
 .flow-stage.active { opacity: 1; visibility: visible; }
+/* swipe-position indicator - mobile only (bct-system.css media query shows
+   it and pulls it into the card); desktop already has the clickable step
+   list, so this stays hidden there */
+.flow-dots { display: none; }
+.flow-dots .fd { width: 6px; height: 6px; border-radius: 50%; background: #D5DEE5; transition: width .25s ease, background .25s ease; }
+.flow-dots .fd.active { width: 18px; border-radius: 4px; background: var(--blue); }
 
 /* Paper document (shared look) */
 .doc {
@@ -534,7 +540,7 @@ section { width: 100%; }
   offset-path: path('M 93 204 Q 310 150 527 96');
   offset-rotate: 0deg;
 }
-.flow-stage.active .track-ship { animation: shipMove 4s ease-in-out infinite; }
+.flow-stage.active .track-ship { animation: shipMove 3.5s ease-in-out forwards; }
 @keyframes shipMove { 0%{ offset-distance: 0%; } 60%,100%{ offset-distance: 100%; } }
 
 /* STAGE 5 — Auto status update */
@@ -907,6 +913,10 @@ footer {
      before the card's bottom edge. */
   .flow-nav .flow-step.active{display:flex!important;flex:0 0 auto!important;align-items:flex-start!important;background:none!important;box-shadow:none!important;padding:22px 22px 26px!important}
   .flow-nav .flow-step.active .fs-num{background:#E7EDF2!important;color:var(--mid-gray)!important}
+  /* swipe-position dots at the card's bottom edge - the only way to tell
+     (or change) which of the 5 steps you're on used to be the hidden
+     desktop step list or waiting for the 5s auto-advance */
+  .flow-dots{display:flex!important;justify-content:center;align-items:center;gap:6px;padding:4px 0 20px}
   .flow-stage{padding:28px 20px!important;gap:20px!important}
   .up-zone{width:100%!important;max-width:300px!important;padding:28px 20px!important}
   /* stage 02 was the worst offender: doc preview + 4 stacked chips ran to
@@ -936,7 +946,12 @@ footer {
      not section/card headers - the shared h3 scale (22px) read too heavy
      here, so step down to the h4-h6 tier (18px) instead of inventing a
      one-off size */
-  .sol-title h3{font-size:16px!important}
+  /* .sol-title h3 (0,1,1) loses to bct-system.css's body.bct-scale h3
+     (0,1,2) regardless of !important or source order - it was never
+     actually applying, stuck at the shared 22px this whole time no matter
+     what size was set here. Match its specificity with a body prefix so
+     source order (this file loads after bct-system.css) decides it. */
+  body .sol-title h3{font-size:16px!important}
 
   /* 5) Streamlined Shipment: icon left, title + copy right */
   .results-grid{grid-template-columns:1fr!important;gap:36px!important}
@@ -944,7 +959,9 @@ footer {
     gap:16px!important;padding:0!important}
   .result-circle{width:76px!important;height:76px!important}
   .result-text{flex:1 1 auto}
-  .result-text h3{font-size:16px!important;margin-bottom:6px}
+  /* same specificity fix as .sol-title h3 above - body.bct-scale h3 (0,1,2)
+     was winning over this (0,1,1) regardless of what size was set here */
+  body .result-text h3{font-size:16px!important;margin-bottom:6px}
 }
 </style>
 </head>
@@ -1234,6 +1251,13 @@ footer {
           <div class="upd-toast"><span class="tk">&#10003;</span>Status updated automatically</div>
         </div>
       </div>
+      <div class="flow-dots" aria-hidden="true">
+        <span class="fd active" data-i="0"></span>
+        <span class="fd" data-i="1"></span>
+        <span class="fd" data-i="2"></span>
+        <span class="fd" data-i="3"></span>
+        <span class="fd" data-i="4"></span>
+      </div>
     </div>
   </div>
 </section>
@@ -1469,18 +1493,37 @@ window.addEventListener('scroll', revealAnims, { passive: true });
 (function() {
   const steps  = document.querySelectorAll('.flow-step');
   const stages = document.querySelectorAll('.flow-stage');
+  const dots   = document.querySelectorAll('.flow-dots .fd');
   if (!steps.length) return;
   let idx = 0, timer = null;
   function activate(i) {
     idx = i;
     steps.forEach((s, n) => s.classList.toggle('active', n === i));
     stages.forEach((s, n) => s.classList.toggle('active', n === i));
+    dots.forEach((d, n) => d.classList.toggle('active', n === i));
   }
   function play() {
     clearInterval(timer);
     timer = setInterval(() => activate((idx + 1) % steps.length), 5000);
   }
   steps.forEach((s, i) => s.addEventListener('click', () => { activate(i); play(); }));
+  dots.forEach((d, i) => d.addEventListener('click', () => { activate(i); play(); }));
+  // Mobile: the step list is hidden (only the active caption shows), so
+  // swiping the card left/right is the only way to move between steps by
+  // hand - the dots above are the position indicator for the same gesture.
+  const stageArea = document.querySelector('.flow-stage-area');
+  if (stageArea) {
+    let touchX = null;
+    stageArea.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+    stageArea.addEventListener('touchend', (e) => {
+      if (touchX === null) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      touchX = null;
+      if (Math.abs(dx) < 40) return;
+      activate((idx + (dx < 0 ? 1 : -1) + steps.length) % steps.length);
+      play();
+    }, { passive: true });
+  }
   // Start only when the section scrolls into view
   const section = document.querySelector('.app-showcase');
   const io = new IntersectionObserver((entries) => {
@@ -1490,6 +1533,27 @@ window.addEventListener('scroll', revealAnims, { passive: true });
   }, { threshold: 0.25 });
   if (section) io.observe(section);
   activate(0);
+})();
+
+// Track-in-transit ship: the motion path was authored in the SVG's fixed
+// 620x300 coordinate space, but the SVG itself scales down (preserveAspectRatio
+// none) to the container's real width - on a phone the offset-path's raw
+// pixel coordinates ran well past the actual (narrower) route line, so the
+// box appeared to fly off past Los Angeles instead of landing on it.
+// Recompute it in real pixels whenever the container's size is known.
+(function() {
+  const map = document.querySelector('.track-map');
+  const ship = document.querySelector('.track-ship');
+  if (!map || !ship) return;
+  function fit() {
+    const w = map.getBoundingClientRect().width;
+    if (!w) return;
+    const s = w / 620;
+    ship.style.offsetPath = `path('M ${(93*s).toFixed(1)} 204 Q ${(310*s).toFixed(1)} 150 ${(527*s).toFixed(1)} 96')`;
+  }
+  addEventListener('resize', fit);
+  addEventListener('load', fit);
+  fit();
 })();
 </script>
 </div><!-- /.page-wrap -->
