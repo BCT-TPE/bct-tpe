@@ -83,6 +83,13 @@ convention pages are trusted to follow on their own):
   its own eyebrow treatment is a bug, not a valid variant — this exact drift was caught between
   FLIR and fitting, and again later in custombike (a local `.eyebrow` class at 20px/700/blue,
   nothing like the shared kicker) — check new pages for this specifically, it recurs.
+  Colour is the one property a page may override, to its own accent (FLIR's amber, custombike's
+  blue). **The override must live in a stylesheet that loads AFTER `bct-system.css`** — in practice
+  the page's `#bctpage-css` block, not its main `<head>` styles. The shared rule carries
+  `!important` at equal specificity, so against a head-styles override it wins purely on source
+  order and the accent silently renders `#aaa`. This shipped as a real bug on custombike:
+  "Project Goal" was declared blue from the head styles and rendered grey for several rounds
+  before anyone noticed.
 
 Exception: **fitting** doesn't carry `body.bct-scale` at all — it shipped with its own hand-tuned
 sizes before the shared scale existed, and by the time the scale was written those sizes were
