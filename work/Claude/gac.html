@@ -402,10 +402,14 @@ section{position:relative}
    Sec5 — Future-Ready Integration
    ============================================================ */
 .sec5{padding:110px 0 120px;text-align:center;overflow:hidden}
+/* the perspective grid is inline SVG (was a flattened background image) so
+   the animated beam dots can ride the exact same line geometry - both this
+   and #beamField share the 1440x1024 viewBox and slice fitting, so their
+   coordinate spaces line up 1:1 */
 .sec5 .grid-bg{
   position:absolute;left:0;right:0;top:0;height:1024px;z-index:0;pointer-events:none;
-  background:url('uploads/gid/img_grid_bk.svg') center top/cover no-repeat;
 }
+.sec5 .grid-bg svg{width:100%;height:100%;display:block}
 .sec5 .beam-field{
   position:absolute;left:0;right:0;top:0;height:1024px;width:100%;
   z-index:0;pointer-events:none;overflow:visible;
@@ -831,7 +835,36 @@ footer{
 
 <!-- ================= Sec5 — Future-Ready Integration ================= -->
 <section class="sec5">
-  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="grid-bg" aria-hidden="true">
+    <svg viewBox="0 0 1440 1024" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#e9e9ee" stroke-width="1">
+      <rect x="100" y="40" width="1240" height="860"/>
+      <rect x="236" y="135" width="967" height="671"/>
+      <rect x="348" y="212" width="744" height="516"/>
+      <rect x="435" y="272" width="570" height="396"/>
+      <rect x="500" y="317" width="440" height="305"/>
+      <rect x="553" y="354" width="335" height="232"/>
+      <line x1="553" y1="354" x2="-241" y2="-196"/>
+      <line x1="553" y1="586" x2="-241" y2="1136"/>
+      <line x1="608" y1="354" x2="79" y2="-196"/>
+      <line x1="608" y1="586" x2="79" y2="1136"/>
+      <line x1="664" y1="354" x2="400" y2="-196"/>
+      <line x1="664" y1="586" x2="400" y2="1136"/>
+      <line x1="720" y1="354" x2="720" y2="-196"/>
+      <line x1="720" y1="586" x2="720" y2="1136"/>
+      <line x1="776" y1="354" x2="1040" y2="-196"/>
+      <line x1="776" y1="586" x2="1040" y2="1136"/>
+      <line x1="832" y1="354" x2="1361" y2="-196"/>
+      <line x1="832" y1="586" x2="1361" y2="1136"/>
+      <line x1="887" y1="354" x2="1681" y2="-196"/>
+      <line x1="887" y1="586" x2="1681" y2="1136"/>
+      <line x1="553" y1="412" x2="-241" y2="137"/>
+      <line x1="887" y1="412" x2="1681" y2="137"/>
+      <line x1="553" y1="470" x2="-241" y2="470"/>
+      <line x1="887" y1="470" x2="1681" y2="470"/>
+      <line x1="553" y1="528" x2="-241" y2="803"/>
+      <line x1="887" y1="528" x2="1681" y2="803"/>
+    </svg>
+  </div>
   <svg class="beam-field" id="beamField" viewBox="0 0 1440 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
   <div class="inner">
     <h2 class="t2 center reveal">Future-Ready Integration: <span class="cyan">Centralizing Identity Management</span> Across Services</h2>
@@ -1047,14 +1080,17 @@ footer{
   var NS = 'http://www.w3.org/2000/svg';
   var DUR = 2.7;   // seconds per beam cycle
   var CL  = 360;   // comet tail length (user units)
-  // outer point -> inner point (behind the centered diagram), colour, start delay
+  // outer point -> inner point, colour, start delay. Each pair lies ON one
+  // of the inline grid's rays (same t-parameterisation as the .grid-bg svg:
+  // outer at t=1.45, inner at t=0.30 of the ray from centre 720,470), so
+  // the dots visibly travel along the drawn line segments.
   var beams = [
-    {x1:150, y1:250, x2:648, y2:472, c:'#3FD0E6', b:0.0},
-    {x1:108, y1:548, x2:616, y2:508, c:'#2563EB', b:0.9},
-    {x1:246, y1:816, x2:658, y2:560, c:'#2CD1C1', b:1.7},
-    {x1:1300,y1:398, x2:800, y2:482, c:'#2CD1C1', b:0.45},
-    {x1:1326,y1:642, x2:822, y2:520, c:'#4AA3FF', b:1.3},
-    {x1:1330,y1:800, x2:800, y2:560, c:'#1E4FE6', b:2.1}
+    {x1:-179, y1:-154, x2:534, y2:341, c:'#3FD0E6', b:0.0},
+    {x1:420,  y1:1094, x2:658, y2:599, c:'#2CD1C1', b:0.9},
+    {x1:1020, y1:-154, x2:782, y2:341, c:'#2563EB', b:1.7},
+    {x1:1619, y1:1094, x2:906, y2:599, c:'#4AA3FF', b:0.45},
+    {x1:1619, y1:158,  x2:906, y2:406, c:'#2CD1C1', b:1.3},
+    {x1:-179, y1:782,  x2:534, y2:534, c:'#1E4FE6', b:2.1}
   ];
   var defs = document.createElementNS(NS,'defs');
   svg.appendChild(defs);
