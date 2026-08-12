@@ -466,7 +466,12 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
      element's own top/left computed values too. 74vw tall so the full
      scaled-down component fits - the floating card stack's bottom sits at
      ~70vw in this projection and was getting cropped at the old 66vw. */
-  .hero-art{order:0;flex:0 0 auto;position:relative;width:100%;height:74vw;overflow:hidden;z-index:2}
+  /* 84vw window + 8vw bike overlap = the bike's top edge lands at 76vw,
+     BELOW the floating card stack's bottom (~72vw incl. shadow): the full
+     component stays visible while the bike still rides over the panel
+     zone's lower dark band. The previous 74vw/-16vw pair put the edge at
+     58vw - straight through the card stack. */
+  .hero-art{order:0;flex:0 0 auto;position:relative;width:100%;height:84vw;overflow:hidden;z-index:2}
   /* width:100vw is load-bearing: standardized CSS zoom keeps a
      percentage-width element's OUTER size fixed (content lays out in a
      shrunken inner coordinate space instead - no visual zoom at all). An
@@ -489,7 +494,7 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
      overlap, and any unfilled strip at its top is just the flat page
      background, so no seam. */
   .hero-bike-wrap{display:block!important;order:1;flex:1 1 auto!important;min-height:0!important;
-    position:relative;overflow:hidden;margin-top:-16vw;z-index:3}
+    position:relative;overflow:hidden;margin-top:-8vw;z-index:3}
   /* max-width:none matters: the page's img{max-width:100%} clamps the
      deliberate 190% oversize back to the container width, which brings the
      full artwork - customizer panel included - back into the frame small.
@@ -989,14 +994,30 @@ body.bct-scale .feat h4{font-size:16px!important;font-weight:600!important}
     gr.addColorStop(1,'rgba(255,255,255,0)');
     sx.fillStyle=gr; sx.beginPath(); sx.arc(32,32,30,0,Math.PI*2); sx.fill();
 
-    // sparse fibonacci-distributed dots just above the surface
-    var N = 320, pts = [], i, j;
-    for(i=0;i<N;i++){
-      var y = 1 - (i/(N-1))*2;
-      var rr = Math.sqrt(Math.max(0,1-y*y));
-      var th = i * 2.39996323;
-      pts.push([Math.cos(th)*rr*1.005, y*1.005, Math.sin(th)*rr*1.005]);
+    // organic, non-uniform dot distribution (per design feedback: evenly
+    // spaced fibonacci points read as artificial): about half the points
+    // gather into random clusters, the rest scatter loosely between them.
+    // Seeded PRNG so every load renders the identical constellation.
+    var seed = 20260812;
+    function rnd(){ seed = (seed*1103515245 + 12345) & 0x7fffffff; return seed/0x7fffffff; }
+    function uniformPt(){
+      var y = 2*rnd()-1, th = 2*Math.PI*rnd(), rr = Math.sqrt(Math.max(0,1-y*y));
+      return [Math.cos(th)*rr, y, Math.sin(th)*rr];
     }
+    function pushPt(p){
+      var l = Math.hypot(p[0],p[1],p[2]) || 1;
+      pts.push([p[0]/l*1.005, p[1]/l*1.005, p[2]/l*1.005]);
+    }
+    var pts = [], i, j, c, k;
+    for(c=0;c<10;c++){                          // 10 clusters, 8-18 dots each
+      var ctr = uniformPt();
+      var n = 8 + Math.floor(rnd()*11);
+      for(k=0;k<n;k++){
+        pushPt([ctr[0]+(rnd()-0.5)*0.5, ctr[1]+(rnd()-0.5)*0.5, ctr[2]+(rnd()-0.5)*0.5]);
+      }
+    }
+    for(k=0;k<120;k++) pushPt(uniformPt());     // loose fill between clusters
+    var N = pts.length;
     var pos = new Float32Array(N*3);
     for(i=0;i<N;i++){ pos[i*3]=pts[i][0]; pos[i*3+1]=pts[i][1]; pos[i*3+2]=pts[i][2]; }
     var pGeo = new THREE.BufferGeometry();
