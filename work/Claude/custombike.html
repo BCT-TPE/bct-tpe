@@ -186,16 +186,12 @@ body .sec-label{color:var(--blue)!important}
 /* rotating network globe */
 .globe-stage{position:relative;width:100%;max-width:none;margin-left:0;aspect-ratio:1/1;
   filter:drop-shadow(0 20px 60px rgba(0,0,0,.35))}
-/* Globe.svg (shaded sphere) then Globe-line.svg (route network) reveal in
-   sequence, then the network keeps moving to read as a turning globe.
-   A real 3D rotateY of the flat art was tried first - it squashed into a
-   thin sliver approaching the edge, because a flat plane rotated in 3D
-   looks like a spinning CARD, not a sphere (a sphere's silhouette stays
-   perfectly round from every angle; a flat image's doesn't). Fixed by never
-   transforming the sphere itself - Globe.svg stays static, always a full
-   circle - and instead scrolling the route network *inside* a circular
-   clip that matches that same circle, so only the surface detail moves,
-   which is the actual visual cue that reads as "the globe is spinning". */
+/* Globe.svg is the static shaded sphere base (its silhouette never moves);
+   the route network on top is a real three.js point/line sphere rendered on
+   a transparent WebGL canvas, rotating a full 360deg around its Y axis with
+   true perspective depth (far-side lines fade into the sphere's own dark
+   tone via fog). Flat-art fakes were tried first - a CSS rotateY squashed
+   into a card-flip, and a 2D texture scroll had no depth - hence WebGL. */
 .globe-base{position:absolute;inset:0;width:100%;height:100%;display:block;
   opacity:0;transition:opacity 1s ease}
 .globe-stage.base-in .globe-base{opacity:1}
@@ -203,13 +199,7 @@ body .sec-label{color:var(--blue)!important}
   opacity:0;clip-path:circle(0% at 50% 50%);
   transition:opacity .4s ease,clip-path 1.2s cubic-bezier(.2,.8,.24,1)}
 .globe-stage.lines-in .globe-line-clip{opacity:1;clip-path:circle(75% at 50% 50%)}
-.globe-line-track{position:absolute;inset:0;width:200%;display:flex}
-.globe-line-track .globe-lines{position:relative;width:50%;height:100%;flex:none;display:block}
-.globe-stage.spin .globe-line-track{animation:globeLineScroll 9s linear infinite}
-@keyframes globeLineScroll{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
-@media(prefers-reduced-motion:reduce){
-  .globe-stage.spin .globe-line-track{animation:none}
-}
+.globe-canvas3d{position:absolute;inset:0;width:100%;height:100%;display:block}
 /* currency tags */
 .geo-tag{
   position:absolute;display:inline-flex;align-items:center;gap:8px;
@@ -585,10 +575,7 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
         <div class="globe-stage" id="globeStage" role="img" aria-label="Rotating network globe showing regional pricing: USA $16,300, GBP £26,180, KR ₩46,100,180">
           <img class="globe-base" src="uploads/Globe.svg" alt="" aria-hidden="true">
           <div class="globe-line-clip">
-            <div class="globe-line-track">
-              <img class="globe-lines" src="uploads/Globe-line.svg" alt="" aria-hidden="true">
-              <img class="globe-lines" src="uploads/Globe-line.svg" alt="" aria-hidden="true">
-            </div>
+            <canvas class="globe-canvas3d" id="globeCanvas3d"></canvas>
           </div>
           <div class="geo-tag tag-kr"><span class="flag">🇰🇷</span>KR ₩46,100,180</div>
           <div class="geo-tag tag-gbp"><span class="flag">🇬🇧</span>GBP £26,180</div>
@@ -785,6 +772,8 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
   </div>
 </footer>
 
+<!-- three.js (r128 UMD build) for the true-3D rotating globe network -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* Reveal on scroll */
 (function(){
@@ -816,23 +805,99 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
 })();
 
 /* ============================================================
-   Globe.svg + Globe-line.svg reveal, then currency tags, then spin
+   Globe: static Globe.svg base + true-3D three.js route network on top.
+   Reveal order: sphere fades in, network grows out, tags stagger in,
+   then the network starts a real 360-degree Y-axis rotation.
    ============================================================ */
 (function(){
   var stage = document.getElementById('globeStage');
-  if(!stage) return;
+  var canvas = document.getElementById('globeCanvas3d');
+  if(!stage || !canvas) return;
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var spinning = false, three = null;
+
+  function initThree(){
+    if(three || !window.THREE) return;
+    var renderer = new THREE.WebGLRenderer({canvas:canvas, alpha:true, antialias:true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    var scene = new THREE.Scene();
+    /* fog the far hemisphere into the sphere's own dark tone - this is the
+       depth cue the flat versions couldn't fake */
+    scene.fog = new THREE.Fog(0x1b1b1d, 2.4, 4.4);
+    var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    camera.position.z = 3.1;
+    var group = new THREE.Group();
+    scene.add(group);
+
+    // fibonacci-distributed points on the unit sphere (same layout the old
+    // 2D-canvas globe used)
+    var N = 640, pts = [], i, j;
+    for(i=0;i<N;i++){
+      var y = 1 - (i/(N-1))*2;
+      var rr = Math.sqrt(Math.max(0,1-y*y));
+      var th = i * 2.39996323;
+      pts.push([Math.cos(th)*rr, y, Math.sin(th)*rr]);
+    }
+    var pos = new Float32Array(N*3);
+    for(i=0;i<N;i++){ pos[i*3]=pts[i][0]; pos[i*3+1]=pts[i][1]; pos[i*3+2]=pts[i][2]; }
+    var pGeo = new THREE.BufferGeometry();
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    group.add(new THREE.Points(pGeo, new THREE.PointsMaterial({
+      color:0xffffff, size:0.028, transparent:true, opacity:0.9, sizeAttenuation:true})));
+
+    // links between near neighbours
+    var seg = [];
+    for(i=0;i<N;i++) for(j=i+1;j<N;j++){
+      var dx=pts[i][0]-pts[j][0], dy=pts[i][1]-pts[j][1], dz=pts[i][2]-pts[j][2];
+      if(dx*dx+dy*dy+dz*dz < 0.05){ seg.push(pts[i][0],pts[i][1],pts[i][2], pts[j][0],pts[j][1],pts[j][2]); }
+    }
+    var lGeo = new THREE.BufferGeometry();
+    lGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(seg),3));
+    group.add(new THREE.LineSegments(lGeo, new THREE.LineBasicMaterial({
+      color:0xdde3ee, transparent:true, opacity:0.32})));
+
+    function resize(){
+      var w = canvas.clientWidth, h = canvas.clientHeight;
+      if(!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w/h; camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', function(){ resize(); renderer.render(scene,camera); }, {passive:true});
+    resize();
+
+    var rafId = 0, running = false;
+    function frame(){
+      if(spinning) group.rotation.y += 0.004;
+      renderer.render(scene, camera);
+      rafId = requestAnimationFrame(frame);
+    }
+    three = {
+      start: function(){ if(!running){ running = true; rafId = requestAnimationFrame(frame); } },
+      stop:  function(){ if(running){ running = false; cancelAnimationFrame(rafId); } },
+      renderOnce: function(){ resize(); renderer.render(scene, camera); }
+    };
+  }
+
+  function ensureThree(cb){
+    if(window.THREE){ initThree(); cb(); }
+    else window.addEventListener('load', function(){ initThree(); cb(); });
+  }
 
   var timers = [];
   function reveal(){
-    if(reduce){
-      stage.classList.add('base-in','lines-in','tags-in');
-      return; // no spin - the globe stays put, tags stay on
-    }
-    stage.classList.add('base-in');                                    // 1) sphere fades in
-    timers.push(setTimeout(function(){ stage.classList.add('lines-in'); }, 700));   // 2) routes grow out
-    timers.push(setTimeout(function(){ stage.classList.add('tags-in'); }, 1900));   // 3) price tags stagger in
-    timers.push(setTimeout(function(){ stage.classList.add('spin'); }, 3600));      // 4) then start turning
+    ensureThree(function(){
+      if(!three) return;                      // WebGL/three unavailable: keep the static art
+      if(reduce){
+        stage.classList.add('base-in','lines-in','tags-in');
+        three.renderOnce();                   // static network, no spin
+        return;
+      }
+      stage.classList.add('base-in');                                                 // 1) sphere fades in
+      timers.push(setTimeout(function(){ stage.classList.add('lines-in'); three.start(); }, 700));  // 2) network grows out
+      timers.push(setTimeout(function(){ stage.classList.add('tags-in'); }, 1900));   // 3) price tags stagger in
+      timers.push(setTimeout(function(){ spinning = true; }, 3600));                  // 4) then start turning
+    });
   }
 
   var done = false;
@@ -841,8 +906,9 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
       if(e.isIntersecting && e.intersectionRatio >= 0.35 && !done){
         done = true;
         reveal();
-        io.disconnect();
       }
+      /* pause the render loop entirely while offscreen */
+      if(done && three && !reduce){ e.isIntersecting ? three.start() : three.stop(); }
     });
   }, {threshold:[0, 0.35]});
   io.observe(stage);
