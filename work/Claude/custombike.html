@@ -185,8 +185,35 @@ body .sec-label{color:var(--blue)!important}
 .goal-globe{position:relative}
 /* rotating network globe */
 .globe-stage{position:relative;width:100%;max-width:none;margin-left:0;aspect-ratio:1/1;
-  filter:drop-shadow(0 20px 60px rgba(0,0,0,.35))}
-.globe-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  filter:drop-shadow(0 20px 60px rgba(0,0,0,.35));perspective:900px}
+/* Globe.svg (shaded sphere) then Globe-line.svg (route network) reveal in
+   sequence; both then spin together as one unit via a real 3D rotateY, so
+   backface-visibility:hidden makes the globe itself vanish - and the tags
+   fade out in sync - exactly when it's turned edge-on/to the back, instead
+   of faking a sphere turn with a 2D trick. */
+.globe-spin{position:absolute;inset:0;transform-style:preserve-3d;backface-visibility:hidden}
+.globe-base,.globe-lines{position:absolute;inset:0;width:100%;height:100%;display:block;backface-visibility:hidden}
+.globe-base{opacity:0;transition:opacity 1s ease}
+.globe-lines{opacity:0;clip-path:circle(0% at 50% 50%);
+  transition:opacity .4s ease,clip-path 1.2s cubic-bezier(.2,.8,.24,1)}
+.globe-stage.base-in .globe-base{opacity:1}
+.globe-stage.lines-in .globe-lines{opacity:1;clip-path:circle(75% at 50% 50%)}
+.globe-stage.spin .globe-spin{animation:globeSpin 11s linear infinite}
+.globe-stage.spin .geo-tag{animation:globeTagsFade 11s linear infinite}
+@keyframes globeSpin{ from{transform:rotateY(0deg)} to{transform:rotateY(360deg)} }
+/* the globe itself is only actually visible (via backface-visibility) for
+   the first and last quarter of the turn (-90deg..90deg) - fade the tags
+   out and back in on the same schedule so they never float over a blank
+   stage. */
+@keyframes globeTagsFade{
+  0%,16%{opacity:1}
+  25%{opacity:0}
+  75%{opacity:0}
+  84%,100%{opacity:1}
+}
+@media(prefers-reduced-motion:reduce){
+  .globe-stage.spin .globe-spin,.globe-stage.spin .geo-tag{animation:none}
+}
 /* currency tags */
 .geo-tag{
   position:absolute;display:inline-flex;align-items:center;gap:8px;
@@ -560,7 +587,10 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
     <div class="goal-grid">
       <div class="goal-globe fade-left">
         <div class="globe-stage" id="globeStage" role="img" aria-label="Rotating network globe showing regional pricing: USA $16,300, GBP £26,180, KR ₩46,100,180">
-          <canvas class="globe-canvas" id="globeCanvas"></canvas>
+          <div class="globe-spin">
+            <img class="globe-base" src="uploads/Globe.svg" alt="" aria-hidden="true">
+            <img class="globe-lines" src="uploads/Globe-line.svg" alt="" aria-hidden="true">
+          </div>
           <div class="geo-tag tag-kr"><span class="flag">🇰🇷</span>KR ₩46,100,180</div>
           <div class="geo-tag tag-gbp"><span class="flag">🇬🇧</span>GBP £26,180</div>
           <div class="geo-tag tag-usa"><span class="flag">🇺🇸</span>USA $16,300<span class="lead"></span></div>
@@ -787,90 +817,33 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
 })();
 
 /* ============================================================
-   Rotating network globe + sequenced currency tags
+   Globe.svg + Globe-line.svg reveal, then currency tags, then spin
    ============================================================ */
 (function(){
-  var canvas = document.getElementById('globeCanvas');
-  var stage  = document.getElementById('globeStage');
-  if(!canvas || !stage) return;
-  var ctx = canvas.getContext('2d');
-  var DPR = Math.min(window.devicePixelRatio || 1, 2);
-  var W=0, H=0, R=0, cx=0, cy=0;
+  var stage = document.getElementById('globeStage');
+  if(!stage) return;
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // points on a sphere (fibonacci distribution)
-  var N = 640, pts = [], i, j;
-  for(i=0;i<N;i++){
-    var y = 1 - (i/(N-1))*2;
-    var rr = Math.sqrt(Math.max(0,1-y*y));
-    var th = i * 2.39996323;
-    pts.push({x:Math.cos(th)*rr, y:y, z:Math.sin(th)*rr});
-  }
-  // links between nearby points (precomputed once)
-  var links = [];
-  for(i=0;i<N;i++) for(j=i+1;j<N;j++){
-    var dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, dz=pts[i].z-pts[j].z;
-    if(dx*dx+dy*dy+dz*dz < 0.05) links.push([i,j]);
-  }
-
-  function resize(){
-    var rect = canvas.getBoundingClientRect();
-    W = rect.width; H = rect.height;
-    if(!W || !H) return;
-    canvas.width = Math.round(W*DPR); canvas.height = Math.round(H*DPR);
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-    R = Math.min(W,H)*0.47; cx = W*0.5; cy = H*0.5;
-  }
-
-  var rot = 0.6;
-  function draw(){
-    if(!W || !H){ resize(); }
-    ctx.clearRect(0,0,W,H);
-    // sphere body
-    var g = ctx.createRadialGradient(cx-R*0.32, cy-R*0.36, R*0.15, cx, cy, R);
-    g.addColorStop(0,'#3b3b3d'); g.addColorStop(0.55,'#242426'); g.addColorStop(1,'#111113');
-    ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
-    // rotate + project
-    var cos=Math.cos(rot), sin=Math.sin(rot), p, x, z;
-    var pr = new Array(N);
-    for(i=0;i<N;i++){
-      p=pts[i]; x=p.x*cos - p.z*sin; z=p.x*sin + p.z*cos;
-      pr[i]={sx:cx + x*R, sy:cy + p.y*R, z:z};
+  var timers = [];
+  function reveal(){
+    if(reduce){
+      stage.classList.add('base-in','lines-in','tags-in');
+      return; // no spin - the globe stays put, tags stay on
     }
-    // links
-    ctx.lineWidth = 0.6;
-    for(i=0;i<links.length;i++){
-      var a=pr[links[i][0]], b=pr[links[i][1]];
-      var depth=(a.z+b.z)*0.5;
-      if(depth < -0.35) continue;
-      var la = Math.max(0,(depth+1)/2)*0.42;
-      if(la<=0.02) continue;
-      ctx.strokeStyle='rgba(230,235,245,'+la.toFixed(3)+')';
-      ctx.beginPath(); ctx.moveTo(a.sx,a.sy); ctx.lineTo(b.sx,b.sy); ctx.stroke();
-    }
-    // dots
-    for(i=0;i<N;i++){
-      p=pr[i]; var d=(p.z+1)/2;
-      ctx.beginPath(); ctx.arc(p.sx,p.sy,0.7+d*1.4,0,Math.PI*2);
-      ctx.fillStyle='rgba(255,255,255,'+(0.12+d*0.8).toFixed(3)+')'; ctx.fill();
-    }
+    stage.classList.add('base-in');                                    // 1) sphere fades in
+    timers.push(setTimeout(function(){ stage.classList.add('lines-in'); }, 700));   // 2) routes grow out
+    timers.push(setTimeout(function(){ stage.classList.add('tags-in'); }, 1900));   // 3) price tags stagger in
+    timers.push(setTimeout(function(){ stage.classList.add('spin'); }, 3600));      // 4) then start turning
   }
-  var running = false, rafId = 0;
-  function loop(){ rot += 0.0016; draw(); rafId = requestAnimationFrame(loop); }
-  function start(){ if(!running){ running = true; rafId = requestAnimationFrame(loop); } }
-  function stop(){ if(running){ running = false; cancelAnimationFrame(rafId); } }
 
-  resize();
-  window.addEventListener('resize', function(){ resize(); if(reduce) draw(); }, {passive:true});
-  if(reduce){ draw(); }
-
-  // sequenced tag reveal + pause the draw loop while offscreen
+  var done = false;
   var io = new IntersectionObserver(function(en){
     en.forEach(function(e){
-      if(e.isIntersecting){
-        if(e.intersectionRatio >= 0.35) stage.classList.add('tags-in');
-        if(!reduce) start();
-      } else if(!reduce){ stop(); }
+      if(e.isIntersecting && e.intersectionRatio >= 0.35 && !done){
+        done = true;
+        reveal();
+        io.disconnect();
+      }
     });
   }, {threshold:[0, 0.35]});
   io.observe(stage);
