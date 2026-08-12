@@ -185,34 +185,30 @@ body .sec-label{color:var(--blue)!important}
 .goal-globe{position:relative}
 /* rotating network globe */
 .globe-stage{position:relative;width:100%;max-width:none;margin-left:0;aspect-ratio:1/1;
-  filter:drop-shadow(0 20px 60px rgba(0,0,0,.35));perspective:900px}
+  filter:drop-shadow(0 20px 60px rgba(0,0,0,.35))}
 /* Globe.svg (shaded sphere) then Globe-line.svg (route network) reveal in
-   sequence; both then spin together as one unit via a real 3D rotateY, so
-   backface-visibility:hidden makes the globe itself vanish - and the tags
-   fade out in sync - exactly when it's turned edge-on/to the back, instead
-   of faking a sphere turn with a 2D trick. */
-.globe-spin{position:absolute;inset:0;transform-style:preserve-3d;backface-visibility:hidden}
-.globe-base,.globe-lines{position:absolute;inset:0;width:100%;height:100%;display:block;backface-visibility:hidden}
-.globe-base{opacity:0;transition:opacity 1s ease}
-.globe-lines{opacity:0;clip-path:circle(0% at 50% 50%);
-  transition:opacity .4s ease,clip-path 1.2s cubic-bezier(.2,.8,.24,1)}
+   sequence, then the network keeps moving to read as a turning globe.
+   A real 3D rotateY of the flat art was tried first - it squashed into a
+   thin sliver approaching the edge, because a flat plane rotated in 3D
+   looks like a spinning CARD, not a sphere (a sphere's silhouette stays
+   perfectly round from every angle; a flat image's doesn't). Fixed by never
+   transforming the sphere itself - Globe.svg stays static, always a full
+   circle - and instead scrolling the route network *inside* a circular
+   clip that matches that same circle, so only the surface detail moves,
+   which is the actual visual cue that reads as "the globe is spinning". */
+.globe-base{position:absolute;inset:0;width:100%;height:100%;display:block;
+  opacity:0;transition:opacity 1s ease}
 .globe-stage.base-in .globe-base{opacity:1}
-.globe-stage.lines-in .globe-lines{opacity:1;clip-path:circle(75% at 50% 50%)}
-.globe-stage.spin .globe-spin{animation:globeSpin 11s linear infinite}
-.globe-stage.spin .geo-tag{animation:globeTagsFade 11s linear infinite}
-@keyframes globeSpin{ from{transform:rotateY(0deg)} to{transform:rotateY(360deg)} }
-/* the globe itself is only actually visible (via backface-visibility) for
-   the first and last quarter of the turn (-90deg..90deg) - fade the tags
-   out and back in on the same schedule so they never float over a blank
-   stage. */
-@keyframes globeTagsFade{
-  0%,16%{opacity:1}
-  25%{opacity:0}
-  75%{opacity:0}
-  84%,100%{opacity:1}
-}
+.globe-line-clip{position:absolute;inset:0;border-radius:50%;overflow:hidden;
+  opacity:0;clip-path:circle(0% at 50% 50%);
+  transition:opacity .4s ease,clip-path 1.2s cubic-bezier(.2,.8,.24,1)}
+.globe-stage.lines-in .globe-line-clip{opacity:1;clip-path:circle(75% at 50% 50%)}
+.globe-line-track{position:absolute;inset:0;width:200%;display:flex}
+.globe-line-track .globe-lines{position:relative;width:50%;height:100%;flex:none;display:block}
+.globe-stage.spin .globe-line-track{animation:globeLineScroll 9s linear infinite}
+@keyframes globeLineScroll{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
 @media(prefers-reduced-motion:reduce){
-  .globe-stage.spin .globe-spin,.globe-stage.spin .geo-tag{animation:none}
+  .globe-stage.spin .globe-line-track{animation:none}
 }
 /* currency tags */
 .geo-tag{
@@ -587,9 +583,12 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
     <div class="goal-grid">
       <div class="goal-globe fade-left">
         <div class="globe-stage" id="globeStage" role="img" aria-label="Rotating network globe showing regional pricing: USA $16,300, GBP £26,180, KR ₩46,100,180">
-          <div class="globe-spin">
-            <img class="globe-base" src="uploads/Globe.svg" alt="" aria-hidden="true">
-            <img class="globe-lines" src="uploads/Globe-line.svg" alt="" aria-hidden="true">
+          <img class="globe-base" src="uploads/Globe.svg" alt="" aria-hidden="true">
+          <div class="globe-line-clip">
+            <div class="globe-line-track">
+              <img class="globe-lines" src="uploads/Globe-line.svg" alt="" aria-hidden="true">
+              <img class="globe-lines" src="uploads/Globe-line.svg" alt="" aria-hidden="true">
+            </div>
           </div>
           <div class="geo-tag tag-kr"><span class="flag">🇰🇷</span>KR ₩46,100,180</div>
           <div class="geo-tag tag-gbp"><span class="flag">🇬🇧</span>GBP £26,180</div>
