@@ -493,25 +493,22 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
      the fold; the wrapper rides -10vw up over the panel block for the
      overlap, and any unfilled strip at its top is just the flat page
      background, so no seam. */
-  /* Measured, not guessed: the panel window is 84vw tall and its LOWEST
-     floating card bottoms out at 75.6vw, leaving an 8.4vw band of empty
-     dark backdrop under the stack. -7vw puts this block's top edge at 77vw
-     - inside that empty band - so the bike overlaps the panel without any
-     card being sliced. Every earlier value (-8/-12/-14vw) landed the edge
-     at 70-76vw, i.e. straight through the card stack, which is what kept
-     reading as "cropped". */
+  /* The photo is bottom-anchored and taller than this block, so
+     overflow:hidden was clipping ~16% off its TOP - right through the brake
+     levers. That clipped-looking bike is what read as "covered". clip-path
+     with a negative top inset keeps the left/right/bottom clipping (which
+     is what holds the customizer panel out of frame) while letting the
+     photo draw upward, unclipped, over the panel block above it. Covering
+     the panel's lower area is intended. */
   .hero-bike-wrap{display:block!important;order:1;flex:1 1 auto!important;min-height:0!important;
-    position:relative;overflow:hidden;margin-top:-7vw;z-index:5}
+    position:relative;overflow:visible;margin-top:-14vw;z-index:5;
+    -webkit-clip-path:inset(-60vw 0 0 0);clip-path:inset(-60vw 0 0 0)}
   /* max-width:none matters: the page's img{max-width:100%} clamps the
      deliberate 190% oversize back to the container width, which brings the
      full artwork - customizer panel included - back into the frame small.
      left:-64% anchors the window at image x ~34%, keeping the left brake
      lever in frame at this larger size while the panel stays out. */
-  /* 175%, not 190%: the photo is bottom-anchored, so anything taller than
-     the block gets clipped off its TOP - at 190% that clip reached the
-     brake levers (the bike itself came out cut). At 175% the clipped strip
-     stays in the artwork's empty upper background, above the bike. */
-  .hero-img-bike{position:absolute;left:-63%;bottom:-4%;width:175%!important;max-width:none!important;height:auto;display:block}
+  .hero-img-bike{position:absolute;left:-68%;bottom:-4%;width:190%!important;max-width:none!important;height:auto;display:block}
   /* the page's own tablet rule (max-width:1100px) hides the live paint
      carousel outright; bring it back for this layout - inside the zoom
      group its vw coordinates scale with the image, so it lands correctly
