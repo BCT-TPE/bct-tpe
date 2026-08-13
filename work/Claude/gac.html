@@ -130,8 +130,12 @@ nav#nav.scrolled{border-color:rgba(255,255,255,0.12)}
    ============================================================ */
 section{position:relative}
 .wrap{max-width:1280px;margin:0 auto;padding:0 80px}
-.t1{font-size:52px;font-weight:700;line-height:64px;color:var(--dark);text-align:center;letter-spacing:-.5px}
-.t2{font-size:40px;font-weight:700;line-height:52px;color:var(--dark)}
+/* font-size/line-height deliberately omitted: bct-system.css's shared type
+   scale sets those on h1/h2 with !important, so any value here is dead code
+   that only misleads. Weight/colour/alignment are NOT in the shared scale,
+   so they still belong to the page. */
+.t1{font-weight:700;color:var(--dark);text-align:center;letter-spacing:-.5px}
+.t2{font-weight:700;color:var(--dark)}
 .t2.center{text-align:center}
 .lead{font-size:18px;font-weight:400;line-height:30px;color:var(--mid-gray)}
 .c2{font-size:20px;font-weight:500;line-height:30px;color:var(--deep)}
@@ -594,8 +598,8 @@ footer{
   .uikit-bike{display:none}
   .voices-inner{grid-template-columns:1fr;gap:36px;padding:48px 32px}
   .footer-grid{grid-template-columns:1fr 1fr;gap:28px}
-  .t1{font-size:38px;line-height:48px}
-  .t2{font-size:30px;line-height:42px}
+  /* (h1/h2 sizes come from the shared bct-scale, which already handles
+     mobile - a page-level override here would be dead code) */
 }
 @media (max-width:560px){
   .pf-grid{grid-template-columns:1fr}
@@ -613,7 +617,7 @@ footer{
 .works-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:52px}
 .works-title{font-size:48px;font-weight:600;color:#121212;line-height:60px;margin-bottom:16px}
 .works-sub{font-size:20px;font-weight:400;color:#6D777F;line-height:36px;max-width:640px}
-.works-view-all{font-size:14px;font-weight:700;color:#04ACEB;text-decoration:none;display:flex;align-items:center;gap:8px;transition:gap .2s;margin-bottom:4px;white-space:nowrap}
+.works-view-all{font-size:14px;font-weight:700;color:var(--primary);text-decoration:none;display:flex;align-items:center;gap:8px;transition:gap .2s;margin-bottom:4px;white-space:nowrap}
 .works-view-all:hover{gap:12px}
 .cases-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px;min-height:640px}
 .case-card{background:#fff;border:1px solid #E6ECF0;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;text-decoration:none;transition:border-color .3s,box-shadow .3s}
@@ -622,10 +626,10 @@ footer{
 .case-img img{width:100%;height:100%;object-fit:cover;opacity:1;display:block;transition:transform .6s,opacity .3s}
 .case-card:hover .case-img img{transform:scale(1.05)}
 .case-info{padding:22px 26px;border-top:1px solid #E6ECF0;display:flex;flex-direction:column;gap:7px;flex-shrink:0}
-.case-tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#04ACEB}
+.case-tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--primary)}
 .case-name{font-size:17px;font-weight:700;color:#121212}
 .case-go{font-size:13px;font-weight:600;color:#6D777F;display:flex;align-items:center;gap:6px;text-decoration:none;transition:color .2s,gap .2s}
-.case-card:hover .case-go{color:#04ACEB;gap:10px}
+.case-card:hover .case-go{color:var(--primary);gap:10px}
 .cases-right{display:flex;flex-direction:column;gap:20px}
 .cases-right .case-card{flex:1}
 @media (max-width:900px){.works-inner{padding:0 32px}.cases-grid{grid-template-columns:1fr;min-height:0}.works-title{font-size:34px;line-height:44px}}
@@ -644,7 +648,16 @@ footer{
      naturally and restore the space the markup dropped across the <br>. */
   .hero .t1 br{display:none!important}
   .hero .t1 span::before{content:" "}
+  /* the desktop 100-120px section rhythm was never reduced for mobile, so
+     every band carried ~2x the vertical air its siblings do at this width */
+  .sec2,.sec3,.sec5{padding-top:64px!important;padding-bottom:64px!important}
+  .hero{padding-bottom:64px!important}
 }
+/* eyebrow kickers: the shared bct-system.css rule paints #aaa with equal
+   !important, so a page accent override only wins from here (this block
+   loads after bct-system.css) - see DESIGN.md section 4. */
+body .sec-label,body p.sec-label{color:var(--primary)!important;margin-bottom:12px}
+body .sec-label.center{text-align:center}
 </style>
 
 </head>
@@ -764,6 +777,7 @@ footer{
   <div class="wrap">
     <div class="sec2-grid">
       <div class="sec2-copy">
+        <p class="sec-label reveal">Project Goal</p>
         <h2 class="t2 reveal">Building a Secure, Multi-Login Consumer Account System</h2>
         <p class="c3 reveal d1">To establish a robust and secure consumer account system that supports multiple login methods and centralizes user data management. The system must adhere to industry-standard authentication protocols to enable seamless integration with other systems.</p>
         <div class="stats reveal d2">
@@ -782,6 +796,7 @@ footer{
 <!-- ================= Sec3 — Advanced Features ================= -->
 <section class="sec3" id="features">
   <div class="wrap">
+    <p class="sec-label center reveal">Advanced Features</p>
     <h2 class="t2 center reveal">Advanced Features of Our<br>Comprehensive User Account System</h2>
     <div class="feat-grid">
 
@@ -867,6 +882,7 @@ footer{
   </div>
   <svg class="beam-field" id="beamField" viewBox="0 0 1440 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
   <div class="inner">
+    <p class="sec-label center reveal">Future-Ready Integration</p>
     <h2 class="t2 center reveal">Future-Ready Integration: <span class="cyan">Centralizing Identity Management</span> Across Services</h2>
     <div class="identity reveal d1">
       <div class="id-scene" role="img" aria-label="Centralized identity management diagram shown in 3D">
