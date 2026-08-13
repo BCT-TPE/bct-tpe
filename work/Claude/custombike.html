@@ -493,11 +493,8 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
      the fold; the wrapper rides -10vw up over the panel block for the
      overlap, and any unfilled strip at its top is just the flat page
      background, so no seam. */
-  /* -12vw: bike top lands at 72vw, exactly the card stack's bottom - the
-     largest overlap that still shows the whole component, and enough of it
-     to read as the bike sitting in front of the panel block */
   .hero-bike-wrap{display:block!important;order:1;flex:1 1 auto!important;min-height:0!important;
-    position:relative;overflow:hidden;margin-top:-12vw;z-index:5}
+    position:relative;overflow:hidden;margin-top:-14vw;z-index:5}
   /* max-width:none matters: the page's img{max-width:100%} clamps the
      deliberate 190% oversize back to the container width, which brings the
      full artwork - customizer panel included - back into the frame small.
@@ -526,10 +523,12 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
    (>1100px); the tablet/mobile stacked layouts keep the centred globe. */
 @media(min-width:1101px){
   .goal{overflow:hidden}
-  /* smaller than the first pass (150%) and pushed down-left: the globe now
-     bleeds off the left edge and the section's bottom, sitting lower than
-     the copy column instead of filling the whole left half */
-  .globe-stage{width:120%;max-width:none;margin-left:-34%;margin-top:10%;margin-bottom:-22%}
+  /* sized so the globe reads at roughly the same visual weight as the form
+     card beside it (was 120% with a -34% bleed, which made it dominate and
+     pushed most of the sphere off the left edge - only one tag stayed in
+     frame). Now nearly all of the globe is visible with just a slight
+     left/bottom bleed, so all three currency pills have room. */
+  .globe-stage{width:100%;max-width:none;margin-left:-12%;margin-top:6%;margin-bottom:-12%}
 }
 /* the currency pills are interactive: clicking one drives the same
    selection the goal form's dropdown does */
