@@ -493,8 +493,11 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
      the fold; the wrapper rides -10vw up over the panel block for the
      overlap, and any unfilled strip at its top is just the flat page
      background, so no seam. */
+  /* -12vw: bike top lands at 72vw, exactly the card stack's bottom - the
+     largest overlap that still shows the whole component, and enough of it
+     to read as the bike sitting in front of the panel block */
   .hero-bike-wrap{display:block!important;order:1;flex:1 1 auto!important;min-height:0!important;
-    position:relative;overflow:hidden;margin-top:-8vw;z-index:3}
+    position:relative;overflow:hidden;margin-top:-12vw;z-index:5}
   /* max-width:none matters: the page's img{max-width:100%} clamps the
      deliberate 190% oversize back to the container width, which brings the
      full artwork - customizer panel included - back into the frame small.
@@ -523,8 +526,14 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
    (>1100px); the tablet/mobile stacked layouts keep the centred globe. */
 @media(min-width:1101px){
   .goal{overflow:hidden}
-  .globe-stage{width:150%;max-width:none;margin-left:-46%;margin-top:-6%;margin-bottom:-28%}
+  /* smaller than the first pass (150%) and pushed down-left: the globe now
+     bleeds off the left edge and the section's bottom, sitting lower than
+     the copy column instead of filling the whole left half */
+  .globe-stage{width:120%;max-width:none;margin-left:-34%;margin-top:10%;margin-bottom:-22%}
 }
+/* the currency pills are interactive: clicking one drives the same
+   selection the goal form's dropdown does */
+.geo-tag{cursor:pointer}
 /* blue eyebrow kickers: bct-system.css's shared eyebrow rule paints #aaa
    with equal !important but loads after the head styles, so this page's
    accent must be re-asserted from here (which loads after bct-system) -
@@ -536,10 +545,11 @@ body .sec-label,body p.sec-label{color:var(--blue)!important}
    as the site's nav dropdowns */
 .cur-dd{position:relative}
 .cur-dd-btn{display:inline-flex;align-items:center;gap:10px;background:none;border:none;
-  color:#fff;font-family:inherit;font-size:20px;font-weight:700;line-height:28px;
+  color:var(--blue);font-family:inherit;font-size:20px;font-weight:700;line-height:28px;
   cursor:pointer;padding:0}
+/* caret matches the label colour; # must be percent-encoded inside a data URI */
 .cur-dd-btn::after{content:"";width:14px;height:8px;flex:none;
-  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='8' viewBox='0 0 14 8' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M1 1.5 7 6.5 13 1.5'/></svg>") center/contain no-repeat;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='8' viewBox='0 0 14 8' fill='none' stroke='%235480FB' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M1 1.5 7 6.5 13 1.5'/></svg>") center/contain no-repeat;
   transition:transform .25s ease}
 .cur-dd.open .cur-dd-btn::after{transform:rotate(180deg)}
 .cur-dd-list{position:absolute;left:0;top:calc(100% + 10px);min-width:172px;z-index:30;
@@ -1087,6 +1097,24 @@ body.bct-scale .feat h4{font-size:16px!important;font-weight:600!important}
       var idx = {USD:0, GBP:1, KRW:2}[sel.value];
       if(idx != null) goTo(idx);
     });
+    // the pills themselves are pickers too: clicking one sets the form's
+    // currency and dispatches a real change event, so the price fields, the
+    // custom dropdown's label and this globe's target all follow the same
+    // single source of truth (the <select>'s value)
+    tags.forEach(function(t){
+      t.el.setAttribute('role','button');
+      t.el.setAttribute('tabindex','0');
+      function pick(){
+        if(sel && sel.value !== t.code){
+          sel.value = t.code;
+          sel.dispatchEvent(new Event('change', {bubbles:true}));
+        } else { goTo(tags.indexOf(t)); }
+      }
+      t.el.addEventListener('click', pick);
+      t.el.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pick(); }
+      });
+    });
     if(reduce) group.rotation.y = targetFor(tags[0].v);
 
     function resize(){
@@ -1298,6 +1326,9 @@ body.bct-scale .feat h4{font-size:16px!important;font-weight:600!important}
   dd.appendChild(btn); dd.appendChild(list);
   sel.style.display = 'none';
   sel.parentNode.insertBefore(dd, sel.nextSibling);
+  // the globe's currency pills also set the select - keep this button's
+  // label in step with changes that didn't originate here
+  sel.addEventListener('change', sync);
   sync();
 })();
 </script>
