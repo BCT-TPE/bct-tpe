@@ -138,3 +138,41 @@ body .sec3-eyebrow,body .sec4-feature-label,body .sec-label,body p.sec-label,bod
 #bctnav .soon-tag{font-style:normal;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
   padding:2px 7px;border-radius:99px;background:rgba(0,0,0,.08);color:#8a929c;white-space:nowrap}
 #bctnav.on-dark .soon-tag{background:rgba(255,255,255,.12);color:rgba(255,255,255,.6)}
+
+/* ---- 7. Shared "Our works" section (.bctworks) ----
+   One component, themed by the page's body class: light pages get paper
+   cards, body.bct-dark pages get the custombike-style translucent dark
+   cards. Each page renders the five OTHER works (never its own). */
+.bctworks{padding:90px var(--bct-gutter)}
+.bctworks .bw-inner{max-width:1440px;margin:0 auto}
+.bctworks .bw-head{margin-bottom:40px}
+.bctworks .bw-sub{margin-top:10px;color:var(--bct-muted)}
+.bctworks .bw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.bctworks .bw-card{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;text-decoration:none;
+  background:#fff;border:1px solid #e6e1d8;transition:border-color .3s var(--bct-ease),box-shadow .3s var(--bct-ease)}
+.bctworks .bw-card:hover{border-color:rgba(10,123,196,.45);box-shadow:0 18px 60px rgba(20,40,60,.14)}
+.bctworks .bw-img{height:210px;overflow:hidden;background:#0d1524}
+.bctworks .bw-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s var(--bct-ease)}
+.bctworks .bw-card:hover .bw-img img{transform:scale(1.05)}
+.bctworks .bw-info{padding:20px 24px;display:flex;flex-direction:column;gap:7px;border-top:1px solid #eee6da}
+.bctworks .bw-tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--bct-blue)}
+.bctworks .bw-name{font-size:17px;font-weight:700;color:var(--bct-ink)}
+.bctworks .bw-go{font-size:13px;font-weight:600;color:var(--bct-muted);display:flex;align-items:center;gap:6px;
+  transition:color .2s var(--bct-ease),gap .2s var(--bct-ease)}
+.bctworks .bw-card:hover .bw-go{color:var(--bct-blue);gap:10px}
+/* dark theme (fitting / custombike / flir) */
+body.bct-dark .bctworks{background:#121212}
+body.bct-dark .bctworks .bw-head h2{color:#fff}
+body.bct-dark .bctworks .bw-sub{color:rgba(255,255,255,.55)}
+body.bct-dark .bctworks .bw-card{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08)}
+body.bct-dark .bctworks .bw-card:hover{border-color:rgba(84,128,251,.4);box-shadow:0 24px 80px rgba(0,0,0,.5)}
+body.bct-dark .bctworks .bw-img{background:linear-gradient(135deg,#080e20,#050915)}
+body.bct-dark .bctworks .bw-img img{opacity:.82}
+body.bct-dark .bctworks .bw-card:hover .bw-img img{opacity:1}
+body.bct-dark .bctworks .bw-info{border-top-color:rgba(255,255,255,.08)}
+body.bct-dark .bctworks .bw-name{color:#fff}
+body.bct-dark .bctworks .bw-tag{color:#7ea2ff}
+body.bct-dark .bctworks .bw-go{color:rgba(255,255,255,.5)}
+body.bct-dark .bctworks .bw-card:hover .bw-go{color:#7ea2ff}
+@media(max-width:1100px){.bctworks .bw-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.bctworks .bw-grid{grid-template-columns:1fr}.bctworks .bw-img{height:180px}}
