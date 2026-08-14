@@ -555,6 +555,15 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
      the bars (the recurring on-device bug). */
   .hero-img-bike{position:absolute;inset:0;width:100%!important;height:100%!important;
     max-width:none!important;display:block;object-fit:cover;object-position:left top}
+  /* the un-keyed twin of the cutout sits underneath with identical
+     geometry, restoring the backdrop's topo lines that the matting removed.
+     Its top 24vw (exactly the overlap band) is clipped away so the panel
+     still shows through around the bike there; below the band it lines up
+     pixel-for-pixel with the cutout's opaque lower half - same source,
+     same cover/left-top mapping. Positive inset values, so Safari is fine. */
+  .hero-img-bike-bg{position:absolute;inset:0;width:100%!important;height:100%!important;
+    max-width:none!important;display:block;object-fit:cover;object-position:left top;
+    -webkit-clip-path:inset(24vw 0 0 0);clip-path:inset(24vw 0 0 0)}
   /* the page's own tablet rule (max-width:1100px) hides the live paint
      carousel outright; bring it back for this layout - inside the zoom
      group its vw coordinates scale with the image, so it lands correctly
@@ -762,6 +771,7 @@ body.bct-scale .feat h4{font-size:16px!important;font-weight:600!important}
          right side, full-bleed under the panel card (display:none on desktop;
          same URL as .hero-img so it's a cache hit, not a second download) -->
     <div class="hero-bike-wrap">
+      <img class="hero-img-bike-bg" src="uploads/custombike/hero-bike-bg.webp" alt="" aria-hidden="true">
       <img class="hero-img-bike" src="uploads/custombike/hero-bike.webp" alt="" aria-hidden="true">
     </div>
   </div>
