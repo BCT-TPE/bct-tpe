@@ -494,7 +494,7 @@
   .scard .no{font-style:normal;font-size:11px;font-weight:700;letter-spacing:.14em;opacity:.85;color:#17303f}
   .scard b{font-size:16px;line-height:1.25;letter-spacing:-.01em;margin-top:3px;color:#17303f}
   .c1{background:#e8996b url("clay/assets/svc1.jpg")}
-  .c2{background:#e3c065 url("clay/assets/svc2-2.png")}
+  .c2{background:#e3c065 url("clay/assets/svc2-2.webp")}
   .c3{background:#9b8ecf url("clay/assets/svc3.jpg")}
   .c4{background:#7fb4d9 url("clay/assets/svc4.jpg")}
   .c5{background:#e493a4 url("clay/assets/svc5.jpg")}
@@ -725,9 +725,7 @@
 
 <!-- fly-through -->
 <div id="transwrap">
-  <video id="transvid" muted playsinline preload="auto">
-    <source src="clay/assets/flythrough.mp4" type="video/mp4">
-  </video>
+  <video id="transvid" muted playsinline preload="auto"></video>
 </div>
 
 <!-- station-to-station connector flights (fwd + reversed) -->
@@ -779,12 +777,8 @@
   </div>
   <div class="visual">
     <video id="herovid" autoplay muted playsinline preload="auto"
-      poster="clay/assets/hero-poster.png">
-      <source src="clay/assets/hero.mp4" type="video/mp4">
-    </video>
-    <video id="herovidB" muted playsinline preload="auto" style="opacity:0">
-      <source src="clay/assets/hero.mp4" type="video/mp4">
-    </video>
+      poster="clay/assets/hero-poster.webp"></video>
+    <video id="herovidB" muted playsinline preload="auto" style="opacity:0"></video>
     <div class="topfade"></div>
   </div>
 </section>
@@ -853,7 +847,7 @@
     <p class="lead rv">Real products, really shipped. A few of our favorites.</p>
     <div class="casestage">
       <div class="cgrid">
-        <a class="ccard" href="work/Claude/fitting.html"><img src="work/Claude/assets/case_dcf.png" alt="Dynamic Cycling Fit" loading="lazy">
+        <a class="ccard" href="work/Claude/fitting.html"><img src="work/Claude/uploads/card_dcf.webp" alt="Dynamic Cycling Fit" loading="lazy">
           <span class="cc-info"><b class="cc-name">Dynamic Cycling Fit</b><span class="cc-desc">Machine-learning bike fitting that dials in every rider&#39;s perfect position.</span>
           <span class="cc-pills"><i>Fitness &amp; Health</i><i>App</i></span></span></a>
         <a class="ccard" href="work/Claude/DataLake.html"><img src="work/Claude/uploads/card_datalake.webp" alt="DataLake" loading="lazy">
@@ -1021,22 +1015,22 @@
 const SCENES = [
   { id:"overview",
     video:"clay/assets/s1-overview.mp4",
-    poster:"clay/assets/s1-overview.png" },
+    poster:"clay/assets/s1-overview.webp" },
   { id:"standup",
     video:"clay/assets/s2-standup.mp4",
-    poster:"clay/assets/s2-standup.png" },
+    poster:"clay/assets/s2-standup.webp" },
   { id:"products",
     video:"clay/assets/s3-products.mp4",
-    poster:"clay/assets/s3-products.png" },
+    poster:"clay/assets/s3-products.webp" },
   { id:"meeting",
     video:"clay/assets/s4-meeting.mp4",
-    poster:"clay/assets/s4-meeting.png" },
+    poster:"clay/assets/s4-meeting.webp" },
   { id:"pantry",
     video:"clay/assets/s5-pantry.mp4",
-    poster:"clay/assets/s5-pantry.png" },
+    poster:"clay/assets/s5-pantry.webp" },
   { id:"curtaincall",
     video:"clay/assets/s6-finale.mp4",
-    poster:"clay/assets/s6-finale.png" },
+    poster:"clay/assets/s6-finale.webp" },
 ];
 const N=SCENES.length;
 
@@ -1073,11 +1067,9 @@ const finale=document.getElementById("finale");
 const dots=document.getElementById("dots");
 const hint=document.getElementById("hint");
 [heroVid,heroVidB,transVid].forEach(v=>{v.muted=true;v.playsInline=true;});
-if(MOBILE){
-  heroVid.src=mSrc("clay/assets/hero.mp4");
-  heroVidB.src=mSrc("clay/assets/hero.mp4");
-  transVid.src=mSrc("clay/assets/flythrough.mp4");
-}
+heroVid.src=mSrc("clay/assets/hero.mp4");
+heroVidB.src=mSrc("clay/assets/hero.mp4");
+transVid.src=mSrc("clay/assets/flythrough.mp4");
 heroVid.play&&heroVid.play().catch(()=>{});
 transVid.load();
 
