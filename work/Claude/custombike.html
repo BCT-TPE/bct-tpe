@@ -475,7 +475,13 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
      vw-width zoom, so its card stack sits at fixed vw offsets. Capping this
      with svh (tried) shrinks the window without moving the cards, which
      pushed the overlap up over the front card on short phones. */
-  .hero-art{order:0;flex:0 0 auto;position:relative;width:100%;height:84vw;overflow:hidden;z-index:2}
+  /* 88vw + the zoom/offset below is solved from the artwork, not eyeballed.
+     Sampling hero.webp: the customizer panel spans y 27.3%-79.4% of the
+     image and the bike's brake lever starts at x~38%. The old window
+     (84vw, zoom 2.55, -5vw/-30vw offsets) showed x 2%-41.2% and y
+     20.8%-78.9% - so it clipped the panel's bottom edge AND let the lever
+     bleed in on the right. */
+  .hero-art{order:0;flex:0 0 auto;position:relative;width:100%;height:88vw;overflow:hidden;z-index:2}
   /* width:100vw is load-bearing: standardized CSS zoom keeps a
      percentage-width element's OUTER size fixed (content lays out in a
      shrunken inner coordinate space instead - no visual zoom at all). An
@@ -486,7 +492,12 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
   /* left shift: the floating colour cards reach image-x ~43%, past a
      0-39% window's right edge - slide the window right so they fit, at the
      cost of the left thumbnail column (which the reference crops too) */
-  .hero-art-zoom{zoom:2.55;width:100vw;position:relative;top:calc(-30vw / 2.55);left:calc(-5vw / 2.55)}
+  /* zoom 2.85 / no left offset: a 100vw window over a 100vw*Z-wide artwork
+     shows exactly 1/Z of its width, so Z must be >= 2.78 for the right edge
+     to land before the lever at x38%. At 2.85 the window shows x 0-35%.
+     top -44vw puts the window's top at y27.2%, just above the panel, and
+     with the 88vw height it reaches y~81% - the panel's full extent. */
+  .hero-art-zoom{zoom:2.85;width:100vw;position:relative;top:calc(-44vw / 2.85);left:0}
   /* bike window: a clipped wrapper with the image explicitly oversized
      (170% width) and anchored to the bottom-right corner. Unlike the
      previous object-fit/scale approach - whose visible slice depended on
@@ -506,14 +517,20 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
      Left/right/bottom stay clipped, which is what keeps the customizer
      panel out of this frame. */
   .hero-bike-wrap{display:block!important;order:1;flex:1 1 auto!important;min-height:0!important;
-    position:relative;overflow:visible;margin-top:-14vw;z-index:5;
-    -webkit-clip-path:inset(-8vw 0 0 0);clip-path:inset(-8vw 0 0 0)}
+    position:relative;overflow:visible;margin-top:-6vw;z-index:5;
+    -webkit-clip-path:inset(-2vw 0 0 0);clip-path:inset(-2vw 0 0 0)}
   /* max-width:none matters: the page's img{max-width:100%} clamps the
      deliberate 190% oversize back to the container width, which brings the
      full artwork - customizer panel included - back into the frame small.
      left:-64% anchors the window at image x ~34%, keeping the left brake
      lever in frame at this larger size while the panel stays out. */
-  .hero-img-bike{position:absolute;left:-68%;bottom:-4%;width:190%!important;max-width:none!important;height:auto;display:block}
+  /* width and left move together: left/width is the artwork fraction the
+     window starts at, and it must stay >=~35% to keep the customizer panel
+     out of this frame (60/170 = 35.3%). The size itself is set by height -
+     the taller panel window above leaves less room here, and the photo is
+     bottom-anchored, so an oversized photo just loses its top (the levers)
+     to the clip. */
+  .hero-img-bike{position:absolute;left:-60%;bottom:-4%;width:170%!important;max-width:none!important;height:auto;display:block}
   /* the page's own tablet rule (max-width:1100px) hides the live paint
      carousel outright; bring it back for this layout - inside the zoom
      group its vw coordinates scale with the image, so it lands correctly
@@ -544,9 +561,16 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
    re-enable and the whole Create-Excellence reorder inside this
    max-height condition, so they stopped applying on tall phones. */
 @media(max-width:768px) and (max-height:800px){
+  /* zoom must stay >= 2.78 here too - the window always shows 1/zoom of the
+     artwork's width, so a smaller zoom (tried 2.24 to save height) puts the
+     right edge at 44.6% and the brake lever bleeds back in. Keeping 2.85 and
+     shortening the window instead means the slice is anchored to the panel's
+     BOTTOM (y ends at ~81% either way): on these short screens the panel's
+     title bar is cropped rather than its bottom edge, which is the end the
+     design cares about. */
   .hero-art{height:66vw!important}
-  .hero-art-zoom{zoom:2.0;top:calc(-30vw / 2.0);left:calc(-5vw / 2.0)}
-  .hero-img-bike{left:-56%;width:160%!important}
+  .hero-art-zoom{zoom:2.85;top:calc(-64.8vw / 2.85);left:0}
+  .hero-img-bike{left:-55%;width:156%!important}
 }
 /* desktop goal section: the globe oversized and deliberately clipped -
    bleeding off the section's left edge and bottom (per the design mock),
