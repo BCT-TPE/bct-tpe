@@ -310,23 +310,26 @@
   .chero h3{font-size:22px;margin:6px 0 7px;font-weight:700}
   .chero h3 .arr{font-weight:400;color:#bfe0f5}
   .chero p{font-size:13.5px;line-height:1.55;color:rgba(255,255,255,.9);max-width:34ch}
-  .ccard{position:absolute;left:50%;top:50%;width:196px;min-height:146px;text-align:left;
-    display:flex;flex-direction:column;justify-content:flex-end;
-    border-radius:16px;padding:14px 15px;text-decoration:none;color:#17303f;
-    box-shadow:0 16px 38px rgba(20,40,60,.18);overflow:hidden;z-index:4;
-    opacity:0;transform:translate(-50%,-50%) scale(.32);will-change:transform,opacity}
-  .ccard .tag{font-size:11px;font-weight:700;letter-spacing:.06em;opacity:.85}
-  .ccard b{font-size:16px;line-height:1.2;margin-top:4px}
-  .ccard .arr{font-weight:400;margin-left:3px}
-  .ccard.in{opacity:1;transform:translate(-50%,-50%)}
-  .ccard:hover{filter:brightness(1.04)}
-  .ccard.c-dcf{background:#e8996b}
-  .ccard.c-data{background:#9b8ecf;color:#fff}
-  .ccard.c-data .tag{opacity:.9}
-  .ccard.c-flir{background:#7fb4d9}
-  .ccard.c-ship{background:#93c07f}
-  .ccard.c-bike{background:#e3c065}
-  .ccard.c-acct{background:#e493a4;color:#fff}
+  /* overlay cards, same design as the case pages' shared "Our works":
+     full-bleed imagery, text on a bottom scrim (name, one-line intro,
+     outlined pill tags), the whole card is the link */
+  .ccard{position:relative;display:block;aspect-ratio:4/3;border-radius:12px;overflow:hidden;
+    text-decoration:none;border:1px solid #e6e1d8;background:#0d1524;
+    box-shadow:0 16px 38px rgba(20,40,60,.12);
+    transition:border-color .3s var(--ease),box-shadow .3s var(--ease)}
+  .ccard:hover{border-color:rgba(10,123,196,.45);box-shadow:0 18px 60px rgba(20,40,60,.2)}
+  .ccard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+    transition:transform .6s var(--ease)}
+  .ccard:hover img{transform:scale(1.05)}
+  .ccard .cc-info{position:absolute;left:0;right:0;bottom:0;z-index:1;padding:72px 22px 20px;
+    display:flex;flex-direction:column;gap:8px;text-align:left;
+    background:linear-gradient(to top,rgba(5,8,14,.82) 0%,rgba(5,8,14,.55) 55%,rgba(5,8,14,0) 100%)}
+  .ccard .cc-name{font-size:19px;font-weight:700;color:#fff;line-height:1.25}
+  .ccard .cc-desc{font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.85);
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .ccard .cc-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+  .ccard .cc-pills i{font-style:normal;font-size:11.5px;font-weight:500;color:#fff;white-space:nowrap;
+    border:1px solid rgba(255,255,255,.55);border-radius:999px;padding:4px 12px}
   /* The section's original choreography (big NOVA card docking centre stage,
      the six project cards bursting into a ring around it) was built around
      the NOVA hero. With NOVA removed there is no centrepiece to orbit, so
@@ -337,10 +340,8 @@
   #cases2 .c2pin{position:static!important;height:auto;display:block;padding:60px 0;overflow:visible}
   #cases2 .casestage{position:static;height:auto;margin-top:22px}
   #cases2 .cgrid{display:grid!important;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-  #cases2 .ccard{position:static!important;transform:none!important;opacity:1!important;width:auto;text-align:left;min-height:150px}
   @media (min-width:1280px) and (orientation:landscape){
     #cases2 .cgrid{grid-template-columns:repeat(3,1fr);gap:16px}
-    #cases2 .ccard{min-height:170px}
   }
   .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:36px;counter-reset:st}
   .step2{background:#fff;border-radius:14px;padding:16px;box-shadow:0 4px 18px rgba(20,40,60,.08);
@@ -712,8 +713,7 @@
     #cases2{height:auto}
     #cases2 .c2pin{position:static;height:auto;padding:40px 0}
     .casestage{grid-template-columns:1fr;gap:16px}
-    .cgrid{grid-template-columns:1fr 1fr;gap:12px}
-    .chero .im{min-height:200px}
+    #cases2 .cgrid{grid-template-columns:1fr;gap:14px}
     .svc a{flex-wrap:wrap;gap:6px}
     .svc b{flex:0 0 100%}
     #cta2{padding:90px 0}
@@ -855,12 +855,24 @@
     <p class="lead rv">Real products, really shipped. A few of our favorites.</p>
     <div class="casestage">
       <div class="cgrid">
-        <a class="ccard c-dcf"  style="--i:0" href="work/Claude/fitting.html"><span class="tag">FITNESS · APP</span><b>Dynamic Cycling Fit <span class="arr">↗</span></b></a>
-        <a class="ccard c-data" style="--i:1" href="work/Claude/DataLake.html"><span class="tag">DATA · PLATFORM</span><b>DataLake <span class="arr">↗</span></b></a>
-        <a class="ccard c-flir" style="--i:2" href="work/flir/flir.html"><span class="tag">IOT · SENSORS</span><b>FLIR <span class="arr">↗</span></b></a>
-        <a class="ccard c-ship" style="--i:3" href="work/Claude/eshipping.html"><span class="tag">LOGISTICS</span><b>eShipping <span class="arr">↗</span></b></a>
-        <a class="ccard c-bike" style="--i:4" href="work/Claude/custombike.html"><span class="tag">COMMERCE</span><b>Custom Bike <span class="arr">↗</span></b></a>
-        <a class="ccard c-acct" style="--i:5" href="work/Claude/gac.html"><span class="tag">PLATFORM</span><b>Account System <span class="arr">↗</span></b></a>
+        <a class="ccard" href="work/Claude/fitting.html"><img src="work/Claude/assets/case_dcf.png" alt="Dynamic Cycling Fit" loading="lazy">
+          <span class="cc-info"><b class="cc-name">Dynamic Cycling Fit</b><span class="cc-desc">Machine-learning bike fitting that dials in every rider&#39;s perfect position.</span>
+          <span class="cc-pills"><i>Fitness &amp; Health</i><i>App</i></span></span></a>
+        <a class="ccard" href="work/Claude/DataLake.html"><img src="work/Claude/uploads/datalake/solution_img.webp" alt="DataLake" loading="lazy">
+          <span class="cc-info"><b class="cc-name">DataLake</b><span class="cc-desc">A secure AWS data lake turning factory data into business intelligence.</span>
+          <span class="cc-pills"><i>Data</i><i>Platform</i></span></span></a>
+        <a class="ccard" href="work/flir/flir.html"><img src="work/Claude/uploads/FLIR.svg" alt="FLIR" loading="lazy">
+          <span class="cc-info"><b class="cc-name">FLIR</b><span class="cc-desc">A mobile companion connecting FLIR&#39;s specialized sensors in one live view.</span>
+          <span class="cc-pills"><i>Digital Sensors</i><i>App</i></span></span></a>
+        <a class="ccard" href="work/Claude/eshipping.html"><img src="work/Claude/uploads/eshipping/challenge_photo.webp" alt="eShipping" loading="lazy">
+          <span class="cc-info"><b class="cc-name">eShipping</b><span class="cc-desc">Automated shipment tracking with real-time status from global carriers.</span>
+          <span class="cc-pills"><i>Logistics</i><i>Web</i></span></span></a>
+        <a class="ccard" href="work/Claude/custombike.html"><img src="work/Claude/uploads/custombike/hero.webp" alt="Custom Bike" loading="lazy">
+          <span class="cc-info"><b class="cc-name">Custom Bike</b><span class="cc-desc">A global customization platform for made-to-order bicycles.</span>
+          <span class="cc-pills"><i>Commerce</i><i>Web</i></span></span></a>
+        <a class="ccard" href="work/Claude/gac.html"><img src="work/Claude/uploads/gid/img_account_system.webp" alt="Account System" loading="lazy">
+          <span class="cc-info"><b class="cc-name">Account System</b><span class="cc-desc">One consumer identity across services, with secure multi-login.</span>
+          <span class="cc-pills"><i>Consumer Platform</i></span></span></a>
       </div>
     </div>
   </div></div>
