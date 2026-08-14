@@ -209,6 +209,12 @@
     opacity:0;transform:translateY(-7px)}
   #nav .navdrop:hover .dropmenu a,#nav .navdrop:focus-within .dropmenu a{opacity:1;transform:none}
   #nav .dropmenu a:hover{color:var(--blue-deep);background:rgba(20,40,60,.06)}
+  /* not-yet-launched Work item (Office Power): inert row + small tag */
+  #nav .dropmenu .soon,#navmenu .nm-sub .soon{display:flex;align-items:center;justify-content:center;gap:8px;cursor:default}
+  #navmenu .nm-sub .soon{justify-content:flex-start}
+  #nav .soon-tag,#navmenu .soon-tag{font-style:normal;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+    padding:2px 7px;border-radius:99px;background:rgba(10,123,196,.14);color:var(--blue);white-space:nowrap}
+  #nav .dropmenu .soon:hover{background:none;color:#3b4552}
   #nav .dropmenu a:nth-child(1){transition-delay:0s,0s,.04s,.04s}
   #nav .dropmenu a:nth-child(2){transition-delay:0s,0s,.08s,.08s}
   #nav .dropmenu a:nth-child(3){transition-delay:0s,0s,.12s,.12s}
@@ -321,17 +327,20 @@
   .ccard.c-ship{background:#93c07f}
   .ccard.c-bike{background:#e3c065}
   .ccard.c-acct{background:#e493a4;color:#fff}
-  /* narrow / portrait: no ring choreography — plain stacked NOVA + 2-col grid.
-     Threshold matches #svc's stacked breakpoint (1279.98) so cases2 never keeps the tall
-     150vh ring while the rest of Act 2 is already stacked — that mismatch left a big empty gap. */
-  @media (max-width:1279.98px), (orientation:portrait){
-    #cases2{height:auto!important}
-    #cases2 .c2pin{position:static!important;height:auto;display:block;padding:60px 0;overflow:visible}
-    #cases2 .casestage{position:static;height:auto;margin-top:22px}
-    #cases2 .cgrid{display:grid!important;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-    #cases2 .chero{position:static!important;transform:none!important;width:auto;z-index:auto;text-align:left}
-    #cases2 .chero .im{height:auto;min-height:190px}
-    #cases2 .ccard{position:static!important;transform:none!important;opacity:1!important;width:auto;text-align:left;min-height:150px}
+  /* The section's original choreography (big NOVA card docking centre stage,
+     the six project cards bursting into a ring around it) was built around
+     the NOVA hero. With NOVA removed there is no centrepiece to orbit, so
+     the former narrow/portrait stacked layout is now the layout at every
+     size - a plain grid of the six cards (3-up on wide screens, 2-up
+     below). The ring JS bails out on its own (it guards on .chero). */
+  #cases2{height:auto!important}
+  #cases2 .c2pin{position:static!important;height:auto;display:block;padding:60px 0;overflow:visible}
+  #cases2 .casestage{position:static;height:auto;margin-top:22px}
+  #cases2 .cgrid{display:grid!important;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  #cases2 .ccard{position:static!important;transform:none!important;opacity:1!important;width:auto;text-align:left;min-height:150px}
+  @media (min-width:1280px) and (orientation:landscape){
+    #cases2 .cgrid{grid-template-columns:repeat(3,1fr);gap:16px}
+    #cases2 .ccard{min-height:170px}
   }
   .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:36px;counter-reset:st}
   .step2{background:#fff;border-radius:14px;padding:16px;box-shadow:0 4px 18px rgba(20,40,60,.08);
@@ -845,11 +854,6 @@
     <h2 class="rv">Work that <span class="si">speaks for itself</span></h2>
     <p class="lead rv">Real products, really shipped. A few of our favorites.</p>
     <div class="casestage">
-      <a class="chero" href="work/Claude/BCT%20Taipei%20Dark.html">
-        <div class="im"><img src="case-nova.jpg" alt="NOVA AI platform dashboard"></div>
-        <div class="cb"><div class="tag">AI · WEB</div><h3>NOVA <span class="arr">↗</span></h3>
-        <p>An AI platform that turns enterprise data into answers your team can act on.</p></div>
-      </a>
       <div class="cgrid">
         <a class="ccard c-dcf"  style="--i:0" href="work/Claude/fitting.html"><span class="tag">FITNESS · APP</span><b>Dynamic Cycling Fit <span class="arr">↗</span></b></a>
         <a class="ccard c-data" style="--i:1" href="work/Claude/DataLake.html"><span class="tag">DATA · PLATFORM</span><b>DataLake <span class="arr">↗</span></b></a>
@@ -959,13 +963,13 @@
       <div class="navdrop">
         <a class="droptrig" href="#cases2" data-target="cases2">Work <svg class="caret" width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="dropmenu">
-          <a href="work/Claude/BCT%20Taipei%20Dark.html">NOVA</a>
           <a href="work/Claude/fitting.html">Dynamic Cycling Fit</a>
           <a href="work/flir/flir.html">FLIR</a>
           <a href="work/Claude/DataLake.html">DataLake</a>
           <a href="work/Claude/eshipping.html">eShipping</a>
           <a href="work/Claude/custombike.html">Custom Bike</a>
           <a href="work/Claude/gac.html">Account System</a>
+          <a class="soon">Office Power <i class="soon-tag">Coming soon</i></a>
         </div>
       </div>
       <a href="#cult" data-target="cult">Team</a>
@@ -977,13 +981,13 @@
     <div class="nm-work">
       <button class="nm-worktrig" aria-expanded="false">Work <svg class="nm-caret" width="16" height="10" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="nm-sub">
-        <a href="work/Claude/BCT%20Taipei%20Dark.html">NOVA</a>
         <a href="work/Claude/fitting.html">Dynamic Cycling Fit</a>
         <a href="work/flir/flir.html">FLIR</a>
         <a href="work/Claude/DataLake.html">DataLake</a>
         <a href="work/Claude/eshipping.html">eShipping</a>
         <a href="work/Claude/custombike.html">Custom Bike</a>
         <a href="work/Claude/gac.html">Account System</a>
+          <a class="soon">Office Power <i class="soon-tag">Coming soon</i></a>
       </div>
     </div>
     <a href="#cult" data-target="cult">Team</a>

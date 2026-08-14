@@ -637,6 +637,14 @@
   /* voices quote calmer */
   .quote-card blockquote{font-size:18px!important;line-height:1.5!important}
 }
+
+/* works grid after NOVA's removal: the two remaining cards fill the row
+   side by side (the wrapper that stacked them next to the big NOVA card
+   dissolves into the grid) */
+@media(min-width:901px){
+  .cases-grid{grid-template-columns:1fr 1fr!important;min-height:0!important}
+  .cases-right{display:contents}
+}
 </style>
 </head>
 <body class="bct-dark">
@@ -658,7 +666,6 @@
         </svg>
       </button>
       <div class="nav-dropdown" role="menu">
-        <a href="https://dev.bct-nova.net/" target="_blank" rel="noopener noreferrer" role="menuitem">NOVA</a>
         <a href="fitting.html" role="menuitem" class="current">Dynamic Cycling Fit</a>
         <a href="../flir/flir.html" role="menuitem">FLIR</a>
         <a href="DataLake.html" role="menuitem">DataLake</a>
@@ -679,13 +686,13 @@
       <div class="navdrop">
         <a class="droptrig" href="../../index.html">Work <svg class="caret" width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="dropmenu">
-          <a href="BCT%20Taipei%20Dark.html">NOVA</a>
           <a href="fitting.html">Dynamic Cycling Fit</a>
           <a href="../flir/flir.html">FLIR</a>
           <a href="DataLake.html">DataLake</a>
           <a href="eshipping.html">eShipping</a>
           <a href="custombike.html">Custom Bike</a>
           <a href="gac.html">Account System</a>
+          <a class="soon">Office Power <i class="soon-tag">Coming soon</i></a>
         </div>
       </div>
       <a href="../../index.html">Team</a>
@@ -697,13 +704,13 @@
     <div class="nm-work">
       <button class="nm-worktrig" aria-expanded="false">Work <svg class="nm-caret" width="16" height="10" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="nm-sub">
-          <a href="BCT%20Taipei%20Dark.html">NOVA</a>
           <a href="fitting.html">Dynamic Cycling Fit</a>
           <a href="../flir/flir.html">FLIR</a>
           <a href="DataLake.html">DataLake</a>
           <a href="eshipping.html">eShipping</a>
           <a href="custombike.html">Custom Bike</a>
           <a href="gac.html">Account System</a>
+          <a class="soon">Office Power <i class="soon-tag">Coming soon</i></a>
       </div>
     </div>
     <a href="../../index.html">Team</a>
@@ -862,14 +869,6 @@
     <a href="BCT Taipei Dark.html#cases" class="works-view-all" style="display:none">View all projects →</a>
   </div>
   <div class="cases-grid reveal">
-    <a class="case-card" href="https://dev.bct-nova.net/" target="_blank" rel="noopener noreferrer">
-      <div class="case-img"><img src="uploads/NOVA.png" alt="NOVA Platform" loading="lazy" decoding="async"></div>
-      <div class="case-info">
-        <div class="case-tag">AI · Web</div>
-        <div class="case-name">NOVA</div>
-        <span class="case-go">Explore more →</span>
-      </div>
-    </a>
     <div class="cases-right">
       <a class="case-card" href="fitting.html" style="text-decoration:none;display:flex;flex-direction:column;">
         <div class="case-img" style="min-height:150px"><img src="assets/case_dcf.png" alt="DCF" loading="lazy"></div>

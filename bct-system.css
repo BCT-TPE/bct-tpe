@@ -130,3 +130,9 @@ body .sec3-eyebrow,body .sec4-feature-label,body .sec-label,body p.sec-label,bod
   body pre{max-width:100%!important;overflow-x:auto!important}
   .voices-inner{grid-template-columns:1fr!important}
 }
+
+/* Work menu: not-yet-launched item (Office Power) - inert, with a small tag */
+#bctnav .dropmenu .soon,#bctnav .nm-sub .soon{display:flex;align-items:center;justify-content:center;gap:8px;cursor:default}
+#bctnav .nm-sub .soon{justify-content:flex-start}
+#bctnav .soon-tag{font-style:normal;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  padding:2px 7px;border-radius:99px;background:rgba(10,123,196,.14);color:var(--bct-blue);white-space:nowrap}
