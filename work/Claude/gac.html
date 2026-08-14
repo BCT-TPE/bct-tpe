@@ -145,6 +145,11 @@ section{position:relative}
    Hero
    ============================================================ */
 .hero{position:relative;padding:calc(var(--header-h) + 80px) 0 100px;text-align:center;background:#fff;overflow:hidden}
+/* soft halo hugging the viewport edges, in the headline gradient's two colors */
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(46% 60% at 0% 16%,   rgba(4,172,235,.14), transparent 72%),
+    radial-gradient(46% 60% at 100% 30%, rgba(44,209,193,.16), transparent 72%)}
 .hero-sub{max-width:800px;margin:24px auto 0;font-size:20px;line-height:32px;color:var(--mid-gray);font-weight:400}
 
 .hero .t1,.hero .hero-sub,.hero .hero-stage{position:relative;z-index:1}
