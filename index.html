@@ -315,9 +315,7 @@
      outlined pill tags), the whole card is the link */
   .ccard{position:relative;display:block;aspect-ratio:4/3;border-radius:12px;overflow:hidden;
     text-decoration:none;border:1px solid #e6e1d8;background:#0d1524;
-    box-shadow:0 16px 38px rgba(20,40,60,.12);
-    transition:border-color .3s var(--ease),box-shadow .3s var(--ease)}
-  .ccard:hover{border-color:rgba(10,123,196,.45);box-shadow:0 18px 60px rgba(20,40,60,.2)}
+    box-shadow:0 16px 38px rgba(20,40,60,.12)}
   .ccard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
     transition:transform .6s var(--ease)}
   .ccard:hover img{transform:scale(1.05)}
@@ -1858,106 +1856,63 @@ document.querySelectorAll("#nav [data-target]").forEach(a=>{
     .observe(sec);
 })();
 
-/* ---------- cases: NOVA reveals big & centred, shrinks in place, then the six project
-   cards burst out from behind it to surround it on all sides (ref 0:30→0:34) ---------- */
+/* ---------- cases: the six work cards burst out from the grid's centre into place
+   (the NOVA-era reveal reworked for the plain grid — no centrepiece needed).
+   Phones/narrow: each card rises softly as it scrolls into view instead. ---------- */
 (function(){
   const sec=document.getElementById("cases2");
   if(!sec) return;
-  const hero=sec.querySelector(".chero");
   const cards=[...sec.querySelectorAll(".ccard")];
-  if(!hero) return;
-  const wideLandscape = matchMedia("(min-width:1280px) and (orientation:landscape)").matches;   /* match the CSS stacked breakpoint + #svc's gate */
-  if(MOBILE||REDUCE||!wideLandscape){ cards.forEach(c=>c.classList.add("in")); return; }  /* narrow/portrait: plain stacked grid */
-  /* heading + subtitle: take them over from the .rv reveal so they arrive LAST, after the cards */
-  const head=[...sec.querySelectorAll(".rv")];
-  head.forEach(el=>{ el.style.transition="none"; el.style.opacity="0"; el.style.transform="translateY(18px)"; });
+  if(!cards.length||REDUCE) return;
   const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
   const eO=t=>1-Math.pow(1-t,3);
-  /* where each card lands relative to NOVA's centre — a ring on all four sides */
-  const RING=[
-    [-300,-165],[ 300,-165],   /* top-left, top-right */
-    [-372,  30],[ 372,  30],   /* left, right */
-    [-256, 216],[ 256, 216]    /* bottom-left, bottom-right */
-  ];
-  /* NOVA reveal. Two phases:
-     APPROACH (section sliding up, scroll-linked) → the big card's TOP EDGE climbs from the very
-       bottom edge, a sliver at first, held large the whole way up (reads cleanly, never a clipped
-       mid-slab). natCenter is recovered from the live rect each frame (rect centre minus the
-       translate we applied) so it's correct whether the sticky pin is engaged or not.
-     DOCK (section reaches the pin) → a SELF-PLAYING ~1s timeline shrinks the card in place to its
-       natural centre and the six project cards burst out — it finishes on its own, no need to keep
-       scrolling. Scrolling back up above the pin resets it so it can replay. */
-  let heroY=0, heroS=1, docked=false, dockAnim=null;
-  function setHero(Y,S){ hero.style.transform=`translate(-50%,-50%) translate(0,${Y.toFixed(1)}px) scale(${S.toFixed(3)})`; heroY=Y; heroS=S; }
-  function applyHeroApproach(r){                   /* scroll-linked rise, held big */
-    const H=innerHeight, hr=hero.getBoundingClientRect();
-    const natCenter=(hr.top+hr.height/2)-heroY, baseH=hr.height/heroS;
-    const S=2.2;                                  /* held large the whole way up — only ever shrinks at the dock */
-    const top=H-(0.90*H)*Math.pow(clamp((H-r)/H,0,1),2.2);  /* slow start → only a little peeks early */
-    setHero((top+baseH*S/2)-natCenter, S);
+  const wideLandscape=matchMedia("(min-width:1280px) and (orientation:landscape)").matches;
+
+  if(MOBILE||!wideLandscape){
+    cards.forEach(c=>{ c.style.opacity="0"; c.style.transform="translateY(26px)";
+      c.style.transition="opacity .6s cubic-bezier(.22,.61,.36,1),transform .6s cubic-bezier(.22,.61,.36,1)"; });
+    const io=new IntersectionObserver(es=>es.forEach(x=>{ if(!x.isIntersecting) return;
+      x.target.style.opacity="1"; x.target.style.transform="none"; io.unobserve(x.target); }),{threshold:.18});
+    cards.forEach(c=>io.observe(c));
+    return;
   }
-  function dockHero(){                             /* self-playing shrink in place → natural centre */
-    cancelAnimationFrame(dockAnim);
-    const sY=heroY, sS=heroS, t0=performance.now();
-    (function step(now){ const e=eO(clamp((now-t0)/1000,0,1));
-      setHero(sY+(0-sY)*e, sS+(1-sS)*e);
-      if(e<1) dockAnim=requestAnimationFrame(step); })(t0);
+
+  /* wide: staggered burst centre → grid, heading + subtitle arrive last (original timing) */
+  const head=[...sec.querySelectorAll(".rv")];
+  const grid=sec.querySelector(".cgrid");
+  let deltas=[], played=false, anim=null;
+  function measure(){
+    const g=grid.getBoundingClientRect(), cx=g.left+g.width/2, cy=g.top+g.height/2;
+    deltas=cards.map(c=>{ const r=c.getBoundingClientRect();
+      return [cx-(r.left+r.width/2), cy-(r.top+r.height/2)]; });
   }
-  function applyReveal(k){
+  function applyK(k){
     cards.forEach((c,i)=>{
-      const t=eO(clamp((k-i*0.05)/0.55,0,1));       /* staggered burst: centre → ring */
-      const rx=RING[i][0]*t, ry=RING[i][1]*t;
-      const cs=(0.30+0.70*t).toFixed(3);
-      c.style.transform=`translate(-50%,-50%) translate(${rx.toFixed(1)}px,${ry.toFixed(1)}px) scale(${cs})`;
+      const t=eO(clamp((k-i*0.05)/0.55,0,1));
+      c.style.transform=`translate(${(deltas[i][0]*(1-t)).toFixed(1)}px,${(deltas[i][1]*(1-t)).toFixed(1)}px) scale(${(0.30+0.70*t).toFixed(3)})`;
       c.style.opacity=t.toFixed(3);
     });
-    const h=eO(clamp((k-0.72)/0.28,0,1));            /* heading + subtitle last */
+    const h=eO(clamp((k-0.72)/0.28,0,1));
     head.forEach(el=>{ el.style.opacity=h.toFixed(3); el.style.transform=`translateY(${((1-h)*18).toFixed(1)}px)`; });
   }
-  applyHeroApproach(sec.getBoundingClientRect().top); applyReveal(0);
-  let raf=null, revAnim=null, lastR=null;
-  function playReveal(){
-    cancelAnimationFrame(revAnim);
+  function hold(){
+    head.forEach(el=>{ el.style.transition="none"; el.style.opacity="0"; el.style.transform="translateY(18px)"; });
+    measure(); applyK(0);
+  }
+  function play(){
+    played=true;
     const t0=performance.now();
-    (function step(now){ const k=clamp((now-t0)/1400,0,1); applyReveal(k); if(k<1) revAnim=requestAnimationFrame(step); })(t0);
+    (function step(now){ const k=clamp((now-t0)/1400,0,1); applyK(k);
+      if(k<1) anim=requestAnimationFrame(step);
+      else cards.forEach(c=>{ c.style.transform=""; c.style.opacity=""; }); })(t0);
   }
-  function loop(){
-    raf=null;
-    const r=Math.round(sec.getBoundingClientRect().top), H=innerHeight;
-    if(!docked){
-      if(r<=0){ docked=true; dockHero(); playReveal(); lastR=r; return; }  /* reached the pin → self-finish (shrink + cards) */
-      applyHeroApproach(r);
-      if(r<H && r!==lastR) raf=requestAnimationFrame(loop);        /* animate the rise only while actually moving */
-    }else if(r>H*0.12){                                            /* scrolled back up above the pin → reset to replay */
-      docked=false; cancelAnimationFrame(dockAnim); cancelAnimationFrame(revAnim);
-      applyReveal(0); applyHeroApproach(r);
+  hold();
+  new IntersectionObserver(es=>es.forEach(x=>{
+    if(x.isIntersecting){ if(!played){ hold(); requestAnimationFrame(play); } }
+    else if(played && x.boundingClientRect.top>innerHeight){   /* scrolled back up past it → replay next time */
+      cancelAnimationFrame(anim); played=false; hold();
     }
-    lastR=r;
-  }
-  function kick(){ if(!raf) raf=requestAnimationFrame(loop); }
-  /* Assist: scroll DOWN into Work and stop just short of the pin → glide the last bit so the reveal
-     auto-plays on its own (no need to nudge it exactly onto the pin). Up-scroll never snaps, so you
-     can always leave. The reveal itself (shrink + cards) is self-playing once the pin is reached. */
-  let snapT=null, prevY=scrollY;
-  function onScroll(){
-    const down=scrollY>prevY; prevY=scrollY;
-    kick();
-    clearTimeout(snapT);
-    if(docked||!down) return;
-    snapT=setTimeout(()=>{
-      if(docked) return;
-      const r=sec.getBoundingClientRect().top, H=innerHeight;
-      if(r>0 && r<H*0.40){                       /* parked, mostly risen → finish the approach for them */
-        const target=Math.round(scrollY+r);
-        if(lenis&&lenis.scrollTo) lenis.scrollTo(target,{duration:0.5});
-        else scrollTo({top:target,behavior:"smooth"});
-      }
-    },150);
-  }
-  addEventListener("scroll",onScroll,{passive:true});
-  addEventListener("resize",kick);
-  new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting) kick(); })).observe(sec);
-  kick();
+  }),{threshold:0.15}).observe(sec);
 })();
 
 /* keep active videos playing (autoplay-policy retries) + preload next flight */
