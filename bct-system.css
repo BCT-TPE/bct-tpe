@@ -81,7 +81,7 @@
   #bctnav .nm-work.open .nm-caret{transform:rotate(180deg)}
   #bctnav .nm-sub{display:flex;flex-direction:column;max-height:0;overflow:hidden;padding-left:2px;transition:max-height .45s var(--bct-ease)}
   #bctnav .nm-work.open .nm-sub{max-height:70vh}
-  #bctnav .nm-sub a{font-size:clamp(16px,4.4vw,21px);font-weight:500;color:#5a6470;text-decoration:none;padding:14px 0;line-height:1.2}
+  #bctnav .nm-sub a{font-size:clamp(16px,4.4vw,21px);font-weight:500;color:#5a6470;text-decoration:none;padding:18px 0;line-height:1.2}
   #bctnav .nm-sub a:hover{color:var(--bct-blue)}
   /* dark-page theme: dark full-screen overlay + white items, same blue
      hover/tap accent as the light menu (var(--bct-blue) reads fine against
