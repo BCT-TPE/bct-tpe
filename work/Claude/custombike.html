@@ -526,7 +526,8 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
      the artwork's own bike starts intruding - so the overlap doubles as the
      cover for that intrusion. */
   .hero-bike-wrap{display:block!important;order:1;flex:1 1 auto!important;min-height:0!important;
-    position:relative;overflow:hidden;margin-top:-17vw;z-index:10}
+    position:relative;overflow:hidden;margin-top:-17vw;z-index:10;
+    isolation:isolate;transform:translateZ(0)}
   /* max-width:none matters: the page's img{max-width:100%} clamps the
      deliberate 190% oversize back to the container width, which brings the
      full artwork - customizer panel included - back into the frame small.
@@ -703,7 +704,7 @@ body.bct-scale .feat h4{font-size:16px!important;font-weight:600!important}
           <a href="eshipping.html">eShipping</a>
           <a href="custombike.html">Custom Bike</a>
           <a href="gac.html">Account System</a>
-          <a class="soon">Office Power <i class="soon-tag">Coming soon</i></a>
+          <a class="soon" aria-disabled="true">Office Power <i class="soon-tag">Coming soon</i></a>
         </div>
       </div>
       <a href="../../index.html">Team</a>
@@ -721,7 +722,7 @@ body.bct-scale .feat h4{font-size:16px!important;font-weight:600!important}
           <a href="eshipping.html">eShipping</a>
           <a href="custombike.html">Custom Bike</a>
           <a href="gac.html">Account System</a>
-          <a class="soon">Office Power <i class="soon-tag">Coming soon</i></a>
+          <a class="soon" aria-disabled="true">Office Power <i class="soon-tag">Coming soon</i></a>
       </div>
     </div>
     <a href="../../index.html">Team</a>
