@@ -194,7 +194,7 @@
   #nav .navdrop .caret{display:block;transition:transform .28s var(--ease)}
   #nav .navdrop:hover .caret,#nav .navdrop:focus-within .caret{transform:rotate(180deg)}
   #nav .dropmenu{position:absolute;top:calc(100% + 14px);left:50%;
-    transform:translateX(-50%) translateY(-8px);min-width:236px;
+    transform:translateX(-50%) translateY(-8px);min-width:320px;
     background:rgba(255,255,255,.62);backdrop-filter:blur(22px) saturate(1.6);-webkit-backdrop-filter:blur(22px) saturate(1.6);
     border:1px solid rgba(255,255,255,.7);border-radius:20px;padding:11px;
     box-shadow:0 24px 60px rgba(20,40,60,.16);display:flex;flex-direction:column;
@@ -203,14 +203,14 @@
   #nav .dropmenu::before{content:"";position:absolute;top:-16px;left:0;right:0;height:16px}
   #nav .navdrop:hover .dropmenu,#nav .navdrop:focus-within .dropmenu{
     opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
-  #nav .dropmenu a{color:#3b4552;font-size:13px;font-weight:500;text-align:center;margin:0;
+  #nav .dropmenu a{color:#3b4552;font-size:13px;font-weight:500;text-align:left;margin:0;
     padding:10px 18px;border-radius:12px;white-space:nowrap;
     transition:color .18s var(--ease),background .18s var(--ease),opacity .3s var(--ease),transform .3s var(--ease);
     opacity:0;transform:translateY(-7px)}
   #nav .navdrop:hover .dropmenu a,#nav .navdrop:focus-within .dropmenu a{opacity:1;transform:none}
   #nav .dropmenu a:hover{color:var(--blue-deep);background:rgba(20,40,60,.06)}
   /* not-yet-launched Work item (Office Power): inert row + small tag */
-  #nav .dropmenu .soon,#navmenu .nm-sub .soon{display:flex;align-items:center;justify-content:center;gap:8px;
+  #nav .dropmenu .soon,#navmenu .nm-sub .soon{display:flex;align-items:center;justify-content:space-between;gap:8px;
     cursor:default;pointer-events:none;opacity:.5}
   #navmenu .nm-sub .soon{justify-content:flex-start}
   #nav .soon-tag,#navmenu .soon-tag{font-style:normal;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
