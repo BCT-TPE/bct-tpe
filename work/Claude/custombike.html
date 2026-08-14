@@ -526,7 +526,7 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
      the artwork's own bike starts intruding - so the overlap doubles as the
      cover for that intrusion. */
   .hero-bike-wrap{display:block!important;order:1;flex:1 1 auto!important;min-height:0!important;
-    position:relative;overflow:hidden;margin-top:-17vw;z-index:10;
+    position:relative;overflow:hidden;margin-top:-24vw;z-index:10;
     isolation:isolate;transform:translateZ(0)}
   /* max-width:none matters: the page's img{max-width:100%} clamps the
      deliberate 190% oversize back to the container width, which brings the
@@ -546,8 +546,15 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
      always lands on the clip line (56vw) regardless of viewport, with no
      clipping at all. Width follows the aspect ratio; right-anchored so the
      bike stays framed and the customizer panel stays out. */
-  .hero-img-bike{position:absolute;left:-88%;bottom:-2%;width:250%!important;
-    height:auto!important;max-width:none!important;display:block}
+  /* dedicated crop asset (hero-bike.webp = artwork x34.5-100% / y28-100%):
+     the customizer panel physically isn't in the image, so no windowing
+     math can ever re-admit it. cover + left-top anchoring means the
+     handlebar (which starts 7% below the crop's top edge) is always fully
+     drawn, and any overflow crops at the BOTTOM - the wheel at the fold,
+     which is the design - instead of a viewport-dependent top cut through
+     the bars (the recurring on-device bug). */
+  .hero-img-bike{position:absolute;inset:0;width:100%!important;height:100%!important;
+    max-width:none!important;display:block;object-fit:cover;object-position:left top}
   /* the page's own tablet rule (max-width:1100px) hides the live paint
      carousel outright; bring it back for this layout - inside the zoom
      group its vw coordinates scale with the image, so it lands correctly
@@ -561,7 +568,8 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
      vw == artwork %, so it scales with the composition), under the cards
      (z2 < .paint-cx's z3). Colour matches the artwork backdrop there. */
   .hero-art-mask{display:block;position:absolute;z-index:2;
-    left:40.2vw;top:33.5vw;width:4vw;height:8vw;background:#2b2b2b}
+    left:40.2vw;top:33.5vw;width:4vw;height:8vw;
+    background:linear-gradient(to bottom,#2c2c2c,#202021)}
 
   /* Create Excellence UX Flow: image directly under the title, feature rows
      after. The h2 and .feat-row live inside .innov-copy, so dissolve that
@@ -596,9 +604,6 @@ footer{background:#04050d;border-top:1px solid rgba(255,255,255,0.07);padding:64
      design cares about. */
   .hero-art{height:65vw!important}
   .hero-art-zoom{zoom:2.4;top:calc(-45.2vw / 2.4);left:0}
-  /* photo size is NOT overridden here: the main rule's 250% is what
-     guarantees it always out-heights the block, which is what pins the
-     cover line. A smaller photo here left the sliver rows uncovered. */
 }
 /* desktop goal section: the globe oversized and deliberately clipped -
    bleeding off the section's left edge and bottom (per the design mock),
@@ -757,7 +762,7 @@ body.bct-scale .feat h4{font-size:16px!important;font-weight:600!important}
          right side, full-bleed under the panel card (display:none on desktop;
          same URL as .hero-img so it's a cache hit, not a second download) -->
     <div class="hero-bike-wrap">
-      <img class="hero-img-bike" src="uploads/custombike/hero.webp" alt="" aria-hidden="true">
+      <img class="hero-img-bike" src="uploads/custombike/hero-bike.webp" alt="" aria-hidden="true">
     </div>
   </div>
 </section>
