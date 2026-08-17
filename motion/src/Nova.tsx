@@ -36,14 +36,14 @@ export const Nova: React.FC = () => {
   });
   const dot = 0.35 + 0.65 * Math.abs(Math.sin((local / 30) * Math.PI * 2));
 
-  /* three thin lines: the two lower ones draw together, the middle one
-     joins later - all fade at the tail so the loop closes cleanly */
-  const PATH_LEN = 1900;
+  /* three organic lines (COMPETE-style): layered irregular sines sampled
+     into smooth paths - no repeating wave pattern. Lower two draw
+     together, the middle one joins later; all fade at the tail. */
   const draw = (from: number, to: number) =>
     interpolate(t, [from, to], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-  const drawnA = draw(0.04, 0.82);       /* lower line 1 */
-  const drawnB = draw(0.06, 0.88);       /* lower line 2, a beat behind */
-  const drawnC = draw(0.34, 0.94);       /* middle line, arrives later */
+  const drawnA = draw(0.04, 0.82);
+  const drawnB = draw(0.06, 0.88);
+  const drawnC = draw(0.34, 0.94);
   const lineFade = interpolate(t, [0.92, 0.995], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
 
   return (
@@ -67,35 +67,9 @@ export const Nova: React.FC = () => {
         viewBox="0 0 1200 800"
         style={{position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: lineFade}}
       >
-        {/* lower pair - drawn together, slightly different waves */}
-        <path
-          d="M -40 560 C 180 520, 300 620, 460 540 S 720 330, 880 300 S 1120 220, 1260 150"
-          fill="none"
-          stroke="rgba(255,255,255,.85)"
-          strokeWidth={3}
-          strokeLinecap="round"
-          strokeDasharray={PATH_LEN}
-          strokeDashoffset={PATH_LEN * (1 - drawnA)}
-        />
-        <path
-          d="M -40 660 C 220 640, 360 700, 540 640 S 800 480, 980 440 S 1160 380, 1260 330"
-          fill="none"
-          stroke="rgba(255,255,255,.5)"
-          strokeWidth={2.5}
-          strokeLinecap="round"
-          strokeDasharray={PATH_LEN}
-          strokeDashoffset={PATH_LEN * (1 - drawnB)}
-        />
-        {/* middle line - joins later, drifting the other way */}
-        <path
-          d="M -40 300 C 160 340, 320 250, 500 280 S 760 200, 940 230 S 1140 160, 1260 190"
-          fill="none"
-          stroke="rgba(255,255,255,.38)"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeDasharray={PATH_LEN}
-          strokeDashoffset={PATH_LEN * (1 - drawnC)}
-        />
+        <NaturalLine line={LINES[0]} progress={drawnA} stroke="rgba(255,255,255,.85)" width={3} />
+        <NaturalLine line={LINES[1]} progress={drawnB} stroke="rgba(255,255,255,.5)" width={2.5} />
+        <NaturalLine line={LINES[2]} progress={drawnC} stroke="rgba(255,255,255,.38)" width={2} />
       </svg>
 
       {/* status pill */}
@@ -135,5 +109,66 @@ export const Nova: React.FC = () => {
         {'π·NOVA'}
       </div>
     </AbsoluteFill>
+  );
+};
+
+/* ---- organic line generation ------------------------------------------- */
+
+type LineSpec = {
+  base: number;          /* vertical anchor */
+  fall: number;          /* overall drift: positive = ends higher */
+  waves: [number, number, number][]; /* [amplitude, frequency, phase] */
+};
+
+/* hand-tuned specs: irrational-ish frequency ratios keep the curves from
+   ever looking periodic - long calm stretches with natural swells */
+const LINES: LineSpec[] = [
+  {base: 545, fall: 320, waves: [[46, 2.13, 0.8], [22, 4.71, 2.9], [9, 8.39, 1.2]]},
+  {base: 655, fall: 250, waves: [[34, 1.71, 3.7], [18, 3.93, 0.4], [7, 7.27, 5.1]]},
+  {base: 295, fall: -90, waves: [[28, 1.93, 1.9], [14, 4.37, 4.4], [6, 9.11, 0.6]]},
+];
+
+const samplePath = (spec: LineSpec) => {
+  const pts: [number, number][] = [];
+  for (let x = -40; x <= 1260; x += 8) {
+    const u = (x + 40) / 1300; /* 0..1 */
+    /* ease the drift so it feels like a natural trend, not a straight slope */
+    const drift = spec.fall * (u * u * (3 - 2 * u));
+    let y = spec.base - drift;
+    for (const [a, f, p] of spec.waves) {
+      /* amplitude breathes along the length so no two stretches match */
+      const amp = a * (0.55 + 0.45 * Math.sin(u * Math.PI * 1.3 + p * 0.7));
+      y += amp * Math.sin(u * Math.PI * f + p);
+    }
+    pts.push([x, y]);
+  }
+  let d = `M ${pts[0][0]} ${pts[0][1].toFixed(1)}`;
+  let len = 0;
+  for (let i = 1; i < pts.length; i++) {
+    d += ` L ${pts[i][0]} ${pts[i][1].toFixed(1)}`;
+    len += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+  }
+  return {d, len};
+};
+
+const PATHS = LINES.map(samplePath);
+
+const NaturalLine: React.FC<{line: LineSpec; progress: number; stroke: string; width: number}> = ({
+  line,
+  progress,
+  stroke,
+  width,
+}) => {
+  const {d, len} = PATHS[LINES.indexOf(line)];
+  return (
+    <path
+      d={d}
+      fill="none"
+      stroke={stroke}
+      strokeWidth={width}
+      strokeLinecap="round"
+      strokeDasharray={len}
+      strokeDashoffset={len * (1 - progress)}
+    />
   );
 };
