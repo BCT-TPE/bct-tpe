@@ -642,7 +642,9 @@
     #svc .deckslot::after{background-color:#7fb4d9;background-image:url("clay/assets/svc4.jpg");transform:rotate(11deg) translate(40%,-2%)}
     #svc .svccue{display:none}   /* "Six ways we can help" cue removed per request */
     /* 2 — SIX WAYS screen: heading + compact 2-col square image cards (2A) */
-    #svc .svchead{position:static!important;transform:none!important;width:auto;opacity:1!important;margin:0 6vw 16px;padding-top:8px}
+    #svc .svchead{position:static!important;transform:none!important;width:auto;opacity:1!important;margin:0 6vw 16px;padding-top:8px;
+      text-align:center}   /* phones: heading group is centred like every other section */
+    #svc .svchead p{margin-left:auto;margin-right:auto}
     #svc .svchead .chips{display:none}
     #svc .svcpanel{display:none}
     #svc .svccards{position:static;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;pointer-events:auto;margin:0 6vw;padding-bottom:20px}
@@ -776,6 +778,18 @@
   footer a{display:block;color:#4a5462;text-decoration:none;margin:6px 0}
   footer a:hover{color:var(--blue-deep)}
   footer .fine{max-width:1080px;margin:0 auto;font-size:12.5px;color:#5d6673}
+  /* Products entrance: copy rises a little further than the site default and
+     each panel slides in from the side it sits on, so the row assembles */
+  html.js #products .pcopy .rv{transform:translateY(28px)}
+  html.js #products .pcopy .rv.vis{transform:none}
+  html.js #products .pvis{transform:translate(48px,26px) scale(.98);
+    transition:opacity .75s var(--ease),transform .9s var(--ease);transition-delay:var(--d,0s)}
+  html.js #products .prow-flip .pvis{transform:translate(-48px,26px) scale(.98)}
+  html.js #products .pvis.vis{transform:none}
+  @media (max-width:640px){
+    html.js #products .pvis,html.js #products .prow-flip .pvis{transform:translateY(26px) scale(.98)}
+  }
+
   /* Chinese typography: the display faces are tracked tight for Latin, which
      crowds CJK (already on a fixed em grid); and CJK lines must not break
      before closing punctuation. */
@@ -787,6 +801,7 @@
   html[lang="zh-Hant"] .lead,html[lang="zh-Hant"] .ptxt,html[lang="zh-Hant"] .caption p{line-height:1.85}
   /* language switcher: quiet in the footer, a real tap target in the mobile menu */
   .langsw{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 12px}
+  .langsw-nav{margin:0 18px 0 0}   /* in the bar: sits left of Contact Us */
   .langsw button{font:600 12.5px/1 inherit;font-family:inherit;color:#5d6673;background:none;border:0;
     padding:4px 2px;cursor:pointer;letter-spacing:.04em;transition:color .18s var(--ease)}
   .langsw button:hover{color:var(--blue-deep)}
@@ -835,7 +850,9 @@
     #cases2{height:auto}
     #cases2 .c2pin{position:static;height:auto;padding:40px 0}
     .casestage{grid-template-columns:1fr;gap:16px}
-    .langsw-m{justify-content:flex-start;gap:14px;margin:26px 0 0}
+    .langsw-nav{display:none}
+    #navmenu{padding-bottom:calc(30px + env(safe-area-inset-bottom))}
+    .langsw-m{justify-content:flex-start;gap:14px;margin:auto 0 0}   /* sits at the foot of the sheet */
     .langsw-m button{font-size:20px;font-weight:700;color:#5a6470;padding:8px 2px}
     .langsw-m button[aria-current="true"]{color:var(--ink)}
     .langsw-m span{font-size:18px}
@@ -844,7 +861,7 @@
        paragraph + CTA land underneath it. display:contents lifts the copy's
        children into the row so they can be ordered around the panel; gap is 0
        because each element already carries its own margin. */
-    .prow,.prow-flip{grid-template-columns:1fr;gap:0;padding:34px 0 46px}   /* room between the two products */
+    .prow,.prow-flip{grid-template-columns:1fr;gap:0;padding:50px 0 46px}   /* clears the section lead, and room between the two products */
     .pcopy{display:contents}
     .pcopy h3{order:1;margin-top:0}
     .pcopy .pk{order:2;margin-top:6px}     /* phones read the name first, then what it is */
@@ -994,16 +1011,16 @@
     <div class="prow">
       <div class="pcopy">
         <span class="pk rv">Enterprise AI agent platform</span>
-        <h3 class="rv" style="--d:.06s">Office Power</h3>
-        <ul class="pfeat rv" style="--d:.12s">
+        <h3 class="rv" style="--d:.08s">Office Power</h3>
+        <ul class="pfeat rv" style="--d:.2s">
           <li>Your first AI coworker live in 15 minutes</li>
           <li>Answers grounded in your own documents</li>
           <li>Budgets, keywords and permissions under IT control</li>
         </ul>
-        <p class="ptxt rv" style="--d:.18s">Office Power is a factory for AI employees, not another chatbot. Install it, run the wizard, and agents are answering on Discord, LINE and the web the same day - with every dollar, keyword and file permission governed.</p>
-        <a class="pbtn rv" style="--d:.24s" href="https://officepower-website.pages.dev/" target="_blank" rel="noopener">Visit Office Power <span class="parr">&#8599;</span></a>
+        <p class="ptxt rv" style="--d:.32s">Office Power is a factory for AI employees, not another chatbot. Install it, run the wizard, and agents are answering on Discord, LINE and the web the same day - with every dollar, keyword and file permission governed.</p>
+        <a class="pbtn rv" style="--d:.44s" href="https://officepower-website.pages.dev/" target="_blank" rel="noopener">Visit Office Power <span class="parr">&#8599;</span></a>
       </div>
-      <div class="pvis op-vis rv" style="--d:.12s" aria-hidden="true">
+      <div class="pvis op-vis rv" style="--d:.16s" aria-hidden="true">
         <div class="opv-bar"><i></i><i></i><i></i><span>officepower.local / dashboard</span><em>LIVE</em></div>
         <div class="opv-stats">
           <div><b>$1,284</b><span>cost / mo</span></div>
@@ -1023,16 +1040,16 @@
     <div class="prow prow-flip">
       <div class="pcopy">
         <span class="pk rv">Collaborative AI page builder</span>
-        <h3 class="rv" style="--d:.06s">NOVA</h3>
-        <ul class="pfeat rv" style="--d:.12s">
+        <h3 class="rv" style="--d:.08s">NOVA</h3>
+        <ul class="pfeat rv" style="--d:.2s">
           <li>Production HTML from a plain-language message</li>
           <li>An MCP server with every page</li>
           <li>Monaco editor - the whole team, live</li>
         </ul>
-        <p class="ptxt rv" style="--d:.18s">Describe your page like you're texting a colleague - NOVA writes it while you watch, spins up an MCP interface for AI agents, and your whole team edits together in real time.</p>
-        <a class="pbtn rv" style="--d:.24s" href="https://op-nova.bct-tw.org/" target="_blank" rel="noopener">Visit NOVA <span class="parr">&#8599;</span></a>
+        <p class="ptxt rv" style="--d:.32s">Describe your page like you're texting a colleague - NOVA writes it while you watch, spins up an MCP interface for AI agents, and your whole team edits together in real time.</p>
+        <a class="pbtn rv" style="--d:.44s" href="https://op-nova.bct-tw.org/" target="_blank" rel="noopener">Visit NOVA <span class="parr">&#8599;</span></a>
       </div>
-      <div class="pvis nova-vis rv" style="--d:.12s" aria-hidden="true">
+      <div class="pvis nova-vis rv" style="--d:.16s" aria-hidden="true">
         <svg class="nvart" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
           <path class="nvs" style="--len:1682;--birth:0.02;--draw:0.34" d="M -140 170 L -124 183 L -103 191 L -78 195 L -49 194 L -17 189 L 18 179 L 55 165 L 94 148 L 135 128 L 177 106 L 220 83 L 263 59 L 308 37 L 353 15 L 398 -4 L 443 -19 L 487 -31 L 532 -38 L 576 -40 L 620 -37 L 664 -28 L 707 -14 L 750 6 L 792 32 L 833 61 L 874 95 L 913 132 L 952 172 L 990 213 L 1027 254 L 1062 295 L 1096 334 L 1128 371 L 1159 404 L 1187 432 L 1212 456 L 1235 474 L 1255 485 L 1271 490 L 1283 488" stroke-width="2.6"/>
           <path class="nvs" style="--len:1711;--birth:0.16;--draw:0.32" d="M -140 700 L -151 716 L -157 729 L -158 740 L -156 749 L -148 754 L -135 756 L -118 755 L -96 751 L -68 744 L -36 734 L 2 720 L 44 704 L 91 684 L 142 662 L 198 637 L 257 610 L 319 580 L 384 549 L 451 517 L 520 484 L 589 450 L 659 416 L 729 382 L 797 349 L 864 316 L 928 285 L 989 256 L 1046 228 L 1100 203 L 1148 181 L 1192 161 L 1230 145 L 1262 131 L 1288 122 L 1308 115 L 1322 112 L 1329 113 L 1330 117 L 1325 125 L 1314 136" stroke-width="2.2"/>
@@ -1157,7 +1174,6 @@
   </section>
 
   <footer>
-    <p class="langsw" data-noi18n aria-label="Language"></p>
     <p class="fine" style="margin-top:0;text-align:center">© 2026 BCT Taipei. All rights reserved. · Bahwan CyberTek Group</p>
   </footer>
 </div>
@@ -1191,6 +1207,7 @@
       </div>
       <a href="#cult" data-target="cult">Team</a>
     </div>
+    <p class="langsw langsw-nav" data-noi18n aria-label="Language"></p>
     <a class="cta" href="mailto:taipei-bct@bahwancybertek.com">Contact Us</a>
   </div>
   <div id="navmenu" aria-hidden="true">
