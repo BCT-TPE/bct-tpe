@@ -295,21 +295,73 @@
      from behind it to surround it on all sides (ref 0:30→0:34) */
   #cases2{position:relative;height:150vh}
   #cases2 .c2pin{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden}
-  /* ---- Products band (placeholder cards until the product pages exist) ---- */
+  /* ---- Products band: one full row per product - copy left, animated panel right ---- */
   #products{padding:80px 0 0}
   #products .wrap{width:88vw;max-width:none;padding:0;margin:0 auto;text-align:center}
-  #products .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:36px}
-  .pcard{position:relative;border-radius:12px;min-height:250px;padding:28px 30px;overflow:hidden;
-    display:flex;flex-direction:column;justify-content:flex-end;gap:8px;text-align:left;color:#fff;
-    text-decoration:none;box-shadow:0 16px 38px rgba(20,40,60,.12);
-    transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
-  .pcard:hover{transform:translateY(-4px);box-shadow:0 24px 60px rgba(20,40,60,.2)}
-  .pcard .pk{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6}
-  .pcard b{font-size:24px;line-height:1.2}
-  .pcard p{font-size:14px;line-height:1.55;color:rgba(255,255,255,.82);max-width:46ch}
-  .pcard .plogo{position:absolute;top:26px;left:30px;height:26px;width:auto}
-  .p-op{background:linear-gradient(135deg,#0b3a63 0%,#0a7bc4 100%)}
-  .p-nova{background:linear-gradient(135deg,#13141c 0%,#2b2e3f 100%)}
+  .prow{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,5vw,80px);
+    align-items:center;padding:56px 0 26px;text-align:left}
+  .pcopy .pk{display:block;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue)}
+  .pcopy h3{font-size:clamp(30px,3vw,42px);font-weight:700;letter-spacing:-.015em;line-height:1.12;margin-top:10px}
+  .pfeat{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+  .pfeat li{position:relative;padding-left:22px;font-size:15px;color:#2b3542}
+  .pfeat li::before{content:"";position:absolute;left:2px;top:.48em;width:7px;height:7px;border-radius:50%;
+    border:1.6px solid var(--blue)}
+  .ptxt{margin-top:18px;font-size:15px;line-height:1.7;color:#414b59;max-width:52ch}
+  .pbtn{display:inline-flex;align-items:center;gap:7px;margin-top:26px;background:var(--blue);color:#fff;
+    font-size:14px;font-weight:700;padding:12px 24px;border-radius:999px;text-decoration:none;
+    transition:transform .2s var(--ease),box-shadow .2s var(--ease)}
+  .pbtn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(10,123,196,.35)}
+  .pbtn .parr{font-weight:400}
+  /* shared panel shell */
+  .pvis{position:relative;border-radius:16px;min-height:380px;overflow:hidden;
+    box-shadow:0 24px 60px rgba(20,40,60,.16)}
+  /* Office Power: dark control plane, cycling log */
+  .op-vis{background:#0f1117;padding:22px 26px;display:flex;flex-direction:column;gap:18px;text-align:left}
+  .opv-bar{display:flex;align-items:center;gap:7px;font:600 11.5px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#8b93a3}
+  .opv-bar i{width:9px;height:9px;border-radius:50%;background:#2a2f3c}
+  .opv-bar i:first-child{background:#e14b4b}
+  .opv-bar span{margin-left:8px}
+  .opv-bar em{margin-left:auto;font-style:normal;color:#4ade80;letter-spacing:.12em}
+  .opv-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .opv-stats div{background:#171b25;border:1px solid #232936;border-radius:10px;padding:14px 16px}
+  .opv-stats b{display:block;font-size:20px;color:#fff;font-weight:700}
+  .opv-stats span{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#77808f}
+  .opv-log{display:flex;flex-direction:column;gap:10px;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#aeb6c4}
+  .opv-log p{opacity:.28;animation:opline 10s infinite}
+  .opv-log b{font-weight:700;color:#e14b4b}
+  .opv-log p:nth-child(2){animation-delay:2s}
+  .opv-log p:nth-child(3){animation-delay:4s}
+  .opv-log p:nth-child(4){animation-delay:6s}
+  .opv-log p:nth-child(5){animation-delay:8s}
+  @keyframes opline{0%{opacity:.28}3%{opacity:1;transform:translateX(4px)}18%{opacity:1;transform:none}24%,100%{opacity:.28}}
+  /* NOVA: message -> page generation loop */
+  .nova-vis{background:#f3ede2;padding:26px;display:flex;flex-direction:column;gap:18px;text-align:left}
+  .nv-chat{display:flex;flex-direction:column;gap:10px}
+  .nv-you{align-self:flex-end;max-width:78%;background:#17181d;color:#f3ede2;font-size:13px;line-height:1.5;
+    padding:10px 14px;border-radius:14px 14px 3px 14px;animation:nvyou 9s infinite}
+  .nv-gen{align-self:flex-start;font:700 11.5px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;
+    color:#c62828;animation:nvgen 9s infinite}
+  .nv-caret{display:inline-block;width:7px;height:12px;margin-left:5px;background:#c62828;vertical-align:-2px;
+    animation:nvblink .7s steps(1) infinite}
+  .nv-page{background:#fff;border:1px solid #e2d9c8;border-radius:10px;padding:14px;flex:1;
+    display:flex;flex-direction:column;gap:12px;animation:nvpage 9s infinite}
+  .nv-hero{height:86px;border-radius:7px;background:#17181d;position:relative;overflow:hidden;animation:nvin 9s infinite}
+  .nv-hero i{position:absolute;left:14px;top:24px;width:44%;height:12px;border-radius:3px;background:#c62828}
+  .nv-hero em{position:absolute;left:14px;top:46px;width:62%;height:7px;border-radius:3px;background:rgba(255,255,255,.35)}
+  .nv-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .nv-cards i{height:64px;border-radius:7px;background:#f3ede2;border:1px solid #e2d9c8}
+  .nv-cards i:nth-child(1){animation:nvin2 9s infinite}
+  .nv-cards i:nth-child(2){animation:nvin2 9s infinite;animation-delay:.45s}
+  .nv-cards i:nth-child(3){animation:nvin2 9s infinite;animation-delay:.9s}
+  @keyframes nvyou{0%{opacity:0;transform:translateY(8px)}4%,92%{opacity:1;transform:none}97%,100%{opacity:0}}
+  @keyframes nvgen{0%,9%{opacity:0}13%,92%{opacity:1}97%,100%{opacity:0}}
+  @keyframes nvblink{50%{opacity:0}}
+  @keyframes nvpage{0%,20%{opacity:0;transform:translateY(10px)}26%,92%{opacity:1;transform:none}97%,100%{opacity:0}}
+  @keyframes nvin{0%,30%{opacity:0}36%,100%{opacity:1}}
+  @keyframes nvin2{0%,42%{opacity:0;transform:translateY(6px)}50%,100%{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){
+    .opv-log p,.nv-you,.nv-gen,.nv-caret,.nv-page,.nv-hero,.nv-cards i{animation:none!important;opacity:1!important;transform:none!important}
+  }
   #cases2 .wrap{width:88vw;max-width:none;padding:0;margin:0 auto;position:relative;text-align:center}  /* 6vw gutters like Six ways / case pages; undoes #act2 .wrap's 1080px cap + padding */
   #cases2 .lead{margin-inline:auto}   /* the 62ch lead is a left-hugging block by default; centre it under the h2 */
   .casestage{position:relative;height:min(64vh,560px);margin-top:20px}
@@ -728,8 +780,8 @@
     #cases2 .c2pin{position:static;height:auto;padding:40px 0}
     .casestage{grid-template-columns:1fr;gap:16px}
     #cases2 .cgrid{grid-template-columns:1fr;gap:14px}
-    #products .pgrid{grid-template-columns:1fr;gap:14px}
-    .pcard{min-height:200px}
+    .prow{grid-template-columns:1fr;gap:22px;padding:40px 0 8px}
+    .pvis{min-height:300px}
     .svc a{flex-wrap:wrap;gap:6px}
     .svc b{flex:0 0 100%}
     #cta2{padding:90px 0}
@@ -863,18 +915,58 @@
   <section id="products"><div class="wrap">
     <h2 class="rv">Our <span class="si">products</span></h2>
     <p class="lead rv">Built by us, run for you.</p>
-    <div class="pgrid">
-      <a class="pcard p-op rv" href="https://officepower-website.pages.dev/" target="_blank" rel="noopener">
-        <span class="pk">Product</span>
-        <b>Office Power</b>
-        <p>The enterprise AI agent platform: governed AI coworkers on Discord, LINE and the web, live in minutes.</p>
-      </a>
-      <a class="pcard p-nova rv" href="https://op-nova.bct-tw.org/" target="_blank" rel="noopener">
-        <img class="plogo" src="logos/img_logo_nova.png" alt="">
-        <span class="pk">Product</span>
-        <b>NOVA</b>
-        <p>Describe a page in plain language. AI builds it, spins up an MCP server, and your whole team edits live.</p>
-      </a>
+
+    <div class="prow rv">
+      <div class="pcopy">
+        <span class="pk">Enterprise AI agent platform</span>
+        <h3>Office Power</h3>
+        <ul class="pfeat">
+          <li>Your first AI coworker live in 15 minutes</li>
+          <li>Answers grounded in your own documents</li>
+          <li>Budgets, keywords and permissions under IT control</li>
+        </ul>
+        <p class="ptxt">Office Power is a factory for AI employees, not another chatbot. Install it, run the wizard, and agents are answering on Discord, LINE and the web the same day - with every dollar, keyword and file permission governed.</p>
+        <a class="pbtn" href="https://officepower-website.pages.dev/" target="_blank" rel="noopener">Visit Office Power <span class="parr">&#8599;</span></a>
+      </div>
+      <div class="pvis op-vis" aria-hidden="true">
+        <div class="opv-bar"><i></i><i></i><i></i><span>officepower.local / dashboard</span><em>LIVE</em></div>
+        <div class="opv-stats">
+          <div><b>$1,284</b><span>cost / mo</span></div>
+          <div><b>6</b><span>agents online</span></div>
+          <div><b>3,912</b><span>messages</span></div>
+        </div>
+        <div class="opv-log">
+          <p><b>&#9650; DEPLOY</b> HR helper &#8594; Discord</p>
+          <p><b>&#9940; GUARDRAIL</b> keyword "salary" blocked</p>
+          <p><b>$ BILLING</b> $1,284 of $3,000 budget</p>
+          <p><b>&#9671; UPLOAD</b> policy_v2 &middot; live instantly</p>
+          <p><b>&#10003; AUDIT</b> 3,912 conversations traceable</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="prow rv">
+      <div class="pcopy">
+        <span class="pk">AI &middot; MCP &middot; realtime collab</span>
+        <h3>NOVA</h3>
+        <ul class="pfeat">
+          <li>Production HTML from a plain-language message</li>
+          <li>An MCP server with every page</li>
+          <li>Monaco editor - the whole team, live</li>
+        </ul>
+        <p class="ptxt">Describe your page like you're texting a colleague - NOVA writes it while you watch, spins up an MCP interface for AI agents, and your whole team edits together in real time.</p>
+        <a class="pbtn" href="https://op-nova.bct-tw.org/" target="_blank" rel="noopener">Visit NOVA <span class="parr">&#8599;</span></a>
+      </div>
+      <div class="pvis nova-vis" aria-hidden="true">
+        <div class="nv-chat">
+          <p class="nv-you">Build a landing page for Acme Analytics - dark hero, three feature cards</p>
+          <p class="nv-gen">&pi;&middot;NOVA &nbsp;Generating HTML<i class="nv-caret"></i></p>
+        </div>
+        <div class="nv-page">
+          <div class="nv-hero"><i></i><em></em></div>
+          <div class="nv-cards"><i></i><i></i><i></i></div>
+        </div>
+      </div>
     </div>
   </div></section>
 
