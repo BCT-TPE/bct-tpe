@@ -315,6 +315,10 @@
   /* shared panel shell */
   .pvis{position:relative;border-radius:16px;min-height:380px;overflow:hidden;
     box-shadow:0 24px 60px rgba(20,40,60,.16)}
+  /* flipped row (NOVA): panel left, copy right */
+  .prow-flip{grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
+  .prow-flip .pcopy{order:2}
+  .prow-flip .pvis{order:1}
   /* Office Power: dark control plane, cycling log */
   .op-vis{background:#0f1117;padding:22px 26px;display:flex;flex-direction:column;gap:18px;text-align:left}
   .opv-bar{display:flex;align-items:center;gap:7px;font:600 11.5px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#8b93a3}
@@ -780,7 +784,9 @@
     #cases2 .c2pin{position:static;height:auto;padding:40px 0}
     .casestage{grid-template-columns:1fr;gap:16px}
     #cases2 .cgrid{grid-template-columns:1fr;gap:14px}
-    .prow{grid-template-columns:1fr;gap:22px;padding:40px 0 8px}
+    .prow,.prow-flip{grid-template-columns:1fr;gap:22px;padding:40px 0 8px}
+    .prow-flip .pcopy{order:1}
+    .prow-flip .pvis{order:2}
     .pvis{min-height:300px}
     .svc a{flex-wrap:wrap;gap:6px}
     .svc b{flex:0 0 100%}
@@ -914,7 +920,6 @@
 
   <section id="products"><div class="wrap">
     <h2 class="rv">Our <span class="si">products</span></h2>
-    <p class="lead rv">Built by us, run for you.</p>
 
     <div class="prow rv">
       <div class="pcopy">
@@ -945,7 +950,7 @@
       </div>
     </div>
 
-    <div class="prow rv">
+    <div class="prow prow-flip rv">
       <div class="pcopy">
         <span class="pk">AI &middot; MCP &middot; realtime collab</span>
         <h3>NOVA</h3>
