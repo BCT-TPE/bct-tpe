@@ -1,97 +1,113 @@
-import {AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 
-/* NOVA "message -> generated page" panel - a port of the CSS loop.
-   Starting point only: change the prompt text, page blocks and pacing in Studio. */
+/* NOVA panel in the Manyone COMPETE visual language:
+   a slowly-drifting warm gradient, one thin line drawing itself across
+   the frame, and a centered pill that typewrites cycling status phrases.
+   Swap PHRASES / colors freely - everything is loop-safe. */
 
 const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
-const RED = '#c62828';
-const CREAM = '#f3ede2';
-const INK = '#17181d';
 
-const PROMPT = 'Build a landing page for Acme Analytics - dark hero, three feature cards';
+/* the three beats of the NOVA story - one per cycle */
+const PHRASES = ['Generating page', 'Mounting MCP server', 'Editing together'];
 
 export const Nova: React.FC = () => {
   const frame = useCurrentFrame();
-  const {fps, durationInFrames} = useVideoConfig();
+  const {durationInFrames} = useVideoConfig();
+  const t = frame / durationInFrames; // 0..1 through the loop
 
-  /* loop-safe global fade: everything exits at the tail so frame 0 == last frame */
-  const exit = interpolate(frame, [durationInFrames - 20, durationInFrames - 4], [1, 0], {
-    extrapolateLeft: 'clamp',
+  /* gradient drift: angle + stop positions wander and return (loop-safe sine) */
+  const drift = Math.sin(t * Math.PI * 2);
+  const angle = 135 + drift * 12;
+  const stop = 50 + drift * 14;
+
+  /* one cycle of the pill per phrase */
+  const per = durationInFrames / PHRASES.length;
+  const idx = Math.min(PHRASES.length - 1, Math.floor(frame / per));
+  const local = frame - idx * per; // frame within this phrase's window
+  const phrase = PHRASES[idx];
+  const typed = Math.round(
+    interpolate(local, [10, 10 + phrase.length * 2.2], [0, phrase.length], {
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    })
+  );
+  const pillIn = interpolate(local, [0, 8, per - 10, per - 2], [0, 1, 1, 0], {
     extrapolateRight: 'clamp',
   });
+  const dot = 0.35 + 0.65 * Math.abs(Math.sin((local / 30) * Math.PI * 2));
 
-  const bubbleIn = spring({frame, fps, config: {damping: 200}, durationInFrames: 18});
-  const genIn = interpolate(frame, [30, 40], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-  const typed = Math.round(interpolate(frame, [6, 46], [0, PROMPT.length], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}));
-  const pageIn = spring({frame: frame - 70, fps, config: {damping: 200}, durationInFrames: 20});
-  const heroIn = interpolate(frame, [95, 108], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-  const caret = Math.floor(frame / 10) % 2 === 0 ? 1 : 0;
+  /* the thin line draws over the whole loop, then fades at the tail */
+  const PATH_LEN = 1700;
+  const drawn = interpolate(t, [0.04, 0.9], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const lineFade = interpolate(t, [0.92, 0.995], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
 
   return (
-    <AbsoluteFill style={{background: CREAM, padding: 52, fontFamily: 'system-ui'}}>
-      <div style={{opacity: exit, display: 'flex', flexDirection: 'column', gap: 26, height: '100%'}}>
-        {/* chat */}
-        <div
-          style={{
-            alignSelf: 'flex-end',
-            maxWidth: '78%',
-            background: INK,
-            color: CREAM,
-            fontSize: 23,
-            lineHeight: 1.5,
-            padding: '18px 26px',
-            borderRadius: '24px 24px 6px 24px',
-            opacity: bubbleIn,
-            transform: `translateY(${(1 - bubbleIn) * 20}px)`,
-          }}
-        >
-          {PROMPT.slice(0, typed)}
-        </div>
-        <div style={{fontFamily: MONO, fontWeight: 700, fontSize: 21, letterSpacing: '.06em', color: RED, opacity: genIn}}>
-          {'π·NOVA  Generating HTML'}
-          <span style={{display: 'inline-block', width: 12, height: 22, marginLeft: 8, background: RED, verticalAlign: -3, opacity: caret}} />
-        </div>
+    <AbsoluteFill
+      style={{
+        background: `linear-gradient(${angle}deg, #d94f42 0%, #e8836a ${stop}%, #f2b48c 100%)`,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      {/* soft inner glow, breathing with the loop */}
+      <AbsoluteFill
+        style={{
+          background: 'radial-gradient(60% 55% at 50% 42%, rgba(255,255,255,.16), transparent 70%)',
+          opacity: 0.6 + 0.4 * Math.abs(drift),
+        }}
+      />
 
-        {/* generated page */}
-        <div
-          style={{
-            background: '#fff',
-            border: '1px solid #e2d9c8',
-            borderRadius: 18,
-            padding: 26,
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 22,
-            opacity: pageIn,
-            transform: `translateY(${(1 - pageIn) * 24}px)`,
-          }}
-        >
-          {/* hero block */}
-          <div style={{height: 170, borderRadius: 12, background: INK, position: 'relative', overflow: 'hidden', opacity: heroIn}}>
-            <div style={{position: 'absolute', left: 28, top: 46, width: `${44 * heroIn}%`, height: 24, borderRadius: 6, background: RED}} />
-            <div style={{position: 'absolute', left: 28, top: 92, width: `${62 * heroIn}%`, height: 14, borderRadius: 6, background: 'rgba(255,255,255,.35)'}} />
-          </div>
-          {/* three cards */}
-          <div style={{display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20}}>
-            {[0, 1, 2].map((i) => {
-              const cardIn = spring({frame: frame - 125 - i * 12, fps, config: {damping: 200}, durationInFrames: 16});
-              return (
-                <div
-                  key={i}
-                  style={{
-                    height: 120,
-                    borderRadius: 12,
-                    background: CREAM,
-                    border: '1px solid #e2d9c8',
-                    opacity: cardIn,
-                    transform: `translateY(${(1 - cardIn) * 14}px)`,
-                  }}
-                />
-              );
-            })}
-          </div>
-        </div>
+      {/* trend line */}
+      <svg
+        viewBox="0 0 1200 800"
+        style={{position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: lineFade}}
+      >
+        <path
+          d="M -40 560 C 180 520, 300 620, 460 540 S 720 330, 880 300 S 1120 220, 1260 150"
+          fill="none"
+          stroke="rgba(255,255,255,.85)"
+          strokeWidth={3}
+          strokeLinecap="round"
+          strokeDasharray={PATH_LEN}
+          strokeDashoffset={PATH_LEN * (1 - drawn)}
+        />
+      </svg>
+
+      {/* status pill */}
+      <div
+        style={{
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 18,
+          background: 'rgba(255,255,255,.92)',
+          borderRadius: 999,
+          padding: '26px 44px',
+          opacity: pillIn,
+          transform: `scale(${0.94 + 0.06 * pillIn})`,
+          boxShadow: '0 18px 50px rgba(120,30,20,.18)',
+        }}
+      >
+        <span style={{fontFamily: MONO, fontSize: 30, fontWeight: 600, color: '#7a2c22', letterSpacing: '.02em'}}>
+          {phrase.slice(0, typed)}
+        </span>
+        <span style={{width: 16, height: 16, borderRadius: '50%', background: '#c62828', opacity: dot}} />
+      </div>
+
+      {/* corner mark */}
+      <div
+        style={{
+          position: 'absolute',
+          left: 44,
+          top: 38,
+          fontFamily: MONO,
+          fontSize: 20,
+          fontWeight: 700,
+          letterSpacing: '.08em',
+          color: 'rgba(255,255,255,.85)',
+        }}
+      >
+        {'π·NOVA'}
       </div>
     </AbsoluteFill>
   );
