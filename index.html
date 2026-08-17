@@ -819,9 +819,18 @@
     #cases2 .c2pin{position:static;height:auto;padding:40px 0}
     .casestage{grid-template-columns:1fr;gap:16px}
     #cases2 .cgrid{grid-template-columns:1fr;gap:14px}
-    .prow,.prow-flip{grid-template-columns:1fr;gap:22px;padding:40px 0 8px}
-    .prow-flip .pcopy{order:1}
-    .prow-flip .pvis{order:2}
+    /* phones read: eyebrow, name, the three points, then the panel, and the
+       paragraph + CTA land underneath it. display:contents lifts the copy's
+       children into the row so they can be ordered around the panel; gap is 0
+       because each element already carries its own margin. */
+    .prow,.prow-flip{grid-template-columns:1fr;gap:0;padding:34px 0 46px}   /* room between the two products */
+    .pcopy{display:contents}
+    .pcopy h3{order:1;margin-top:0}
+    .pcopy .pk{order:2;margin-top:6px}     /* phones read the name first, then what it is */
+    .pfeat{order:3;margin-top:18px}
+    .prow .pvis,.prow-flip .pvis{order:4;margin-top:26px}   /* beats the desktop flip rule */
+    .ptxt{order:5;margin-top:22px}
+    .pbtn{order:6;margin-top:20px;justify-self:start}       /* grid item: don't stretch full width */
     .pvis{min-height:0}   /* aspect-ratio governs: a min-height here would force the box wider than the column */
     .op-vis{aspect-ratio:auto;padding:18px 20px;gap:14px}   /* HTML panel: size to content instead of cropping the log */
     .opv-stats div{padding:11px 12px}
@@ -1466,6 +1475,105 @@ function replayStory(){
 document.documentElement.classList.add("js");
 const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add("vis"); }),{threshold:.12});
 document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+/* ---------- NOVA panel: the Remotion composition's exact motion, driven per
+   frame over the inline SVG. CSS keyframes stay as the no-JS fallback; when
+   this runs it takes them over so the pacing matches the rendered reference
+   (per-stroke draw windows, continuous aging blur, natural pill growth)
+   while staying vector-sharp at any pixel density. ---------- */
+(function(){
+  const panel=document.querySelector("#products .nova-vis");
+  if(!panel) return;
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const DUR=10000;
+  const svg=panel.querySelector(".nvart");
+  const strokes=[...svg.querySelectorAll(".nvs")].map(p=>({
+    el:p,
+    len:parseFloat(p.style.getPropertyValue("--len")),
+    birth:parseFloat(p.style.getPropertyValue("--birth")),
+    draw:parseFloat(p.style.getPropertyValue("--draw")),
+  }));
+  const pills=[...panel.querySelectorAll(".nvpill")].map(el=>({
+    el, i:el.querySelector("i"), full:el.querySelector("i").textContent
+  }));
+  const mark=panel.querySelector(".nvmark");
+
+  /* one blur filter per stroke; stdDeviation is what ages them */
+  const NS="http://www.w3.org/2000/svg";
+  const defs=document.createElementNS(NS,"defs");
+  strokes.forEach((s,i)=>{
+    const f=document.createElementNS(NS,"filter");
+    f.setAttribute("id","nvb"+i);
+    f.setAttribute("x","-25%"); f.setAttribute("y","-25%");
+    f.setAttribute("width","150%"); f.setAttribute("height","150%");
+    const g=document.createElementNS(NS,"feGaussianBlur");
+    g.setAttribute("stdDeviation","0");
+    f.appendChild(g); defs.appendChild(f);
+    s.blur=g; s.el.setAttribute("filter","url(#nvb"+i+")");
+  });
+  svg.insertBefore(defs,svg.firstChild);
+
+  /* hand the animation over from CSS */
+  panel.style.animation="none";
+  strokes.forEach(s=>s.el.style.animation="none");
+  pills.forEach(p=>{ p.el.style.animation="none"; p.i.style.animation="none"; p.i.style.width="auto"; });
+  if(mark) mark.style.animation="none";
+
+  const lerp=(x,xs,ys)=>{                       /* piecewise-linear, clamped */
+    if(x<=xs[0]) return ys[0];
+    for(let i=1;i<xs.length;i++) if(x<=xs[i]){
+      const t=(x-xs[i-1])/(xs[i]-xs[i-1]); return ys[i-1]+(ys[i]-ys[i-1])*t;
+    }
+    return ys[ys.length-1];
+  };
+
+  function draw(now){
+    const t=(now%DUR)/DUR;
+    const env=lerp(t,[0,0.16,0.9,1],[0,1,1,0]);
+
+    /* gradient wanders and returns */
+    const d=Math.sin(t*Math.PI*2);
+    panel.style.backgroundImage=
+      "linear-gradient("+(135+d*14).toFixed(1)+"deg,#f8f4f2 0%,#efeae7 "+(55+d*16).toFixed(1)+"%,#e8e2de 100%)";
+    if(mark) mark.style.opacity=env;
+
+    /* strokes: a travelling tip, then softening with age */
+    for(const s of strokes){
+      const drawn=Math.max(0,Math.min(1,(t-s.birth)/s.draw));
+      const age=Math.max(0,t-s.birth-s.draw);
+      s.el.style.strokeDashoffset=(s.len*(1-drawn)).toFixed(1);
+      s.el.style.opacity=(drawn<=0?0:lerp(age,[0,0.14,0.45],[0.62,0.36,0.16])*env).toFixed(3);
+      s.blur.setAttribute("stdDeviation",Math.min(9,age*26).toFixed(2));
+    }
+
+    /* pills: one per third, each growing as its label types */
+    const per=DUR/pills.length;
+    const idx=Math.min(pills.length-1,Math.floor(t*DUR/per));
+    const local=t*DUR-idx*per;
+    pills.forEach((p,i)=>{
+      if(i!==idx){ p.el.style.opacity=0; return; }
+      const typeStart=i===0?730:270;
+      const chars=Math.round(lerp(local,[typeStart,typeStart+p.full.length*80],[0,p.full.length]));
+      p.i.textContent=p.full.slice(0,chars);
+      const fade=lerp(local,[0,200,per-470,per-130],[0,1,1,0]);
+      p.el.style.opacity=(fade*env).toFixed(3);
+      const enter=i===0?lerp(t,[0,0.14],[0.72,1]):1;
+      const blur=i===0?lerp(t,[0,0.11],[26,0]):0;
+      p.el.style.transform="translate(-50%,-50%) scaleX("+enter.toFixed(3)+")";
+      p.el.style.filter=blur>0.2?"blur("+blur.toFixed(1)+"px)":"none";
+    });
+
+    raf=requestAnimationFrame(draw);
+  }
+
+  /* only spend frames on it while it is on screen */
+  let raf=null;
+  new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting && !raf) raf=requestAnimationFrame(draw);
+    else if(!e.isIntersecting && raf){ cancelAnimationFrame(raf); raf=null; }
+  }),{threshold:0.05}).observe(panel);
+})();
+
 /* products: the copy + panels reveal on entry and RESET once the section has
    fully left, so scrolling back up replays the entrance (and restarts the
    panel videos from frame 0 rather than dropping you mid-loop) */
