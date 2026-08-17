@@ -94,6 +94,27 @@
   #bctnav.on-dark .nm-sub a:hover{color:var(--bct-blue)}
 }
 
+/* ---- language switcher (footer + mobile menu) ---- */
+.langsw{display:flex;align-items:center;justify-content:center;gap:10px;margin:0;padding:16px var(--bct-gutter) 0;
+  background:var(--bct-paper)}
+.langsw button{font:600 12.5px/1 inherit;font-family:inherit;color:var(--bct-muted);background:none;border:0;
+  padding:4px 2px;cursor:pointer;letter-spacing:.04em;transition:color .18s var(--bct-ease)}
+.langsw button:hover{color:var(--bct-blue)}
+.langsw button[aria-current="true"]{color:var(--bct-ink)}
+.langsw span{color:#c9c3ba;font-size:12px}
+body.bct-dark .langsw{background:#121212}
+body.bct-dark .langsw button{color:rgba(255,255,255,.55)}
+body.bct-dark .langsw button[aria-current="true"]{color:#fff}
+body.bct-dark .langsw span{color:rgba(255,255,255,.25)}
+@media(max-width:760px){
+  #bctnav .langsw-m{justify-content:flex-start;gap:14px;margin:26px 0 0;padding:0;background:none}
+  #bctnav .langsw-m button{font-size:20px;font-weight:700;color:#5a6470;padding:8px 2px}
+  #bctnav .langsw-m button[aria-current="true"]{color:var(--bct-ink)}
+  #bctnav.on-dark .langsw-m button{color:rgba(255,255,255,.62)}
+  #bctnav.on-dark .langsw-m button[aria-current="true"]{color:#fff}
+  #bctnav .langsw-m span{font-size:18px}
+}
+
 /* ---- 3. Shared footer (homepage footer; !important so page footer{} rules can't restyle it) ---- */
 #bctftr{background:var(--bct-paper)!important;border:0!important;border-top:1px solid #e6e1d8!important;
   padding:13px var(--bct-gutter)!important;margin:0!important;text-align:center!important;color:var(--bct-muted)!important;
