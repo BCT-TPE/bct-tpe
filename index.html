@@ -776,6 +776,15 @@
   footer a{display:block;color:#4a5462;text-decoration:none;margin:6px 0}
   footer a:hover{color:var(--blue-deep)}
   footer .fine{max-width:1080px;margin:0 auto;font-size:12.5px;color:#5d6673}
+  /* Chinese typography: the display faces are tracked tight for Latin, which
+     crowds CJK (already on a fixed em grid); and CJK lines must not break
+     before closing punctuation. */
+  html[lang="zh-Hant"] :is(h1,h2,h3),html[lang="zh-Hant"] #act2 h2,
+  html[lang="zh-Hant"] #hero h1,html[lang="zh-Hant"] .svcline,
+  html[lang="zh-Hant"] .svchead h2,html[lang="zh-Hant"] .pcopy h3,
+  html[lang="zh-Hant"] #cult h2{letter-spacing:normal}
+  html[lang="zh-Hant"] body{line-break:strict;overflow-wrap:break-word}
+  html[lang="zh-Hant"] .lead,html[lang="zh-Hant"] .ptxt,html[lang="zh-Hant"] .caption p{line-height:1.85}
   /* language switcher: quiet in the footer, a real tap target in the mobile menu */
   .langsw{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 12px}
   .langsw button{font:600 12.5px/1 inherit;font-family:inherit;color:#5d6673;background:none;border:0;
@@ -926,7 +935,7 @@
     <div class="svcpin"><div class="svcstage">
       <div class="svcline"><i class="svcpill blue" style="top:-22%;left:7%;--tr:-6deg;--td:.45s">27 years</i><i class="svcpill" style="top:-24%;right:15%;--tr:6deg;--td:.62s">98% on-time</i><i class="svcpill" style="top:58%;right:20%;--tr:5deg;--td:.8s">50+ shipped 🌍</i><p class="sl-a">Whether you need an <b>AI platform</b> 🧠<br>or an <b>app that ships</b> 🚀</p><p class="sl-b">Let's take it <span class="deckslot" aria-hidden="true"></span> from idea to production</p><span class="svccue" aria-hidden="true">Six ways we can help<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
       <div class="svchead">
-        <h2>Six ways <span class="si">we can help</span></h2>
+        <h2 data-tc="六個面向，">Six ways <span class="si">we can help</span></h2>
         <p>End-to-end with one team in Taipei: strategy, design, build and run.</p>
         <div class="chips" aria-hidden="true">
           <span class="chip" style="--cx:6px;--cy:0px;--r0:-38deg;--r1:-8deg;--d:.00s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18.5" x2="13" y2="18.5"/></svg></span>
@@ -1040,7 +1049,7 @@
   </div></section>
 
 <section id="cases2"><div class="c2pin"><div class="wrap">
-    <h2 class="rv">Work that <span class="si">speaks for itself</span></h2>
+    <h2 class="rv" data-tc="作品">Work that <span class="si">speaks for itself</span></h2>
     <p class="lead rv">Real projects, really shipped. A few of our favorites.</p>
     <div class="casestage">
       <div class="cgrid">

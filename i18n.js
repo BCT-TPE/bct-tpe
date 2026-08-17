@@ -24,7 +24,7 @@
     "Scroll": "向下捲動",
     "↺ Back to the story": "↺ 回到故事",
     "© 2026 BCT Taipei. All rights reserved. · Bahwan CyberTek Group":
-      "© 2026 BCT 台北。版權所有 · Bahwan CyberTek Group",
+      "© 2026 BCT 台北。保留所有權利 · Bahwan CyberTek Group",
 
     /* hero */
     "Step inside": "走進來看看",
@@ -67,11 +67,11 @@
     "app that ships": "能上線的 App",
     "Let's take it": "我們陪你",
     "from idea to production": "從構想走到上線",
-    "Six ways we can help": "六個面向，我們都能幫忙",
-    "Six ways": "六個面向",
-    "we can help": "我們都能幫忙",
+    "Six ways we can help": "六個面向，我們都幫得上",
+    "Six ways": "六個面向，",
+    "we can help": "我們都幫得上",
     "End-to-end with one team in Taipei: strategy, design, build and run.":
-      "台北一個團隊，從策略、設計、開發到維運一手包辦。",
+      "一個台北團隊，包辦策略、設計、開發與維運。",
     "AI Agent Development": "AI Agent 開發",
     "Mobile & Web Apps": "行動與網頁應用",
     "RPA & ML Services": "RPA 與機器學習",
@@ -95,7 +95,7 @@
     "An MCP server with every page": "每個頁面都自帶 MCP 服務",
     "Monaco editor - the whole team, live": "Monaco 編輯器，全團隊即時協作",
     "Describe your page like you're texting a colleague - NOVA writes it while you watch, spins up an MCP interface for AI agents, and your whole team edits together in real time.":
-      "像傳訊息給同事一樣描述你要的頁面 — NOVA 當場寫出來，替 AI agent 開好 MCP 介面，整個團隊可以即時一起編輯。",
+      "像傳訊息給同事一樣描述你要的頁面，NOVA 當場就寫出來，替 AI agent 開好 MCP 介面，整個團隊還能即時一起編輯。",
     "Visit NOVA": "前往 NOVA",
 
     /* case studies */
@@ -128,9 +128,9 @@
     "Good coffee ☕": "好咖啡 ☕",
     "Hybrid work": "混合辦公",
     "Team outings 🌴": "團隊旅遊 🌴",
-    "High": "高",
+    "High": "高度",
     "freedom,": "自由，",
-    "high": "高",
+    "high": "高度",
     "responsibility": "當責",
     "The best work comes from people who own their craft, in the office or remote.":
       "最好的作品來自真正掌握自己專業的人，在辦公室或遠端都一樣。",
@@ -140,6 +140,68 @@
     "We design systems and experiences that elevate how people connect, work, and grow.":
       "我們設計的系統與體驗，讓人們的連結、工作與成長更進一步。",
   };
+
+  /* Chinese sets no space between words, but the markup carries English word
+     spaces between inline spans (e.g. "High freedom, high responsibility").
+     Collapse only the gaps that land between two CJK characters - the spaces
+     around Latin runs like "AI 平台" must stay. */
+  const CJK = /[\u2E80-\u9FFF\u3000-\u303F\uFF00-\uFFEF]/;
+  let gapNodes = null;
+  function collectGaps() {
+    if (gapNodes) return gapNodes;
+    const all = [];
+    const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode(n) {
+        if (SKIP.test(n.parentNode.nodeName)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      },
+    });
+    let n;
+    while ((n = walk.nextNode())) all.push(n);
+    gapNodes = [];
+    all.forEach((node, i) => {
+      if (node.nodeValue !== " " && !/^\s+$/.test(node.nodeValue)) return;
+      let prev = null, next = null;
+      for (let j = i - 1; j >= 0 && !prev; j--) if (all[j].nodeValue.trim()) prev = all[j].nodeValue.trim();
+      for (let j = i + 1; j < all.length && !next; j++) if (all[j].nodeValue.trim()) next = all[j].nodeValue.trim();
+      if (prev && next) gapNodes.push({ node, en: node.nodeValue, prev: () => prev, next: () => next });
+    });
+    return gapNodes;
+  }
+  function gaps(lang) {
+    collectGaps().forEach((g) => {
+      if (lang !== "tc") { g.node.nodeValue = g.en; return; }
+      /* re-read live text: the neighbours have just been translated */
+      const before = prevChar(g.node), after = nextChar(g.node);
+      g.node.nodeValue = CJK.test(before) && CJK.test(after) ? "" : g.en;
+    });
+  }
+  function prevChar(node) {
+    let el = node;
+    while (el) {
+      let p = el.previousSibling;
+      while (p) {
+        const t = p.textContent;
+        if (t && t.trim()) return t.trim().slice(-1);
+        p = p.previousSibling;
+      }
+      el = el.parentNode === document.body ? null : el.parentNode;
+    }
+    return "";
+  }
+  function nextChar(node) {
+    let el = node;
+    while (el) {
+      let p = el.nextSibling;
+      while (p) {
+        const t = p.textContent;
+        if (t && t.trim()) return t.trim()[0];
+        p = p.nextSibling;
+      }
+      el = el.parentNode === document.body ? null : el.parentNode;
+    }
+    return "";
+  }
 
   const KEY = "bct-lang";
   const SKIP = /^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE)$/;
@@ -165,16 +227,17 @@
       const host = n.parentElement;
       const override =
         host && host.dataset.tc && host.firstChild === n ? host.dataset.tc : null;
-      if (override) nodes.push({ node: n, en: n.nodeValue, key, tc: override });
+      if (override) nodes.push({ node: n, en: n.nodeValue, whole: override });
       else if (TC[key]) nodes.push({ node: n, en: n.nodeValue, key, tc: TC[key] });
     }
     return nodes;
   }
 
   function apply(lang) {
-    collect().forEach(({ node, en, key, tc }) => {
-      node.nodeValue = lang === "tc" ? en.replace(key, tc) : en;
+    collect().forEach(({ node, en, key, tc, whole }) => {
+      node.nodeValue = lang !== "tc" ? en : whole !== undefined ? whole : en.replace(key, tc);
     });
+    gaps(lang);
     document.documentElement.lang = lang === "tc" ? "zh-Hant" : "en";
     document.querySelectorAll(".langsw button").forEach((b) =>
       b.setAttribute("aria-current", b.dataset.lang === lang ? "true" : "false")
