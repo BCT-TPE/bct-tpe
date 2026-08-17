@@ -36,9 +36,14 @@ export const Nova: React.FC = () => {
   });
   const dot = 0.35 + 0.65 * Math.abs(Math.sin((local / 30) * Math.PI * 2));
 
-  /* the thin line draws over the whole loop, then fades at the tail */
-  const PATH_LEN = 1700;
-  const drawn = interpolate(t, [0.04, 0.9], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  /* three thin lines: the two lower ones draw together, the middle one
+     joins later - all fade at the tail so the loop closes cleanly */
+  const PATH_LEN = 1900;
+  const draw = (from: number, to: number) =>
+    interpolate(t, [from, to], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const drawnA = draw(0.04, 0.82);       /* lower line 1 */
+  const drawnB = draw(0.06, 0.88);       /* lower line 2, a beat behind */
+  const drawnC = draw(0.34, 0.94);       /* middle line, arrives later */
   const lineFade = interpolate(t, [0.92, 0.995], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
 
   return (
@@ -57,11 +62,12 @@ export const Nova: React.FC = () => {
         }}
       />
 
-      {/* trend line */}
+      {/* trend lines */}
       <svg
         viewBox="0 0 1200 800"
         style={{position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: lineFade}}
       >
+        {/* lower pair - drawn together, slightly different waves */}
         <path
           d="M -40 560 C 180 520, 300 620, 460 540 S 720 330, 880 300 S 1120 220, 1260 150"
           fill="none"
@@ -69,7 +75,26 @@ export const Nova: React.FC = () => {
           strokeWidth={3}
           strokeLinecap="round"
           strokeDasharray={PATH_LEN}
-          strokeDashoffset={PATH_LEN * (1 - drawn)}
+          strokeDashoffset={PATH_LEN * (1 - drawnA)}
+        />
+        <path
+          d="M -40 660 C 220 640, 360 700, 540 640 S 800 480, 980 440 S 1160 380, 1260 330"
+          fill="none"
+          stroke="rgba(255,255,255,.5)"
+          strokeWidth={2.5}
+          strokeLinecap="round"
+          strokeDasharray={PATH_LEN}
+          strokeDashoffset={PATH_LEN * (1 - drawnB)}
+        />
+        {/* middle line - joins later, drifting the other way */}
+        <path
+          d="M -40 300 C 160 340, 320 250, 500 280 S 760 200, 940 230 S 1140 160, 1260 190"
+          fill="none"
+          stroke="rgba(255,255,255,.38)"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeDasharray={PATH_LEN}
+          strokeDashoffset={PATH_LEN * (1 - drawnC)}
         />
       </svg>
 
