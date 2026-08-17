@@ -300,8 +300,8 @@
   #products .wrap{width:88vw;max-width:none;padding:0;margin:0 auto;text-align:center}
   .prow{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,5vw,80px);
     align-items:center;padding:64px 0 64px;text-align:left}
-  .pcopy .pk{display:block;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue)}
-  .pcopy h3{font-size:clamp(30px,3vw,42px);font-weight:700;letter-spacing:-.015em;line-height:1.12;margin-top:10px}
+  .pcopy .pk{display:block;font-size:13.5px;font-weight:600;letter-spacing:.005em;color:var(--blue)}
+  .pcopy h3{font-size:clamp(24px,2.2vw,32px);font-weight:700;letter-spacing:-.01em;line-height:1.15;margin-top:8px}
   .pfeat{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
   .pfeat li{position:relative;padding-left:22px;font-size:15px;color:#2b3542}
   .pfeat li::before{content:"";position:absolute;left:2px;top:.48em;width:7px;height:7px;border-radius:50%;
@@ -313,8 +313,10 @@
   .pbtn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(10,123,196,.35)}
   .pbtn .parr{font-weight:400}
   /* shared panel shell */
-  .pvis{position:relative;border-radius:16px;min-height:380px;overflow:hidden;
+  .pvis{position:relative;border-radius:16px;aspect-ratio:3/2;min-height:340px;overflow:hidden;
     box-shadow:0 24px 60px rgba(20,40,60,.16)}
+  .pvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .nova-vis{background:#e8836a}
   /* flipped row (NOVA): panel left, copy right */
   .prow-flip{grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
   .prow-flip .pcopy{order:2}
@@ -787,7 +789,11 @@
     .prow,.prow-flip{grid-template-columns:1fr;gap:22px;padding:40px 0 8px}
     .prow-flip .pcopy{order:1}
     .prow-flip .pvis{order:2}
-    .pvis{min-height:300px}
+    .pvis{min-height:0}   /* aspect-ratio governs: a min-height here would force the box wider than the column */
+    .op-vis{aspect-ratio:auto;padding:18px 20px;gap:14px}   /* HTML panel: size to content instead of cropping the log */
+    .opv-stats div{padding:11px 12px}
+    .opv-stats b{font-size:17px}
+    .opv-log{font-size:11.5px;gap:8px}
     .svc a{flex-wrap:wrap;gap:6px}
     .svc b{flex:0 0 100%}
     #cta2{padding:90px 0}
@@ -919,21 +925,21 @@
   </div></div>
 
   <section id="products"><div class="wrap">
-    <h2 class="rv">Our <span class="si">products</span></h2>
+    <h2 class="rv">Products <span class="si">of our own</span></h2>
 
-    <div class="prow rv">
+    <div class="prow">
       <div class="pcopy">
-        <span class="pk">Enterprise AI agent platform</span>
-        <h3>Office Power</h3>
-        <ul class="pfeat">
+        <span class="pk rv">Enterprise AI agent platform</span>
+        <h3 class="rv" style="--d:.06s">Office Power</h3>
+        <ul class="pfeat rv" style="--d:.12s">
           <li>Your first AI coworker live in 15 minutes</li>
           <li>Answers grounded in your own documents</li>
           <li>Budgets, keywords and permissions under IT control</li>
         </ul>
-        <p class="ptxt">Office Power is a factory for AI employees, not another chatbot. Install it, run the wizard, and agents are answering on Discord, LINE and the web the same day - with every dollar, keyword and file permission governed.</p>
-        <a class="pbtn" href="https://officepower-website.pages.dev/" target="_blank" rel="noopener">Visit Office Power <span class="parr">&#8599;</span></a>
+        <p class="ptxt rv" style="--d:.18s">Office Power is a factory for AI employees, not another chatbot. Install it, run the wizard, and agents are answering on Discord, LINE and the web the same day - with every dollar, keyword and file permission governed.</p>
+        <a class="pbtn rv" style="--d:.24s" href="https://officepower-website.pages.dev/" target="_blank" rel="noopener">Visit Office Power <span class="parr">&#8599;</span></a>
       </div>
-      <div class="pvis op-vis" aria-hidden="true">
+      <div class="pvis op-vis rv" style="--d:.12s" aria-hidden="true">
         <div class="opv-bar"><i></i><i></i><i></i><span>officepower.local / dashboard</span><em>LIVE</em></div>
         <div class="opv-stats">
           <div><b>$1,284</b><span>cost / mo</span></div>
@@ -950,27 +956,24 @@
       </div>
     </div>
 
-    <div class="prow prow-flip rv">
+    <div class="prow prow-flip">
       <div class="pcopy">
-        <span class="pk">AI &middot; MCP &middot; realtime collab</span>
-        <h3>NOVA</h3>
-        <ul class="pfeat">
+        <span class="pk rv">Collaborative AI page builder</span>
+        <h3 class="rv" style="--d:.06s">NOVA</h3>
+        <ul class="pfeat rv" style="--d:.12s">
           <li>Production HTML from a plain-language message</li>
           <li>An MCP server with every page</li>
           <li>Monaco editor - the whole team, live</li>
         </ul>
-        <p class="ptxt">Describe your page like you're texting a colleague - NOVA writes it while you watch, spins up an MCP interface for AI agents, and your whole team edits together in real time.</p>
-        <a class="pbtn" href="https://op-nova.bct-tw.org/" target="_blank" rel="noopener">Visit NOVA <span class="parr">&#8599;</span></a>
+        <p class="ptxt rv" style="--d:.18s">Describe your page like you're texting a colleague - NOVA writes it while you watch, spins up an MCP interface for AI agents, and your whole team edits together in real time.</p>
+        <a class="pbtn rv" style="--d:.24s" href="https://op-nova.bct-tw.org/" target="_blank" rel="noopener">Visit NOVA <span class="parr">&#8599;</span></a>
       </div>
-      <div class="pvis nova-vis" aria-hidden="true">
-        <div class="nv-chat">
-          <p class="nv-you">Build a landing page for Acme Analytics - dark hero, three feature cards</p>
-          <p class="nv-gen">&pi;&middot;NOVA &nbsp;Generating HTML<i class="nv-caret"></i></p>
-        </div>
-        <div class="nv-page">
-          <div class="nv-hero"><i></i><em></em></div>
-          <div class="nv-cards"><i></i><i></i><i></i></div>
-        </div>
+      <div class="pvis nova-vis rv" style="--d:.12s" aria-hidden="true">
+        <video class="pvid" autoplay loop muted playsinline preload="metadata"
+          poster="work/Claude/uploads/nova-poster.webp">
+          <source src="work/Claude/uploads/nova-panel.webm" type="video/webm">
+          <source src="work/Claude/uploads/nova-panel.mp4" type="video/mp4">
+        </video>
       </div>
     </div>
   </div></section>
@@ -1424,6 +1427,24 @@ function replayStory(){
 document.documentElement.classList.add("js");
 const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add("vis"); }),{threshold:.12});
 document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+/* products: the copy + panels reveal on entry and RESET once the section has
+   fully left, so scrolling back up replays the entrance (and restarts the
+   panel videos from frame 0 rather than dropping you mid-loop) */
+(function(){
+  const sec=document.getElementById("products"); if(!sec) return;
+  const items=[...sec.querySelectorAll(".rv")];
+  const vids=[...sec.querySelectorAll("video")];
+  new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.intersectionRatio===0){
+      items.forEach(el=>el.classList.remove("vis"));
+      vids.forEach(v=>{ try{ v.pause(); v.currentTime=0; }catch(_){} });
+    }else if(e.intersectionRatio>=.15){
+      items.forEach(el=>el.classList.add("vis"));
+      vids.forEach(v=>{ v.play&&v.play().catch(()=>{}); });
+    }
+  }),{threshold:[0,.15]}).observe(sec);
+})();
+
 /* join-us: reveal headline + spark when the section enters; reset once it fully
    leaves so the text + speech-bubble entrance REPLAYS on scroll back */
 (function(){ const cult=document.getElementById("cult"); if(!cult) return;

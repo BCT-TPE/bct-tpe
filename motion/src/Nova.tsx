@@ -2,52 +2,58 @@ import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from 'remoti
 
 /* NOVA panel in the Manyone COMPETE visual language.
    Measured off the reference (720x720, 24fps, 7.34s):
-     - the whole composition ramps in over ~16% of the loop and out over ~8%
+     - the whole composition ramps in over ~16% of the loop and out over ~10%
      - the pill arrives first as a blurred capsule, then the text types
-     - lines never "draw and stop": they drift continuously across frame,
-       soft-edged, at several blur depths, fading out at both ends
-   Loop-safe because the envelope returns to zero at the tail. */
+     - strokes are DRAWN by a travelling tip along a wandering parametric
+       path (steep hairpins, not gentle waves). Once a stroke finishes it
+       stays but softens - blurring and dimming as it ages - while the next
+       one is already being drawn, so the frame keeps evolving.
+   Loop-safe: the envelope returns to zero at the tail. */
 
 const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
 
 /* the three beats of the NOVA story - one per cycle */
 const PHRASES = ['Generating page', 'Mounting MCP server', 'Editing together'];
 
-/* Drifting lines at four depths. `blur` sets how far back a line sits,
-   `speed` is how far it travels across the loop (in viewport widths). */
-type LineSpec = {
-  base: number;
-  fall: number;
-  waves: [number, number, number][];
-  blur: number;
-  opacity: number;
+/* Each stroke is a parametric curve, so x can double back and form the
+   hairpins the reference has. birth/draw/fade are fractions of the loop. */
+type Stroke = {
+  x0: number; y0: number; x1: number; y1: number;
+  ax: number; fx: number; px: number;   /* x wander */
+  ay: number; fy: number; py: number;   /* y wander */
+  birth: number; draw: number;
   width: number;
-  speed: number;
 };
 
-const LINES: LineSpec[] = [
-  {base: 470, fall: 300, waves: [[52, 2.3, 0.8], [26, 5.1, 2.9], [10, 9.7, 1.2]], blur: 0, opacity: 0.8, width: 2.4, speed: 0.3},
-  {base: 610, fall: 210, waves: [[40, 1.7, 3.7], [20, 4.3, 0.4], [8, 8.1, 5.1]], blur: 5, opacity: 0.6, width: 5, speed: 0.22},
-  {base: 330, fall: -140, waves: [[34, 2.1, 1.9], [16, 4.9, 4.4], [7, 9.3, 0.6]], blur: 12, opacity: 0.45, width: 9, speed: -0.18},
-  {base: 545, fall: 60, waves: [[60, 1.3, 5.5], [24, 3.7, 2.1], [9, 7.1, 3.3]], blur: 22, opacity: 0.32, width: 14, speed: 0.12},
+const STROKES: Stroke[] = [
+  /* long sweep entering top-left, settling right */
+  {x0: -80, y0: 170, x1: 1180, y1: 470, ax: 120, fx: 1.6, px: 0.4, ay: 190, fy: 2.2, py: 1.1, birth: 0.02, draw: 0.34, width: 2.6},
+  /* low riser that climbs out to the upper right */
+  {x0: -60, y0: 700, x1: 1240, y1: 250, ax: 90, fx: 2.1, px: 2.6, ay: 130, fy: 1.7, py: 0.2, birth: 0.16, draw: 0.32, width: 2.2},
+  /* the tall hairpin: climbs, arcs over, comes back down */
+  {x0: 330, y0: 820, x1: 700, y1: 830, ax: 250, fx: 1.0, px: 1.57, ay: -640, fy: 1.0, py: 0, birth: 0.34, draw: 0.30, width: 2.8},
+  /* diagonal cutting down to the lower right */
+  {x0: 120, y0: 330, x1: 1150, y1: 780, ax: 70, fx: 1.4, px: 4.0, ay: 90, fy: 2.6, py: 3.3, birth: 0.52, draw: 0.28, width: 2.0},
+  /* late soft arc across the middle */
+  {x0: -60, y0: 560, x1: 1220, y1: 330, ax: 110, fx: 1.9, px: 5.2, ay: 150, fy: 1.4, py: 2.4, birth: 0.66, draw: 0.26, width: 2.4},
 ];
 
-/* sample each spec into a long path (2.5x frame width) so it can drift through */
-const samplePath = (spec: LineSpec) => {
-  const pts: string[] = [];
-  for (let x = -1000; x <= 2000; x += 10) {
-    const u = (x + 1000) / 3000;
-    const drift = spec.fall * (u * u * (3 - 2 * u));
-    let y = spec.base - drift;
-    for (const [a, f, p] of spec.waves) {
-      const amp = a * (0.55 + 0.45 * Math.sin(u * Math.PI * 1.7 + p * 0.7));
-      y += amp * Math.sin(u * Math.PI * f + p);
-    }
-    pts.push(`${x} ${y.toFixed(1)}`);
+/* sample a stroke into a polyline + its length (for dash animation) */
+const buildPath = (s: Stroke) => {
+  const pts: [number, number][] = [];
+  for (let i = 0; i <= 160; i++) {
+    const u = i / 160;
+    const ease = u * u * (3 - 2 * u);
+    const x = s.x0 + (s.x1 - s.x0) * ease + s.ax * Math.sin(u * Math.PI * s.fx + s.px) - s.ax * Math.sin(s.px);
+    const y = s.y0 + (s.y1 - s.y0) * ease + s.ay * Math.sin(u * Math.PI * s.fy + s.py) - s.ay * Math.sin(s.py);
+    pts.push([x, y]);
   }
-  return 'M ' + pts.join(' L ');
+  let len = 0;
+  for (let i = 1; i < pts.length; i++) len += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+  const d = 'M ' + pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(' L ');
+  return {d, len};
 };
-const PATHS = LINES.map(samplePath);
+const PATHS = STROKES.map(buildPath);
 
 export const Nova: React.FC = () => {
   const frame = useCurrentFrame();
@@ -102,48 +108,55 @@ export const Nova: React.FC = () => {
         }}
       />
 
-      {/* drifting lines */}
+      {/* strokes */}
       <svg
         viewBox="0 0 1200 800"
         style={{position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: env}}
       >
         <defs>
-          {/* fades both ends of every stroke so lines never start or stop hard */}
-          <linearGradient id="endfade" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="#fff" stopOpacity="0" />
-            <stop offset="0.18" stopColor="#fff" stopOpacity="1" />
-            <stop offset="0.82" stopColor="#fff" stopOpacity="1" />
-            <stop offset="1" stopColor="#fff" stopOpacity="0" />
-          </linearGradient>
-          {LINES.map((l, i) =>
-            l.blur ? (
-              <filter key={i} id={`b${i}`} x="-20%" y="-60%" width="140%" height="220%">
-                <feGaussianBlur stdDeviation={l.blur} />
+          {STROKES.map((_, i) => {
+            /* a stroke softens as it ages: sharp while drawing, hazy once old */
+            const age = t - STROKES[i].birth - STROKES[i].draw;
+            const blur = Math.max(0, Math.min(9, age * 26));
+            return (
+              <filter key={i} id={`sb${i}`} x="-25%" y="-25%" width="150%" height="150%">
+                <feGaussianBlur stdDeviation={blur.toFixed(2)} />
               </filter>
-            ) : null
-          )}
+            );
+          })}
         </defs>
-        {LINES.map((l, i) => {
-          /* each line drifts at its own pace - depth parallax */
-          const x = -l.speed * 1200 * t;
-          /* the far lines swell and ebb instead of holding one opacity */
-          const breathe = 0.75 + 0.25 * Math.sin(t * Math.PI * 2 + i * 1.7);
+        {STROKES.map((s, i) => {
+          const {d, len} = PATHS[i];
+          /* the travelling tip */
+          const drawn = interpolate(t, [s.birth, s.birth + s.draw], [0, 1], {
+            extrapolateLeft: 'clamp',
+            extrapolateRight: 'clamp',
+          });
+          if (drawn <= 0) return null;
+          /* full strength while being drawn, then settling back as it ages */
+          const age = Math.max(0, t - s.birth - s.draw);
+          const alpha = interpolate(age, [0, 0.14, 0.45], [0.9, 0.5, 0.22], {
+            extrapolateLeft: 'clamp',
+            extrapolateRight: 'clamp',
+          });
           return (
-            <g key={i} transform={`translate(${x.toFixed(1)} 0)`} filter={l.blur ? `url(#b${i})` : undefined}>
-              <path
-                d={PATHS[i]}
-                fill="none"
-                stroke="url(#endfade)"
-                strokeOpacity={l.opacity * breathe}
-                strokeWidth={l.width}
-                strokeLinecap="round"
-              />
-            </g>
+            <path
+              key={i}
+              d={d}
+              fill="none"
+              stroke="rgba(255,255,255,1)"
+              strokeOpacity={alpha}
+              strokeWidth={s.width}
+              strokeLinecap="round"
+              strokeDasharray={len}
+              strokeDashoffset={len * (1 - drawn)}
+              filter={`url(#sb${i})`}
+            />
           );
         })}
       </svg>
 
-      {/* frosted status pill - lines stay visible through it */}
+      {/* frosted status pill - strokes stay visible through it */}
       <div
         style={{
           position: 'relative',
