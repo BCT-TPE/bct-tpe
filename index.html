@@ -1516,18 +1516,13 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
   /* geometry targets: page outline + text lines, on a plane at z=0 */
   let seed=424242;
   const rnd=()=>((seed=(seed*1103515245+12345)&0x7fffffff)/0x7fffffff);
-  const PW=340, PH=460, PER=2*(PW+PH);
-  const onPerim=d=>{ d=((d%PER)+PER)%PER;
-    if(d<PW)return[-PW/2+d,-PH/2];
-    if(d<PW+PH)return[PW/2,-PH/2+(d-PW)];
-    if(d<2*PW+PH)return[PW/2-(d-PW-PH),PH/2];
-    return[-PW/2,PH/2-(d-2*PW-PH)]; };
+  /* the reference's halo: a jittered ring, slightly thick, living in 3D */
+  const RING=250;
   const targets=[], scat=[], stag=[], reds=[], sizes=[];
-  const M=Math.round(N*0.6);
-  const LINES=[[-138,105],[-46,125],[6,125],[58,90]];
   for(let i=0;i<N;i++){
-    if(i<M){ const p=onPerim((i/M)*PER); targets.push([p[0]+(rnd()-0.5)*7,-(p[1]+(rnd()-0.5)*7),0]); }
-    else { const L=LINES[(i-M)%LINES.length]; targets.push([(rnd()-0.5)*L[1]*2, -L[0]+(rnd()-0.5)*8, 0]); }
+    const a=(i/N)*Math.PI*2+rnd()*0.15;
+    const r=RING+(rnd()-0.5)*46;
+    targets.push([Math.cos(a)*r, Math.sin(a)*r, (rnd()-0.5)*40]);
     scat.push([(rnd()-0.5)*1150,(rnd()-0.5)*760,(rnd()-0.5)*520]);
     stag.push(rnd());
     reds.push(rnd()<0.09);
@@ -1582,11 +1577,7 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
     const dotSpr=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(dcv),transparent:true,depthWrite:false}));
     scene.add(dotSpr);
 
-    /* collaborating cursors */
-    const mkCur=(hex)=>{const s2=new THREE.Sprite(new THREE.SpriteMaterial({map:dotTex,color:hex,transparent:true,depthWrite:false}));s2.scale.set(26,26,1);pageGroup.add(s2);return s2;};
-    const cur1=mkCur("#d80011"), cur2=mkCur("#4a4440");
-
-    three={renderer,scene,cam,geo,pos,asz,aal,pts,pageGroup,dotSpr,cur1,cur2};
+    three={renderer,scene,cam,geo,pos,asz,aal,pts,pageGroup,dotSpr};
   }
 
   function frame(now){
@@ -1598,7 +1589,7 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
     if(mark) mark.style.opacity=lerp(t,[0,0.05,0.955,1],[0,1,1,0]);
 
     if(three){
-      const {renderer,scene,cam,geo,pos,asz,aal,pageGroup,dotSpr,cur1,cur2}=three;
+      const {renderer,scene,cam,geo,pos,asz,aal,pageGroup,dotSpr}=three;
       const w=canvas.clientWidth,h=canvas.clientHeight;
       const sz=renderer.getSize(new window.THREE.Vector2());
       if(Math.round(sz.x)!==w||Math.round(sz.y)!==h){renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();}
@@ -1635,14 +1626,12 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
       dotSpr.scale.set(64*swell,64*swell,1);
       dotSpr.position.set(0,-118,40);
 
-      /* page tilts gently in space; cursors ride its perimeter */
-      const pageIn=ss((t-0.56)/0.2);
-      pageGroup.rotation.y=-0.22*pageIn+0.06*Math.sin(t*6.2832);
-      pageGroup.rotation.x=0.10*pageIn+0.03*Math.cos(t*6.2832);
-      const curA=lerp(t,[0.7,0.76,0.94,1],[0,1,1,0]);
-      const p1=onPerim(t*PER*2.1), p2=onPerim(PER*0.55-t*PER*1.6);
-      cur1.material.opacity=curA; cur2.material.opacity=curA*0.8;
-      cur1.position.set(p1[0],-p1[1],26); cur2.position.set(p2[0],-p2[1],26);
+      /* the halo: tilts back for depth and keeps turning (the fade at the
+         loop's tail hides the rotation reset) */
+      const ringIn=ss((t-0.56)/0.2);
+      pageGroup.rotation.x=0.52*ringIn+0.04*Math.cos(t*6.2832);
+      pageGroup.rotation.y=0.08*Math.sin(t*6.2832);
+      pageGroup.rotation.z=t*2.4*ringIn;
 
       /* camera parallax - the "3D" read */
       cam.position.x=Math.sin(t*6.2832)*70;

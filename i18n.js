@@ -171,6 +171,11 @@
   function gaps(lang) {
     collectGaps().forEach((g) => {
       if (lang !== "tc") { g.node.nodeValue = g.en; return; }
+      /* a text-less inline element beside the gap (like the card-deck slot in
+         the services statement) still occupies width - keep its spacing */
+      const sp = g.node.previousSibling, sn = g.node.nextSibling;
+      if ((sp && sp.nodeType === 1 && !sp.textContent.trim()) ||
+          (sn && sn.nodeType === 1 && !sn.textContent.trim())) { g.node.nodeValue = g.en; return; }
       /* re-read live text: the neighbours have just been translated */
       const before = prevChar(g.node), after = nextChar(g.node);
       g.node.nodeValue = CJK.test(before) && CJK.test(after) ? "" : g.en;
@@ -242,6 +247,12 @@
     document.querySelectorAll(".langsw button").forEach((b) =>
       b.setAttribute("aria-current", b.dataset.lang === lang ? "true" : "false")
     );
+    /* text reflow moves anything positioned from measured rects (the services
+       card deck, pinned scenes) - let those recompute on the next frame */
+    requestAnimationFrame(() => {
+      dispatchEvent(new Event("resize"));
+      dispatchEvent(new Event("scroll"));
+    });
     try { localStorage.setItem(KEY, lang); } catch (e) {}
   }
 
