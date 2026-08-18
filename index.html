@@ -331,7 +331,11 @@
     letter-spacing:.08em;color:#070402;animation:nvenv 10s ease-in-out infinite}
   .nvbeat{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     font:600 clamp(16px,1.7vw,23px)/1.3 "General Sans",system-ui,sans-serif;font-style:normal;
-    color:#070402;opacity:0;pointer-events:none;text-shadow:0 1px 12px rgba(248,244,242,.8)}
+    color:#070402;opacity:0;pointer-events:none}
+  /* soft cream scrim floating under the caption - the particles pass behind it */
+  .nvbeat::before{content:"";position:absolute;left:50%;top:50%;width:min(74%,540px);height:132px;
+    transform:translate(-50%,-50%);border-radius:50%;filter:blur(6px);z-index:-1;
+    background:radial-gradient(closest-side,rgba(248,244,242,.95),rgba(248,244,242,.72) 58%,transparent 100%)}
   @keyframes nvgrad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
   @keyframes nvglow{0%,100%{opacity:.55}25%,75%{opacity:1}}
   @keyframes nvenv{0%{opacity:0}16%,90%{opacity:1}100%{opacity:0}}
@@ -1473,140 +1477,197 @@ function replayStory(){
 document.documentElement.classList.add("js");
 const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add("vis"); }),{threshold:.12});
 document.querySelectorAll(".rv").forEach(el=>io.observe(el));
-/* ---------- NOVA panel: the particle story, driven per frame on a canvas.
-   Same math as motion/src/NovaParticles.tsx: charcoal fragments drift on the
-   warm ground, converge into a red point, then bloom into a page outline
-   while two cursors orbit it. Particles steer clear of an elliptical
-   keep-out around the caption so the text always reads. Vector-sharp at
-   any DPR, loop-safe, and only running while on screen. ---------- */
+/* ---------- NOVA panel: the particle story in a shallow 3D space.
+   three.js points with real depth: fragments float with parallax, spiral
+   into a glowing point, then bloom onto a gently tilted page. Every
+   particle carries its own stagger and eases through the transitions
+   (no collective jump, no vanish-pop - they shrink into the dot and
+   re-emerge from it). The caption sits on its own scrim, so the field
+   never needs to dodge it. three.js loads lazily when the panel nears
+   the viewport; if WebGL is unavailable the captions still cycle. ---------- */
 (function(){
   const panel=document.querySelector("#products .nova-vis");
   if(!panel) return;
   const canvas=panel.querySelector(".nvcanvas");
-  if(!canvas||!canvas.getContext) return;
+  if(!canvas) return;
   if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  const DUR=10000, W=1200, Hh=800, CX=W/2, CY=Hh/2, N=300;
-  const RED="#d80011", INK="#070402";
+  const DUR=12000, N=420;
   const beats=[panel.querySelector(".b1"),panel.querySelector(".b2"),panel.querySelector(".b3")];
   const mark=panel.querySelector(".nvmark");
   if(mark) mark.style.animation="none";
   panel.style.animation="none";
 
-  /* seeded PRNG - identical distribution to the Remotion source */
-  let seed=424242;
-  const rnd=()=>((seed=(seed*1103515245+12345)&0x7fffffff)/0x7fffffff);
-
-  /* page outline + interior text lines */
-  const pw=340, ph=460, x0=CX-pw/2, y0=CY-ph/2, per=2*(pw+ph);
-  const targets=[];
-  const M=Math.round(N*0.62);
-  for(let i=0;i<M;i++){
-    let d=(i/M)*per, x,y;
-    if(d<pw){x=x0+d;y=y0;}
-    else if(d<pw+ph){x=x0+pw;y=y0+(d-pw);}
-    else if(d<2*pw+ph){x=x0+pw-(d-pw-ph);y=y0+ph;}
-    else{x=x0;y=y0+ph-(d-2*pw-ph);}
-    targets.push([x+(rnd()-0.5)*7,y+(rnd()-0.5)*7]);
-  }
-  const LINES=[[y0+92,210],[y0+180,250],[y0+232,250],[y0+284,180]];
-  for(let i=M;i<N;i++){
-    const L=LINES[(i-M)%LINES.length];
-    targets.push([CX-L[1]/2+rnd()*L[1],L[0]+(rnd()-0.5)*8]);
-  }
-  const P=[];
-  for(let i=0;i<N;i++) P.push({
-    x0:rnd()*W, y0:rnd()*Hh*0.92, drift:0.35+rnd()*1.1,
-    size:1.3+rnd()*2.1, tw:rnd()*Math.PI*2, red:rnd()<0.085
-  });
-
   const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
-  const sm=t=>t*t*(3-2*t);
-  const seg=(t,a,b)=>sm(clamp((t-a)/(b-a),0,1));
+  const ss=t=>{t=clamp(t,0,1);return t*t*t*(t*(t*6-15)+10);};   /* smootherstep */
   const lerp=(x,xs,ys)=>{ if(x<=xs[0])return ys[0];
     for(let i=1;i<xs.length;i++) if(x<=xs[i]){const u=(x-xs[i-1])/(xs[i]-xs[i-1]);return ys[i-1]+(ys[i]-ys[i-1])*u;}
     return ys[ys.length-1]; };
-  const onPerim=d=>{ d=((d%per)+per)%per;
-    if(d<pw)return[x0+d,y0];
-    if(d<pw+ph)return[x0+pw,y0+(d-pw)];
-    if(d<2*pw+ph)return[x0+pw-(d-pw-ph),y0+ph];
-    return[x0,y0+ph-(d-2*pw-ph)]; };
+  const BEAT_T=[[0.05,0.30],[0.37,0.60],[0.68,0.95]];
 
-  const BEAT_T=[[0.05,0.30],[0.38,0.62],[0.70,0.96]];
-  /* caption keep-out ellipse */
-  const KRX=300, KRY=74;
+  /* captions always run, even before three arrives */
+  let tNow=0;
+  function captions(){
+    BEAT_T.forEach((b,i)=>{
+      if(beats[i]) beats[i].style.opacity=lerp(tNow,[b[0],b[0]+0.05,b[1]-0.05,b[1]],[0,1,1,0]);
+    });
+  }
 
-  const ctx=canvas.getContext("2d");
+  /* geometry targets: page outline + text lines, on a plane at z=0 */
+  let seed=424242;
+  const rnd=()=>((seed=(seed*1103515245+12345)&0x7fffffff)/0x7fffffff);
+  const PW=340, PH=460, PER=2*(PW+PH);
+  const onPerim=d=>{ d=((d%PER)+PER)%PER;
+    if(d<PW)return[-PW/2+d,-PH/2];
+    if(d<PW+PH)return[PW/2,-PH/2+(d-PW)];
+    if(d<2*PW+PH)return[PW/2-(d-PW-PH),PH/2];
+    return[-PW/2,PH/2-(d-2*PW-PH)]; };
+  const targets=[], scat=[], stag=[], reds=[], sizes=[];
+  const M=Math.round(N*0.6);
+  const LINES=[[-138,105],[-46,125],[6,125],[58,90]];
+  for(let i=0;i<N;i++){
+    if(i<M){ const p=onPerim((i/M)*PER); targets.push([p[0]+(rnd()-0.5)*7,-(p[1]+(rnd()-0.5)*7),0]); }
+    else { const L=LINES[(i-M)%LINES.length]; targets.push([(rnd()-0.5)*L[1]*2, -L[0]+(rnd()-0.5)*8, 0]); }
+    scat.push([(rnd()-0.5)*1150,(rnd()-0.5)*760,(rnd()-0.5)*520]);
+    stag.push(rnd());
+    reds.push(rnd()<0.09);
+    sizes.push(7+rnd()*9);
+  }
+
+  let three=null, raf=null;
+  function boot(){
+    const THREE=window.THREE;
+    let renderer;
+    try{ renderer=new THREE.WebGLRenderer({canvas, alpha:true, antialias:true}); }
+    catch(e){ return; }
+    renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));
+    const scene=new THREE.Scene();
+    const cam=new THREE.PerspectiveCamera(36,3/2,1,4000);
+    cam.position.set(0,0,980);
+
+    /* soft round sprite */
+    const cv=document.createElement("canvas"); cv.width=cv.height=64;
+    const c2=cv.getContext("2d");
+    const g=c2.createRadialGradient(32,32,0,32,32,30);
+    g.addColorStop(0,"rgba(255,255,255,1)"); g.addColorStop(.6,"rgba(255,255,255,.8)"); g.addColorStop(1,"rgba(255,255,255,0)");
+    c2.fillStyle=g; c2.beginPath(); c2.arc(32,32,30,0,6.2832); c2.fill();
+    const dotTex=new THREE.CanvasTexture(cv);
+
+    const geo=new THREE.BufferGeometry();
+    const pos=new Float32Array(N*3), col=new Float32Array(N*3), asz=new Float32Array(N), aal=new Float32Array(N);
+    const ink=new THREE.Color("#332e2a"), red=new THREE.Color("#d80011");
+    for(let i=0;i<N;i++){ const c=reds[i]?red:ink; col[i*3]=c.r; col[i*3+1]=c.g; col[i*3+2]=c.b; }
+    geo.setAttribute("position",new THREE.BufferAttribute(pos,3));
+    geo.setAttribute("color",new THREE.BufferAttribute(col,3));
+    geo.setAttribute("aSize",new THREE.BufferAttribute(asz,1));
+    geo.setAttribute("aAlpha",new THREE.BufferAttribute(aal,1));
+    const mat=new THREE.ShaderMaterial({
+      transparent:true, depthWrite:false,
+      uniforms:{tex:{value:dotTex}},
+      vertexShader:"attribute float aSize;attribute float aAlpha;varying float vA;varying vec3 vC;attribute vec3 color;"+
+        "void main(){vA=aAlpha;vC=color;vec4 mv=modelViewMatrix*vec4(position,1.);"+
+        "gl_PointSize=aSize*(700./-mv.z);gl_Position=projectionMatrix*mv;}",
+      fragmentShader:"uniform sampler2D tex;varying float vA;varying vec3 vC;"+
+        "void main(){vec4 s=texture2D(tex,gl_PointCoord);gl_FragColor=vec4(vC,s.a*vA);}"
+    });
+    const pts=new THREE.Points(geo,mat);
+    const pageGroup=new THREE.Group(); pageGroup.add(pts); scene.add(pageGroup);
+
+    /* the vision dot: red glow sprite */
+    const dcv=document.createElement("canvas"); dcv.width=dcv.height=128;
+    const d2=dcv.getContext("2d");
+    const dg=d2.createRadialGradient(64,64,0,64,64,62);
+    dg.addColorStop(0,"rgba(216,0,17,1)"); dg.addColorStop(.35,"rgba(216,0,17,.75)"); dg.addColorStop(1,"rgba(216,0,17,0)");
+    d2.fillStyle=dg; d2.beginPath(); d2.arc(64,64,62,0,6.2832); d2.fill();
+    const dotSpr=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(dcv),transparent:true,depthWrite:false}));
+    scene.add(dotSpr);
+
+    /* collaborating cursors */
+    const mkCur=(hex)=>{const s2=new THREE.Sprite(new THREE.SpriteMaterial({map:dotTex,color:hex,transparent:true,depthWrite:false}));s2.scale.set(26,26,1);pageGroup.add(s2);return s2;};
+    const cur1=mkCur("#d80011"), cur2=mkCur("#4a4440");
+
+    three={renderer,scene,cam,geo,pos,asz,aal,pts,pageGroup,dotSpr,cur1,cur2};
+  }
+
   function frame(now){
-    const t=(now%DUR)/DUR, fr=t*DUR/(1000/24);
-    /* HiDPI sizing */
-    const cw=canvas.clientWidth, chh=canvas.clientHeight, dpr=Math.min(2,devicePixelRatio||1);
-    if(canvas.width!==Math.round(cw*dpr)){canvas.width=Math.round(cw*dpr);canvas.height=Math.round(chh*dpr);}
-    const sc=canvas.width/W;
-    ctx.setTransform(sc,0,0,sc,0,(canvas.height-Hh*sc)/2);
-    ctx.clearRect(-50,-CY,W+100,Hh*3);
-
-    const converge=seg(t,0.28,0.44), bloom=seg(t,0.58,0.72);
-    const dot=lerp(t,[0.38,0.46,0.62,0.70],[0,1,1,0]);
-    const env=lerp(t,[0,0.05,0.955,1],[0,1,1,0]);
-    const cursors=lerp(t,[0.72,0.78,0.955,1],[0,1,1,0]);
-    const beatOp=BEAT_T.map(b=>lerp(t,[b[0],b[0]+0.05,b[1]-0.05,b[1]],[0,1,1,0]));
-    const keep=Math.max(beatOp[0],beatOp[1],beatOp[2]);
-
-    /* gradient wanders */
+    const t=(now%DUR)/DUR; tNow=t;
+    captions();
     const d=Math.sin(t*Math.PI*2);
     panel.style.backgroundImage=
       "linear-gradient("+(135+d*14).toFixed(1)+"deg,#f8f4f2 0%,#efeae7 "+(55+d*16).toFixed(1)+"%,#e8e2de 100%)";
-    if(mark) mark.style.opacity=env;
-    beats.forEach((b,i)=>{ if(b) b.style.opacity=beatOp[i]*env; });
+    if(mark) mark.style.opacity=lerp(t,[0,0.05,0.955,1],[0,1,1,0]);
 
-    for(let i=0;i<N;i++){
-      const p=P[i];
-      const sy=(p.y0+fr*p.drift)%Hh;
-      const sx=p.x0+Math.sin(fr/42+p.tw)*7;
-      const cx1=sx+(CX-sx)*converge, cy1=sy+(CY-sy)*converge;
-      let x=cx1+(targets[i][0]-cx1)*bloom, y=cy1+(targets[i][1]-cy1)*bloom;
-      /* keep-out: ease particles out of the caption ellipse while text shows */
-      if(keep>0){
-        const ex=(x-CX)/KRX, ey=(y-CY)/KRY, ed=Math.hypot(ex,ey);
-        if(ed<1&&ed>0.0001){
-          const bx=CX+(ex/ed)*KRX, by=CY+(ey/ed)*KRY;
-          const f=sm(1-ed)*keep;
-          x+= (bx-x)*f; y+=(by-y)*f;
-        }
+    if(three){
+      const {renderer,scene,cam,geo,pos,asz,aal,pageGroup,dotSpr,cur1,cur2}=three;
+      const w=canvas.clientWidth,h=canvas.clientHeight;
+      const sz=renderer.getSize(new window.THREE.Vector2());
+      if(Math.round(sz.x)!==w||Math.round(sz.y)!==h){renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();}
+
+      const env=lerp(t,[0,0.05,0.955,1],[0,1,1,0]);
+      /* dot life: swells while particles pour in, hands off to the bloom */
+      const dotA=lerp(t,[0.3,0.42,0.6,0.7],[0,1,1,0]);
+      let arrived=0;
+
+      for(let i=0;i<N;i++){
+        /* each particle owns its window inside the phase - organic, not a jump */
+        const cv2=ss((t-(0.24+stag[i]*0.12))/0.14);
+        const bl=ss((t-(0.56+stag[i]*0.12))/0.14);
+        arrived+=cv2*(1-bl);
+        /* scattered home with periodic float (loop-safe) */
+        const fx=scat[i][0]+Math.sin(t*6.2832+stag[i]*6.2832)*16;
+        const fy=scat[i][1]+Math.cos(t*6.2832*2+stag[i]*4)*10;
+        const fz=scat[i][2];
+        let x=fx+(0-fx)*cv2, y=fy+(0-fy)*cv2, z=fz+(0-fz)*cv2;
+        x+=(targets[i][0]-x)*bl; y+=(targets[i][1]-y)*bl; z+=(targets[i][2]-z)*bl;
+        pos[i*3]=x; pos[i*3+1]=y; pos[i*3+2]=z;
+        /* shrink into the dot, re-emerge with the bloom */
+        const inDot=cv2*(1-bl);
+        asz[i]=sizes[i]*(1-0.92*inDot);
+        const tw=0.72+0.28*Math.sin(t*6.2832*3+stag[i]*6.2832);
+        aal[i]=env*tw*(reds[i]?0.95:0.8)*(1-0.85*inDot);
       }
-      const hid=converge>0.96&&bloom<0.04?0:1;
-      const tw=0.5+0.5*Math.abs(Math.sin(fr/15+p.tw));
-      ctx.globalAlpha=env*hid*tw*(p.red?0.85:0.55);
-      ctx.fillStyle=p.red?RED:INK;
-      ctx.beginPath(); ctx.arc(x,y,p.size,0,6.2832); ctx.fill();
-    }
+      geo.attributes.position.needsUpdate=true;
+      geo.attributes.aSize.needsUpdate=true;
+      geo.attributes.aAlpha.needsUpdate=true;
 
-    /* the message dot - sits below the caption line so they never collide */
-    if(dot>0){
-      ctx.globalAlpha=dot;
-      ctx.fillStyle=RED;
-      ctx.shadowColor="rgba(216,0,17,.55)"; ctx.shadowBlur=16;
-      ctx.beginPath(); ctx.arc(CX,CY+108,11+2*Math.sin(fr/5),0,6.2832); ctx.fill();
-      ctx.shadowBlur=0;
+      dotSpr.material.opacity=dotA;
+      const swell=1+0.1*Math.sin(t*6.2832*5)+0.55*(arrived/N);
+      dotSpr.scale.set(64*swell,64*swell,1);
+      dotSpr.position.set(0,-118,40);
+
+      /* page tilts gently in space; cursors ride its perimeter */
+      const pageIn=ss((t-0.56)/0.2);
+      pageGroup.rotation.y=-0.22*pageIn+0.06*Math.sin(t*6.2832);
+      pageGroup.rotation.x=0.10*pageIn+0.03*Math.cos(t*6.2832);
+      const curA=lerp(t,[0.7,0.76,0.94,1],[0,1,1,0]);
+      const p1=onPerim(t*PER*2.1), p2=onPerim(PER*0.55-t*PER*1.6);
+      cur1.material.opacity=curA; cur2.material.opacity=curA*0.8;
+      cur1.position.set(p1[0],-p1[1],26); cur2.position.set(p2[0],-p2[1],26);
+
+      /* camera parallax - the "3D" read */
+      cam.position.x=Math.sin(t*6.2832)*70;
+      cam.position.y=Math.cos(t*6.2832)*34;
+      cam.lookAt(0,0,0);
+      renderer.render(scene,cam);
     }
-    /* collaborating cursors */
-    if(cursors>0){
-      const c1=onPerim(t*per*2.1), c2=onPerim(per*0.55-t*per*1.6);
-      ctx.globalAlpha=cursors; ctx.fillStyle=RED;
-      ctx.beginPath(); ctx.arc(c1[0],c1[1],7,0,6.2832); ctx.fill();
-      ctx.globalAlpha=cursors*0.8; ctx.fillStyle=INK;
-      ctx.beginPath(); ctx.arc(c2[0],c2[1],7,0,6.2832); ctx.fill();
-    }
-    ctx.globalAlpha=1;
     raf=requestAnimationFrame(frame);
   }
 
-  let raf=null;
+  let loading=false;
+  function ensureThree(){
+    if(three||loading) return;
+    loading=true;
+    if(window.THREE){ boot(); return; }
+    const s=document.createElement("script");
+    s.src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+    s.onload=boot;
+    document.head.appendChild(s);
+  }
+
   new IntersectionObserver(es=>es.forEach(e=>{
-    if(e.isIntersecting&&!raf) raf=requestAnimationFrame(frame);
-    else if(!e.isIntersecting&&raf){cancelAnimationFrame(raf);raf=null;}
-  }),{threshold:0.05}).observe(panel);
+    if(e.isIntersecting){ ensureThree(); if(!raf) raf=requestAnimationFrame(frame); }
+    else if(raf){ cancelAnimationFrame(raf); raf=null; }
+  }),{threshold:0.05,rootMargin:"400px 0px"}).observe(panel);
 })();
 
 /* products: the copy + panels reveal on entry and RESET once the section has
