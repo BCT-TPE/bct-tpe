@@ -88,7 +88,7 @@
     "Answers grounded in your own documents": "答案有憑有據，來自你自己的文件",
     "Budgets, keywords and permissions under IT control": "預算、關鍵字與權限，IT 全都管得住",
     "Office Power is a factory for AI employees, not another chatbot. Install it, run the wizard, and agents are answering on Discord, LINE and the web the same day - with every dollar, keyword and file permission governed.":
-      "Office Power 不是又一個聊天機器人，而是一座生產 AI 員工的工廠。安裝、跑完設定精靈，當天就能在 Discord、LINE 與網頁上回覆訊息，每一塊錢、每個關鍵字、每份檔案權限都在掌控之中。",
+      "Office Power 不僅是一個聊天機器人，更是一座生產 AI 員工的工廠。安裝、跑完設定後，當天就有 AI 員工在 Discord、LINE 和網頁上回覆訊息，花費、關鍵字、檔案權限，全在控管之內。",
     "Visit Office Power": "前往 Office Power",
     "Collaborative AI page builder": "協作式 AI 網頁生成工具",
     "Production HTML from a plain-language message": "一句話生成可上線的 HTML",
