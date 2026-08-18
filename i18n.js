@@ -82,7 +82,7 @@
     /* products */
     "of our own": "產品",
     "Our own software, built and run by the team in Taipei.":
-      "從設計、開發到維運，都由我們在台北的團隊一手包辦。",
+      "從設計、開發到維運，都由台北團隊一手包辦。",
     "Enterprise AI agent platform": "企業級 AI Agent 平台",
     "Your first AI coworker live in 15 minutes": "15 分鐘讓第一位 AI 同事上線",
     "Answers grounded in your own documents": "答案有憑有據，來自你自己的文件",
