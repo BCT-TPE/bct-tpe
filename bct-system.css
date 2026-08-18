@@ -94,6 +94,11 @@
   #bctnav.on-dark .nm-sub a:hover{color:var(--bct-blue)}
 }
 
+/* ---- header hides on scroll down, returns on scroll up ----
+   #bctnav carries transform:none!important, so the hide animates top instead. */
+#bctnav{transition:top .35s var(--bct-ease)!important}
+#bctnav.navhid:not(.open){top:-110px!important}
+
 /* ---- language switcher (footer + mobile menu) ---- */
 .langsw{display:flex;align-items:center;justify-content:center;gap:10px;margin:0}
 #bctnav .langsw-nav{margin:0 18px 0 0}

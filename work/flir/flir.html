@@ -739,6 +739,7 @@ body .sec-label,body p.sec-label,body .features .sec-h2{color:var(--lo-line)!imp
   </div>
 </nav>
 <script>(function(){var n=document.getElementById("bctnav");if(!n)return;var b=n.querySelector(".burger");if(b)b.addEventListener("click",function(){var o=n.classList.toggle("open");b.setAttribute("aria-expanded",o);});n.querySelectorAll(".nm-worktrig").forEach(function(wt){wt.addEventListener("click",function(){var w=wt.closest(".nm-work");var o=w.classList.toggle("open");wt.setAttribute("aria-expanded",o);});});})();</script>
+<script>(function(){var n=document.getElementById("bctnav");if(!n)return;var ly=scrollY;addEventListener("scroll",function(){var y=scrollY,d=y-ly;ly=y;if(y<90||d<-2)n.classList.remove("navhid");else if(d>6)n.classList.add("navhid");},{passive:true});})();</script>
 
 
 <!-- ═══════════ HERO ═══════════ -->

@@ -139,7 +139,9 @@
   #hero.expanding .topfade{opacity:0}
 
   /* ---------- nav (z10) ---------- */
-  #nav{position:fixed;top:0;left:0;right:0;z-index:10;padding:20px 6vw}
+  #nav{position:fixed;top:0;left:0;right:0;z-index:10;padding:20px 6vw;
+    transition:transform .35s var(--ease)}
+  #nav.navhid:not(.menuopen){transform:translateY(-110%)}
   #nav .bar{display:flex;align-items:center;gap:18px;position:relative;z-index:2}
   #nav .logo img{height:32px;display:block}
   /* hamburger → full-screen menu overlay — MOBILE ONLY (desktop keeps the inline nav) */
@@ -324,58 +326,19 @@
   .nova-vis::after{content:"";position:absolute;inset:0;pointer-events:none;
     background:radial-gradient(62% 58% at 50% 44%,rgba(255,255,255,.55),transparent 72%);
     animation:nvglow 10s ease-in-out infinite}
-  .nvart{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-  .nvart .nvs{fill:none;stroke:var(--c,#070402);stroke-linecap:round;
-    stroke-dasharray:var(--len);stroke-dashoffset:var(--len);opacity:0;
-    animation:nvdraw 10s linear infinite;animation-delay:calc(var(--birth) * 10s)}
+  .nvcanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
   .nvmark{position:absolute;left:26px;top:22px;font:700 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
     letter-spacing:.08em;color:#070402;animation:nvenv 10s ease-in-out infinite}
-  /* one stroke: drawn by a travelling tip, then softening as it ages */
-  @keyframes nvdraw{
-    0%{stroke-dashoffset:var(--len);opacity:0;filter:blur(0)}
-    2%{opacity:.62}
-    35%{stroke-dashoffset:0;opacity:.62;filter:blur(0)}
-    52%{stroke-dashoffset:0;opacity:.42;filter:blur(2px)}
-    88%{stroke-dashoffset:0;opacity:.18;filter:blur(5px)}
-    100%{stroke-dashoffset:0;opacity:0;filter:blur(6px)}
-  }
+  .nvbeat{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font:600 clamp(16px,1.7vw,23px)/1.3 "General Sans",system-ui,sans-serif;font-style:normal;
+    color:#070402;opacity:0;pointer-events:none;text-shadow:0 1px 12px rgba(248,244,242,.8)}
   @keyframes nvgrad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
   @keyframes nvglow{0%,100%{opacity:.55}25%,75%{opacity:1}}
   @keyframes nvenv{0%{opacity:0}16%,90%{opacity:1}100%{opacity:0}}
-  @keyframes nvdot{0%,100%{opacity:.35}50%{opacity:1}}
-  /* three pills share the loop; only one is up at a time and each grows as
-     its label types, the way the reference pill does */
-  .nvpill{position:absolute;left:50%;top:50%;display:inline-flex;align-items:center;gap:10px;
-    background:#070402;border-radius:999px;padding:14px 24px;opacity:0;
-    transform:translate(-50%,-50%);white-space:nowrap;
-    animation:10s ease-in-out infinite}
-  .nvpill i{display:inline-block;overflow:hidden;width:0;vertical-align:-.1em;
-    font:600 clamp(13px,1.35vw,17px)/1.15 ui-monospace,SFMono-Regular,Menlo,monospace;
-    font-style:normal;color:#f8f4f2;animation:10s steps(24,end) infinite}
-  .nvpill.p1{animation-name:nvshow1} .nvpill.p1 i{animation-name:nvtype1}
-  .nvpill.p2{animation-name:nvshow2} .nvpill.p2 i{animation-name:nvtype2}
-  .nvpill.p3{animation-name:nvshow3} .nvpill.p3 i{animation-name:nvtype3}
-  .nvdot{width:9px;height:9px;border-radius:50%;background:#d80011;flex:0 0 auto;
-    animation:nvdot 1.4s ease-in-out infinite}
-  /* pill 1 also carries the panel's entrance: blurred capsule first, then type */
-  @keyframes nvshow1{0%{opacity:0;transform:translate(-50%,-50%) scaleX(.72);filter:blur(14px)}
-    10%{opacity:1;transform:translate(-50%,-50%);filter:blur(0)}
-    30%{opacity:1;filter:blur(0)}33%,100%{opacity:0;filter:blur(6px)}}
-  @keyframes nvshow2{0%,33%{opacity:0;filter:blur(6px)}37%{opacity:1;filter:blur(0)}
-    63%{opacity:1;filter:blur(0)}66%,100%{opacity:0;filter:blur(6px)}}
-  @keyframes nvshow3{0%,66%{opacity:0;filter:blur(6px)}70%{opacity:1;filter:blur(0)}
-    90%{opacity:1;filter:blur(0)}100%{opacity:0;filter:blur(6px)}}
-  @keyframes nvtype1{0%,8%{width:0}22%,33%{width:15ch}34%,100%{width:0}}
-  @keyframes nvtype2{0%,37%{width:0}54%,66%{width:19ch}67%,100%{width:0}}
-  @keyframes nvtype3{0%,70%{width:0}84%,100%{width:16ch}}82%{width:16ch}92%{width:16ch}93%,100%{width:0}}
   @media (prefers-reduced-motion:reduce){
-    .nova-vis,.nova-vis::after,.nvart .nvs,.nvmark,.nvpill,.nvpill i,.nvdot{animation:none!important}
-    .nvart .nvs{stroke-dashoffset:0;opacity:.5;filter:none}
-    .nvmark{opacity:1}
-    .nvpill.p1{opacity:1;filter:none} .nvpill.p1 i{width:15ch}
-    .nvpill.p2,.nvpill.p3{display:none}
+    .nova-vis,.nova-vis::after,.nvmark{animation:none!important}
+    .nvbeat.b3{opacity:1}
   }
-  /* flipped row (NOVA): panel left, copy right */
   .prow-flip{grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
   .prow-flip .pcopy{order:2}
   .prow-flip .pvis{order:1}
@@ -1050,17 +1013,11 @@
         <a class="pbtn rv" style="--d:.44s" href="https://op-nova.bct-tw.org/" target="_blank" rel="noopener">Visit NOVA <span class="parr">&#8599;</span></a>
       </div>
       <div class="pvis nova-vis rv" style="--d:.16s" aria-hidden="true">
-        <svg class="nvart" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-          <path class="nvs" style="--len:1682;--birth:0.02;--draw:0.34" d="M -140 170 L -124 183 L -103 191 L -78 195 L -49 194 L -17 189 L 18 179 L 55 165 L 94 148 L 135 128 L 177 106 L 220 83 L 263 59 L 308 37 L 353 15 L 398 -4 L 443 -19 L 487 -31 L 532 -38 L 576 -40 L 620 -37 L 664 -28 L 707 -14 L 750 6 L 792 32 L 833 61 L 874 95 L 913 132 L 952 172 L 990 213 L 1027 254 L 1062 295 L 1096 334 L 1128 371 L 1159 404 L 1187 432 L 1212 456 L 1235 474 L 1255 485 L 1271 490 L 1283 488" stroke-width="2.6"/>
-          <path class="nvs" style="--len:1711;--birth:0.16;--draw:0.32" d="M -140 700 L -151 716 L -157 729 L -158 740 L -156 749 L -148 754 L -135 756 L -118 755 L -96 751 L -68 744 L -36 734 L 2 720 L 44 704 L 91 684 L 142 662 L 198 637 L 257 610 L 319 580 L 384 549 L 451 517 L 520 484 L 589 450 L 659 416 L 729 382 L 797 349 L 864 316 L 928 285 L 989 256 L 1046 228 L 1100 203 L 1148 181 L 1192 161 L 1230 145 L 1262 131 L 1288 122 L 1308 115 L 1322 112 L 1329 113 L 1330 117 L 1325 125 L 1314 136" stroke-width="2.2"/>
-          <path class="nvs" style="--len:1409;--birth:0.34;--draw:0.3;--c:#d80011" d="M 330 900 L 330 845 L 330 790 L 330 737 L 330 684 L 330 632 L 329 582 L 328 534 L 327 489 L 326 445 L 324 405 L 322 368 L 320 334 L 318 303 L 315 276 L 312 253 L 309 234 L 306 219 L 302 209 L 299 202 L 295 200 L 292 202 L 288 209 L 285 219 L 282 234 L 278 253 L 276 276 L 273 303 L 270 334 L 268 368 L 266 405 L 265 445 L 263 489 L 262 534 L 261 582 L 261 632 L 260 684 L 260 737 L 260 790 L 260 845 L 260 900" stroke-width="2.8"/>
-          <path class="nvs" style="--len:1530;--birth:0.52;--draw:0.28" d="M 240 -120 L 237 -136 L 239 -148 L 246 -156 L 256 -158 L 271 -154 L 290 -145 L 312 -130 L 338 -109 L 368 -83 L 400 -52 L 435 -16 L 473 23 L 513 66 L 556 111 L 600 158 L 645 205 L 692 251 L 740 296 L 788 339 L 837 379 L 886 416 L 935 450 L 983 479 L 1030 504 L 1076 525 L 1121 542 L 1164 555 L 1205 565 L 1244 572 L 1281 578 L 1314 581 L 1345 584 L 1372 587 L 1396 589 L 1416 593 L 1432 597 L 1444 602 L 1451 609 L 1454 616 L 1453 624" stroke-width="2.0"/>
-          <path class="nvs" style="--len:1602;--birth:0.66;--draw:0.26" d="M -140 560 L -129 547 L -110 532 L -84 515 L -53 496 L -16 476 L 27 455 L 73 433 L 123 411 L 177 388 L 232 366 L 290 343 L 348 321 L 408 299 L 467 278 L 526 258 L 584 240 L 641 222 L 696 206 L 750 192 L 801 180 L 850 169 L 897 160 L 941 153 L 982 148 L 1021 145 L 1057 144 L 1091 144 L 1123 147 L 1152 151 L 1179 157 L 1203 164 L 1226 172 L 1246 182 L 1265 193 L 1281 205 L 1295 217 L 1308 230 L 1317 244 L 1324 258 L 1329 273" stroke-width="2.4"/>
-        </svg>
+        <canvas class="nvcanvas"></canvas>
         <span class="nvmark">&pi;&middot;NOVA</span>
-        <span class="nvpill p1"><i>Generating page</i><b class="nvdot"></b></span>
-        <span class="nvpill p2"><i>Mounting MCP server</i><b class="nvdot"></b></span>
-        <span class="nvpill p3"><i>Editing together</i><b class="nvdot"></b></span>
+        <i class="nvbeat b1">From a plain message</i>
+        <i class="nvbeat b2">a page takes shape</i>
+        <i class="nvbeat b3">edited live, together</i>
       </div>
     </div>
   </div></section>
@@ -1516,102 +1473,139 @@ function replayStory(){
 document.documentElement.classList.add("js");
 const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add("vis"); }),{threshold:.12});
 document.querySelectorAll(".rv").forEach(el=>io.observe(el));
-/* ---------- NOVA panel: the Remotion composition's exact motion, driven per
-   frame over the inline SVG. CSS keyframes stay as the no-JS fallback; when
-   this runs it takes them over so the pacing matches the rendered reference
-   (per-stroke draw windows, continuous aging blur, natural pill growth)
-   while staying vector-sharp at any pixel density. ---------- */
+/* ---------- NOVA panel: the particle story, driven per frame on a canvas.
+   Same math as motion/src/NovaParticles.tsx: charcoal fragments drift on the
+   warm ground, converge into a red point, then bloom into a page outline
+   while two cursors orbit it. Particles steer clear of an elliptical
+   keep-out around the caption so the text always reads. Vector-sharp at
+   any DPR, loop-safe, and only running while on screen. ---------- */
 (function(){
   const panel=document.querySelector("#products .nova-vis");
   if(!panel) return;
+  const canvas=panel.querySelector(".nvcanvas");
+  if(!canvas||!canvas.getContext) return;
   if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  const DUR=10000;
-  const svg=panel.querySelector(".nvart");
-  const strokes=[...svg.querySelectorAll(".nvs")].map(p=>({
-    el:p,
-    len:parseFloat(p.style.getPropertyValue("--len")),
-    birth:parseFloat(p.style.getPropertyValue("--birth")),
-    draw:parseFloat(p.style.getPropertyValue("--draw")),
-  }));
-  const pills=[...panel.querySelectorAll(".nvpill")].map(el=>({
-    el, i:el.querySelector("i"), full:el.querySelector("i").textContent
-  }));
+  const DUR=10000, W=1200, Hh=800, CX=W/2, CY=Hh/2, N=300;
+  const RED="#d80011", INK="#070402";
+  const beats=[panel.querySelector(".b1"),panel.querySelector(".b2"),panel.querySelector(".b3")];
   const mark=panel.querySelector(".nvmark");
-
-  /* one blur filter per stroke; stdDeviation is what ages them */
-  const NS="http://www.w3.org/2000/svg";
-  const defs=document.createElementNS(NS,"defs");
-  strokes.forEach((s,i)=>{
-    const f=document.createElementNS(NS,"filter");
-    f.setAttribute("id","nvb"+i);
-    f.setAttribute("x","-25%"); f.setAttribute("y","-25%");
-    f.setAttribute("width","150%"); f.setAttribute("height","150%");
-    const g=document.createElementNS(NS,"feGaussianBlur");
-    g.setAttribute("stdDeviation","0");
-    f.appendChild(g); defs.appendChild(f);
-    s.blur=g; s.el.setAttribute("filter","url(#nvb"+i+")");
-  });
-  svg.insertBefore(defs,svg.firstChild);
-
-  /* hand the animation over from CSS */
-  panel.style.animation="none";
-  strokes.forEach(s=>s.el.style.animation="none");
-  pills.forEach(p=>{ p.el.style.animation="none"; p.i.style.animation="none"; p.i.style.width="auto"; });
   if(mark) mark.style.animation="none";
+  panel.style.animation="none";
 
-  const lerp=(x,xs,ys)=>{                       /* piecewise-linear, clamped */
-    if(x<=xs[0]) return ys[0];
-    for(let i=1;i<xs.length;i++) if(x<=xs[i]){
-      const t=(x-xs[i-1])/(xs[i]-xs[i-1]); return ys[i-1]+(ys[i]-ys[i-1])*t;
-    }
-    return ys[ys.length-1];
-  };
+  /* seeded PRNG - identical distribution to the Remotion source */
+  let seed=424242;
+  const rnd=()=>((seed=(seed*1103515245+12345)&0x7fffffff)/0x7fffffff);
 
-  function draw(now){
-    const t=(now%DUR)/DUR;
-    const env=lerp(t,[0,0.16,0.9,1],[0,1,1,0]);
+  /* page outline + interior text lines */
+  const pw=340, ph=460, x0=CX-pw/2, y0=CY-ph/2, per=2*(pw+ph);
+  const targets=[];
+  const M=Math.round(N*0.62);
+  for(let i=0;i<M;i++){
+    let d=(i/M)*per, x,y;
+    if(d<pw){x=x0+d;y=y0;}
+    else if(d<pw+ph){x=x0+pw;y=y0+(d-pw);}
+    else if(d<2*pw+ph){x=x0+pw-(d-pw-ph);y=y0+ph;}
+    else{x=x0;y=y0+ph-(d-2*pw-ph);}
+    targets.push([x+(rnd()-0.5)*7,y+(rnd()-0.5)*7]);
+  }
+  const LINES=[[y0+92,210],[y0+180,250],[y0+232,250],[y0+284,180]];
+  for(let i=M;i<N;i++){
+    const L=LINES[(i-M)%LINES.length];
+    targets.push([CX-L[1]/2+rnd()*L[1],L[0]+(rnd()-0.5)*8]);
+  }
+  const P=[];
+  for(let i=0;i<N;i++) P.push({
+    x0:rnd()*W, y0:rnd()*Hh*0.92, drift:0.35+rnd()*1.1,
+    size:1.3+rnd()*2.1, tw:rnd()*Math.PI*2, red:rnd()<0.085
+  });
 
-    /* gradient wanders and returns */
+  const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+  const sm=t=>t*t*(3-2*t);
+  const seg=(t,a,b)=>sm(clamp((t-a)/(b-a),0,1));
+  const lerp=(x,xs,ys)=>{ if(x<=xs[0])return ys[0];
+    for(let i=1;i<xs.length;i++) if(x<=xs[i]){const u=(x-xs[i-1])/(xs[i]-xs[i-1]);return ys[i-1]+(ys[i]-ys[i-1])*u;}
+    return ys[ys.length-1]; };
+  const onPerim=d=>{ d=((d%per)+per)%per;
+    if(d<pw)return[x0+d,y0];
+    if(d<pw+ph)return[x0+pw,y0+(d-pw)];
+    if(d<2*pw+ph)return[x0+pw-(d-pw-ph),y0+ph];
+    return[x0,y0+ph-(d-2*pw-ph)]; };
+
+  const BEAT_T=[[0.05,0.30],[0.38,0.62],[0.70,0.96]];
+  /* caption keep-out ellipse */
+  const KRX=300, KRY=74;
+
+  const ctx=canvas.getContext("2d");
+  function frame(now){
+    const t=(now%DUR)/DUR, fr=t*DUR/(1000/24);
+    /* HiDPI sizing */
+    const cw=canvas.clientWidth, chh=canvas.clientHeight, dpr=Math.min(2,devicePixelRatio||1);
+    if(canvas.width!==Math.round(cw*dpr)){canvas.width=Math.round(cw*dpr);canvas.height=Math.round(chh*dpr);}
+    const sc=canvas.width/W;
+    ctx.setTransform(sc,0,0,sc,0,(canvas.height-Hh*sc)/2);
+    ctx.clearRect(-50,-CY,W+100,Hh*3);
+
+    const converge=seg(t,0.28,0.44), bloom=seg(t,0.58,0.72);
+    const dot=lerp(t,[0.38,0.46,0.62,0.70],[0,1,1,0]);
+    const env=lerp(t,[0,0.05,0.955,1],[0,1,1,0]);
+    const cursors=lerp(t,[0.72,0.78,0.955,1],[0,1,1,0]);
+    const beatOp=BEAT_T.map(b=>lerp(t,[b[0],b[0]+0.05,b[1]-0.05,b[1]],[0,1,1,0]));
+    const keep=Math.max(beatOp[0],beatOp[1],beatOp[2]);
+
+    /* gradient wanders */
     const d=Math.sin(t*Math.PI*2);
     panel.style.backgroundImage=
       "linear-gradient("+(135+d*14).toFixed(1)+"deg,#f8f4f2 0%,#efeae7 "+(55+d*16).toFixed(1)+"%,#e8e2de 100%)";
     if(mark) mark.style.opacity=env;
+    beats.forEach((b,i)=>{ if(b) b.style.opacity=beatOp[i]*env; });
 
-    /* strokes: a travelling tip, then softening with age */
-    for(const s of strokes){
-      const drawn=Math.max(0,Math.min(1,(t-s.birth)/s.draw));
-      const age=Math.max(0,t-s.birth-s.draw);
-      s.el.style.strokeDashoffset=(s.len*(1-drawn)).toFixed(1);
-      s.el.style.opacity=(drawn<=0?0:lerp(age,[0,0.14,0.45],[0.62,0.36,0.16])*env).toFixed(3);
-      s.blur.setAttribute("stdDeviation",Math.min(9,age*26).toFixed(2));
+    for(let i=0;i<N;i++){
+      const p=P[i];
+      const sy=(p.y0+fr*p.drift)%Hh;
+      const sx=p.x0+Math.sin(fr/42+p.tw)*7;
+      const cx1=sx+(CX-sx)*converge, cy1=sy+(CY-sy)*converge;
+      let x=cx1+(targets[i][0]-cx1)*bloom, y=cy1+(targets[i][1]-cy1)*bloom;
+      /* keep-out: ease particles out of the caption ellipse while text shows */
+      if(keep>0){
+        const ex=(x-CX)/KRX, ey=(y-CY)/KRY, ed=Math.hypot(ex,ey);
+        if(ed<1&&ed>0.0001){
+          const bx=CX+(ex/ed)*KRX, by=CY+(ey/ed)*KRY;
+          const f=sm(1-ed)*keep;
+          x+= (bx-x)*f; y+=(by-y)*f;
+        }
+      }
+      const hid=converge>0.96&&bloom<0.04?0:1;
+      const tw=0.5+0.5*Math.abs(Math.sin(fr/15+p.tw));
+      ctx.globalAlpha=env*hid*tw*(p.red?0.85:0.55);
+      ctx.fillStyle=p.red?RED:INK;
+      ctx.beginPath(); ctx.arc(x,y,p.size,0,6.2832); ctx.fill();
     }
 
-    /* pills: one per third, each growing as its label types */
-    const per=DUR/pills.length;
-    const idx=Math.min(pills.length-1,Math.floor(t*DUR/per));
-    const local=t*DUR-idx*per;
-    pills.forEach((p,i)=>{
-      if(i!==idx){ p.el.style.opacity=0; return; }
-      const typeStart=i===0?730:270;
-      const chars=Math.round(lerp(local,[typeStart,typeStart+p.full.length*80],[0,p.full.length]));
-      p.i.textContent=p.full.slice(0,chars);
-      const fade=lerp(local,[0,200,per-470,per-130],[0,1,1,0]);
-      p.el.style.opacity=(fade*env).toFixed(3);
-      const enter=i===0?lerp(t,[0,0.14],[0.72,1]):1;
-      const blur=i===0?lerp(t,[0,0.11],[26,0]):0;
-      p.el.style.transform="translate(-50%,-50%) scaleX("+enter.toFixed(3)+")";
-      p.el.style.filter=blur>0.2?"blur("+blur.toFixed(1)+"px)":"none";
-    });
-
-    raf=requestAnimationFrame(draw);
+    /* the message dot - sits below the caption line so they never collide */
+    if(dot>0){
+      ctx.globalAlpha=dot;
+      ctx.fillStyle=RED;
+      ctx.shadowColor="rgba(216,0,17,.55)"; ctx.shadowBlur=16;
+      ctx.beginPath(); ctx.arc(CX,CY+108,11+2*Math.sin(fr/5),0,6.2832); ctx.fill();
+      ctx.shadowBlur=0;
+    }
+    /* collaborating cursors */
+    if(cursors>0){
+      const c1=onPerim(t*per*2.1), c2=onPerim(per*0.55-t*per*1.6);
+      ctx.globalAlpha=cursors; ctx.fillStyle=RED;
+      ctx.beginPath(); ctx.arc(c1[0],c1[1],7,0,6.2832); ctx.fill();
+      ctx.globalAlpha=cursors*0.8; ctx.fillStyle=INK;
+      ctx.beginPath(); ctx.arc(c2[0],c2[1],7,0,6.2832); ctx.fill();
+    }
+    ctx.globalAlpha=1;
+    raf=requestAnimationFrame(frame);
   }
 
-  /* only spend frames on it while it is on screen */
   let raf=null;
   new IntersectionObserver(es=>es.forEach(e=>{
-    if(e.isIntersecting && !raf) raf=requestAnimationFrame(draw);
-    else if(!e.isIntersecting && raf){ cancelAnimationFrame(raf); raf=null; }
+    if(e.isIntersecting&&!raf) raf=requestAnimationFrame(frame);
+    else if(!e.isIntersecting&&raf){cancelAnimationFrame(raf);raf=null;}
   }),{threshold:0.05}).observe(panel);
 })();
 
@@ -2006,6 +2000,17 @@ document.getElementById("skip").onclick=()=>{
     wt.addEventListener("click",()=>{ const w=wt.closest(".nm-work"), o=w.classList.toggle("open"); wt.setAttribute("aria-expanded",o); }));
   /* close the overlay after picking any destination */
   document.querySelectorAll("#navmenu [data-target], #navmenu .nm-sub a").forEach(a=>a.addEventListener("click",()=>setOpen(false)));
+})();
+
+/* header hides on scroll down, returns on scroll up (manyone-style) */
+(function(){
+  const nav=document.getElementById("nav"); if(!nav) return;
+  let ly=scrollY;
+  addEventListener("scroll",()=>{
+    const y=scrollY, d=y-ly; ly=y;
+    if(y<90||d<-2) nav.classList.remove("navhid");
+    else if(d>6) nav.classList.add("navhid");
+  },{passive:true});
 })();
 
 /* nav links: jump straight to an Act-2 section from anywhere */
