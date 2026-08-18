@@ -99,10 +99,10 @@
     "Visit NOVA": "前往 NOVA",
 
     /* case studies */
-    "Work that": "作品",
-    "speaks for itself": "自己會說話",
+    "Work that": "從想法到上線，",
+    "speaks for itself": "我們陪你走完",
     "Real projects, really shipped. A few of our favorites.":
-      "真實的專案，真的上線了。這是我們的幾個代表作。",
+      "以下是幾個從零開始、一路帶到上線的專案。",
     "Machine-learning bike fitting that dials in every rider's perfect position.":
       "以機器學習調校，為每位騎士找到最合適的騎乘姿勢。",
     "A secure AWS data lake turning factory data into business intelligence.":
