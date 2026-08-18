@@ -1492,7 +1492,7 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
   if(!canvas) return;
   if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  const DUR=12000, N=420;
+  const DUR=12000, N=650;
   const beats=[panel.querySelector(".b1"),panel.querySelector(".b2"),panel.querySelector(".b3")];
   const mark=panel.querySelector(".nvmark");
   if(mark) mark.style.animation="none";
@@ -1527,6 +1527,14 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
     stag.push(rnd());
     reds.push(rnd()<0.09);
     sizes.push(7+rnd()*9);
+  }
+  /* constellation: nearby fragments get a faint thread during the scatter act */
+  const pairs=[];
+  for(let i=0;i<N&&pairs.length<130;i+=3){
+    for(let j=i+1;j<N;j++){
+      const dx=scat[i][0]-scat[j][0], dy=scat[i][1]-scat[j][1], dz=scat[i][2]-scat[j][2];
+      if(dx*dx+dy*dy+dz*dz<180*180){ pairs.push([i,j]); break; }
+    }
   }
 
   let three=null, raf=null;
@@ -1577,7 +1585,23 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
     const dotSpr=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(dcv),transparent:true,depthWrite:false}));
     scene.add(dotSpr);
 
-    three={renderer,scene,cam,geo,pos,asz,aal,pts,pageGroup,dotSpr};
+    /* constellation threads */
+    const lgeo=new THREE.BufferGeometry();
+    const lpos=new Float32Array(pairs.length*6);
+    lgeo.setAttribute("position",new THREE.BufferAttribute(lpos,3));
+    const lmat=new THREE.LineBasicMaterial({color:0x332e2a,transparent:true,opacity:0});
+    const lines=new THREE.LineSegments(lgeo,lmat);
+    scene.add(lines);
+
+    /* expanding pulse ring for the vision act */
+    const rcv=document.createElement("canvas"); rcv.width=rcv.height=256;
+    const r2=rcv.getContext("2d");
+    r2.strokeStyle="rgba(216,0,17,.9)"; r2.lineWidth=5;
+    r2.beginPath(); r2.arc(128,128,118,0,6.2832); r2.stroke();
+    const pulse=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(rcv),transparent:true,depthWrite:false,opacity:0}));
+    scene.add(pulse);
+
+    three={renderer,scene,cam,geo,pos,asz,aal,pts,pageGroup,dotSpr,lines,lpos,lgeo,pulse};
   }
 
   function frame(now){
@@ -1589,7 +1613,7 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
     if(mark) mark.style.opacity=lerp(t,[0,0.05,0.955,1],[0,1,1,0]);
 
     if(three){
-      const {renderer,scene,cam,geo,pos,asz,aal,pageGroup,dotSpr}=three;
+      const {renderer,scene,cam,geo,pos,asz,aal,pageGroup,dotSpr,lines,lpos,lgeo,pulse}=three;
       const w=canvas.clientWidth,h=canvas.clientHeight;
       const sz=renderer.getSize(new window.THREE.Vector2());
       if(Math.round(sz.x)!==w||Math.round(sz.y)!==h){renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();}
@@ -1599,27 +1623,64 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
       const dotA=lerp(t,[0.3,0.42,0.6,0.7],[0,1,1,0]);
       let arrived=0;
 
+      const sweep=t*6.2832*1.6;                       /* bright comet circling the halo */
       for(let i=0;i<N;i++){
         /* each particle owns its window inside the phase - organic, not a jump */
         const cv2=ss((t-(0.24+stag[i]*0.12))/0.14);
-        const bl=ss((t-(0.56+stag[i]*0.12))/0.14);
+        const blRaw=clamp((t-(0.56+stag[i]*0.12))/0.14,0,1);
+        const bl=ss(blRaw);
+        /* overshoot: fly a touch past the ring, then settle */
+        const over=1+0.22*Math.sin(blRaw*Math.PI);
         arrived+=cv2*(1-bl);
         /* scattered home with periodic float (loop-safe) */
         const fx=scat[i][0]+Math.sin(t*6.2832+stag[i]*6.2832)*16;
         const fy=scat[i][1]+Math.cos(t*6.2832*2+stag[i]*4)*10;
         const fz=scat[i][2];
-        let x=fx+(0-fx)*cv2, y=fy+(0-fy)*cv2, z=fz+(0-fz)*cv2;
-        x+=(targets[i][0]-x)*bl; y+=(targets[i][1]-y)*bl; z+=(targets[i][2]-z)*bl;
+        /* spiral in: the pull rotates the fragment around the centre on its way */
+        const th=cv2*(1-cv2)*2.6*(stag[i]>0.5?1:-1);
+        const cth=Math.cos(th), sth=Math.sin(th);
+        const rx=fx*cth-fy*sth, ry=fx*sth+fy*cth;
+        let x=rx+(0-rx)*cv2, y=ry+(0-ry)*cv2, z=fz+(0-fz)*cv2;
+        x+=(targets[i][0]*over-x)*bl; y+=(targets[i][1]*over-y)*bl; z+=(targets[i][2]-z)*bl;
         pos[i*3]=x; pos[i*3+1]=y; pos[i*3+2]=z;
         /* shrink into the dot, re-emerge with the bloom */
         const inDot=cv2*(1-bl);
         asz[i]=sizes[i]*(1-0.92*inDot);
         const tw=0.72+0.28*Math.sin(t*6.2832*3+stag[i]*6.2832);
-        aal[i]=env*tw*(reds[i]?0.95:0.8)*(1-0.85*inDot);
+        /* on the halo, a travelling highlight sweeps the ring */
+        let hot=0;
+        if(bl>0.5){
+          const a0=Math.atan2(targets[i][1],targets[i][0]);
+          const dAng=Math.abs((((a0-sweep)%6.2832)+9.4248)%6.2832-3.1416);
+          hot=Math.exp(-dAng*dAng*5)*0.7*bl;
+        }
+        aal[i]=Math.min(1,env*(tw*(reds[i]?0.95:0.8)+hot))*(1-0.85*inDot);
       }
       geo.attributes.position.needsUpdate=true;
       geo.attributes.aSize.needsUpdate=true;
       geo.attributes.aAlpha.needsUpdate=true;
+
+      /* constellation threads live only while the field is scattered */
+      const lineA=env*0.16*(1-ss((t-0.22)/0.12));
+      lines.material.opacity=Math.max(0,lineA);
+      if(lineA>0.002){
+        for(let k=0;k<pairs.length;k++){
+          const a=pairs[k][0], b=pairs[k][1];
+          lpos[k*6]=pos[a*3];   lpos[k*6+1]=pos[a*3+1]; lpos[k*6+2]=pos[a*3+2];
+          lpos[k*6+3]=pos[b*3]; lpos[k*6+4]=pos[b*3+1]; lpos[k*6+5]=pos[b*3+2];
+        }
+        lgeo.attributes.position.needsUpdate=true;
+      }
+
+      /* vision act: pulses ripple out of the dot */
+      const dotPhase=lerp(t,[0.34,0.42,0.6,0.68],[0,1,1,0]);
+      if(dotPhase>0.01){
+        const pt=(t*2.4)%0.8/0.8;                      /* one ripple every ~1s */
+        pulse.material.opacity=dotPhase*(1-pt)*0.55;
+        const ps=40+pt*300;
+        pulse.scale.set(ps,ps,1);
+        pulse.position.copy(dotSpr.position);
+      } else pulse.material.opacity=0;
 
       dotSpr.material.opacity=dotA;
       const swell=1+0.1*Math.sin(t*6.2832*5)+0.55*(arrived/N);
@@ -1634,8 +1695,9 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
       pageGroup.rotation.z=t*2.4*ringIn;
 
       /* camera parallax - the "3D" read */
-      cam.position.x=Math.sin(t*6.2832)*70;
-      cam.position.y=Math.cos(t*6.2832)*34;
+      cam.position.x=Math.sin(t*6.2832)*84;
+      cam.position.y=Math.cos(t*6.2832)*40;
+      cam.position.z=980-70*Math.sin(t*6.2832);        /* slow dolly in and out */
       cam.lookAt(0,0,0);
       renderer.render(scene,cam);
     }
@@ -2286,7 +2348,7 @@ if(location.hash){
     return;
   }
 
-  /* wide: staggered burst centre → grid, heading + subtitle arrive last (original timing) */
+  /* wide: heading + subtitle land first, then the staggered burst centre → grid */
   const head=[...sec.querySelectorAll(".rv")];
   const grid=sec.querySelector(".cgrid");
   let deltas=[], played=false, anim=null;
@@ -2297,11 +2359,11 @@ if(location.hash){
   }
   function applyK(k){
     cards.forEach((c,i)=>{
-      const t=eO(clamp((k-i*0.05)/0.55,0,1));
+      const t=eO(clamp((k-0.2-i*0.05)/0.5,0,1));   /* cards follow the heading */
       c.style.transform=`translate(${(deltas[i][0]*(1-t)).toFixed(1)}px,${(deltas[i][1]*(1-t)).toFixed(1)}px) scale(${(0.30+0.70*t).toFixed(3)})`;
       c.style.opacity=t.toFixed(3);
     });
-    const h=eO(clamp((k-0.72)/0.28,0,1));
+    const h=eO(clamp(k/0.24,0,1));               /* heading first */
     head.forEach(el=>{ el.style.opacity=h.toFixed(3); el.style.transform=`translateY(${((1-h)*18).toFixed(1)}px)`; });
   }
   function hold(){
