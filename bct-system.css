@@ -124,6 +124,9 @@ body.bct-dark .langsw span{color:rgba(255,255,255,.25)}
   #bctnav .langsw-m span{font-size:18px}
 }
 
+/* CJK mobile menu needs more air between items */
+html[lang="zh-Hant"] #bctnav .navmenu{gap:26px}
+
 /* ---- 3. Shared footer (homepage footer; !important so page footer{} rules can't restyle it) ---- */
 #bctftr{background:var(--bct-paper)!important;border:0!important;border-top:1px solid #e6e1d8!important;
   padding:13px var(--bct-gutter)!important;margin:0!important;text-align:center!important;color:var(--bct-muted)!important;
@@ -179,9 +182,21 @@ body .sec3-eyebrow,body .sec4-feature-label,body .sec-label,body p.sec-label,bod
 .bctworks .bw-inner{max-width:1440px;margin:0 auto}
 .bctworks .bw-head{margin-bottom:40px}
 .bctworks .bw-sub{margin-top:10px;color:var(--bct-muted)}
-.bctworks .bw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.bctworks .bw-card{position:relative;display:block;aspect-ratio:4/3;border-radius:12px;overflow:hidden;
+/* desktop: one swipeable row - sized so a third card peeks in, inviting the scroll */
+.bctworks .bw-grid{display:flex;gap:20px;overflow-x:auto;padding-bottom:16px;
+  /* bleed to the viewport's right edge so the next card is visibly cut by the
+     screen, not by the section gutter - the classic "there's more" cue */
+  margin-right:calc(50% - 50vw);padding-right:calc(50vw - 50%);
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:rgba(26,26,26,.22) transparent}
+.bctworks .bw-grid::-webkit-scrollbar{height:7px}
+.bctworks .bw-grid::-webkit-scrollbar-track{background:transparent}
+.bctworks .bw-grid::-webkit-scrollbar-thumb{background:rgba(26,26,26,.22);border-radius:99px}
+.bctworks .bw-card{position:relative;display:block;flex:0 0 clamp(380px,34vw,500px);
+  scroll-snap-align:start;aspect-ratio:4/3;border-radius:12px;overflow:hidden;
   text-decoration:none;border:1px solid #e6e1d8;background:#0d1524}
+body.bct-dark .bctworks .bw-grid{scrollbar-color:rgba(255,255,255,.25) transparent}
+body.bct-dark .bctworks .bw-grid::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25)}
 .bctworks .bw-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
   transition:transform .6s var(--bct-ease)}
 .bctworks .bw-card:hover img{transform:scale(1.05)}
@@ -199,5 +214,7 @@ body.bct-dark .bctworks{background:#121212}
 body.bct-dark .bctworks .bw-head h2{color:#fff}
 body.bct-dark .bctworks .bw-sub{color:rgba(255,255,255,.55)}
 body.bct-dark .bctworks .bw-card{border-color:rgba(255,255,255,.08)}
-@media(max-width:1100px){.bctworks .bw-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:1100px){.bctworks .bw-grid{display:grid;grid-template-columns:1fr 1fr;overflow:visible;padding-bottom:0;
+    margin-right:0;padding-right:0}
+  .bctworks .bw-card{flex:none}}
 @media(max-width:700px){.bctworks .bw-grid{grid-template-columns:1fr}}

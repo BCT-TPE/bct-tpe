@@ -766,6 +766,7 @@
   html[lang="zh-Hant"] #cult h2{letter-spacing:normal}
   html[lang="zh-Hant"] body{line-break:strict;overflow-wrap:break-word}
   html[lang="zh-Hant"] .lead,html[lang="zh-Hant"] .ptxt,html[lang="zh-Hant"] .caption p{line-height:1.85}
+  html[lang="zh-Hant"] #navmenu{gap:26px}   /* CJK menu glyphs are visually denser - open the list up */
   /* language switcher: quiet in the footer, a real tap target in the mobile menu */
   .langsw{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 12px}
   .langsw-nav{margin:0 18px 0 0}   /* in the bar: sits left of Contact Us */
@@ -835,6 +836,7 @@
     .pfeat{order:3;margin-top:18px}
     .prow .pvis,.prow-flip .pvis{order:4;margin-top:26px}   /* beats the desktop flip rule */
     .ptxt{order:5;margin-top:36px}
+    .prow-flip .ptxt{margin-top:48px}   /* the light NOVA panel has no dark shadow edge - needs more literal air to read equal */
     .pbtn{order:6;margin-top:20px;justify-self:start}       /* grid item: don't stretch full width */
     .pvis{min-height:0}   /* aspect-ratio governs: a min-height here would force the box wider than the column */
     .op-vis{aspect-ratio:auto;padding:18px 20px;gap:14px}   /* HTML panel: size to content instead of cropping the log */
