@@ -324,14 +324,12 @@
      costs a few KB instead of a video file. Same paths and timing as the
      Remotion composition in motion/. One 10s loop, everything loop-safe. */
   .nova-vis{background:linear-gradient(135deg,#f8f4f2 0%,#efeae7 55%,#e8e2de 100%);
-    background-size:170% 170%;animation:nvgrad 10s ease-in-out infinite;display:flex;align-items:center;justify-content:center}
+    background-size:170% 170%;animation:nvgrad 10s ease-in-out infinite;display:flex;align-items:center;justify-content:center;
+    aspect-ratio:16/9}   /* same footprint as the Office Power film */
   .nova-vis::after{content:"";position:absolute;inset:0;pointer-events:none;
     background:radial-gradient(62% 58% at 50% 44%,rgba(255,255,255,.55),transparent 72%);
     animation:nvglow 10s ease-in-out infinite}
   .nvcanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-  .nvmark{position:absolute;left:26px;top:22px;font:700 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
-    letter-spacing:.08em;color:#070402;animation:nvenv 10s ease-in-out infinite}
-  .nvbeat{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     font:600 clamp(16px,1.7vw,23px)/1.3 "General Sans",system-ui,sans-serif;font-style:normal;
     color:#070402;opacity:0;pointer-events:none}
   /* soft cream scrim floating under the caption - the particles pass behind it */
@@ -999,7 +997,6 @@
       </div>
       <div class="pvis nova-vis rv" style="--d:.16s" aria-hidden="true">
         <canvas class="nvcanvas"></canvas>
-        <span class="nvmark">&pi;&middot;NOVA</span>
         <i class="nvbeat b1">From a plain message</i>
         <i class="nvbeat b2">a page takes shape</i>
         <i class="nvbeat b3">edited live, together</i>
@@ -1704,10 +1701,10 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
   }),{threshold:0.05,rootMargin:"400px 0px"}).observe(panel);
 })();
 
-/* ---------- Office Power panel: caption rides the film's final act.
-   The clip fades to white at ~14.35s; the HTML caption fades in on the wide
-   factory shot and out before the loop restarts, so the type is always
-   sharp, selectable and translatable. ---------- */
+/* ---------- Office Power panel: caption owns the white beat.
+   The film fades to white at ~14.85s and holds white until ~17.2s; the HTML
+   caption fades in once the frame is white and out just before the loop
+   restarts, so the type is always sharp, selectable and translatable. ---------- */
 (function(){
   const panel=document.querySelector("#products .op-vis");
   if(!panel) return;
@@ -1719,7 +1716,7 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
     return;
   }
   vid.addEventListener("timeupdate",()=>{
-    cap.classList.toggle("on", vid.currentTime>10.6 && vid.currentTime<14.45);
+    cap.classList.toggle("on", vid.currentTime>14.75 && vid.currentTime<16.75);
   });
 })();
 
