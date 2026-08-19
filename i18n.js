@@ -90,6 +90,8 @@
     "Office Power is a factory for AI employees, not another chatbot. Install it, run the wizard, and agents are answering on Discord, LINE and the web the same day - with every dollar, keyword and file permission governed.":
       "Office Power 不僅是一個聊天機器人，更是一座生產 AI 員工的工廠。安裝、跑完設定後，當天就有 AI 員工在 Discord、LINE 和網頁上回覆訊息，花費、關鍵字、檔案權限，全在控管之內。",
     "Visit Office Power": "前往 Office Power",
+    "One conversation.": "一段對話，",
+    "A factory of AI employees.": "背後是一座 AI 員工工廠。",
     "Collaborative AI page builder": "協作式 AI 網頁生成工具",
     "Production HTML from a plain-language message": "一句話生成可上線的 HTML",
     "An MCP server with every page": "每個頁面都自帶 MCP 服務",
