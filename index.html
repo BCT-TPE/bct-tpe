@@ -820,6 +820,10 @@
     .pfeat{order:3;margin-top:18px}
     .prow .pvis,.prow-flip .pvis{order:4;margin-top:26px}   /* beats the desktop flip rule */
     .ptxt{order:5;margin-top:36px}
+    /* the light NOVA panel's drop shadow is far more visible on the beige page
+       than the dark panel's, and eats into the gap - compensate so the two
+       rows READ identical, not just measure identical */
+    .prow-flip .ptxt{margin-top:52px}
     .pbtn{order:6;margin-top:20px;justify-self:start}       /* grid item: don't stretch full width */
     .pvis{min-height:0}   /* aspect-ratio governs: a min-height here would force the box wider than the column */
     .svc a{flex-wrap:wrap;gap:6px}
@@ -1745,11 +1749,21 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
       rr(-pw/2+10,-h/2+26,pw-20,pw-20,8); ctx.stroke(); ctx.setLineDash([]);
     }
     ctx.restore();
+    /* window inner edge + a soft top sheen */
+    ctx.strokeStyle="#232936"; ctx.lineWidth=1.5; rr(-pw/2,-h/2+16,pw,pw,10); ctx.stroke();
+    const sheen=ctx.createLinearGradient(0,-h/2,0,-h/2+50);
+    sheen.addColorStop(0,"rgba(255,255,255,.07)"); sheen.addColorStop(1,"rgba(255,255,255,0)");
+    ctx.fillStyle=sheen; rr(-w/2,-h/2,w,50,14); ctx.fill();
     /* role bar */
     ctx.fillStyle="#10131b"; rr(-w/2+14,h/2-56,w-28,28,8); ctx.fill();
     ctx.fillStyle=stamp>0?TXT:MUT;
     ctx.font="700 17px ui-monospace,Menlo,monospace"; ctx.textAlign="center"; ctx.textBaseline="middle";
     ctx.fillText(ROLES[idx%ROLES.length][1]+" AGENT",0,h/2-42);
+    /* station progress LEDs */
+    [stamp,chips,tick].forEach((v,i)=>{
+      ctx.fillStyle=v>0.5?GRN:"#2a3040";
+      ctx.beginPath(); ctx.arc(-16+i*16,h/2-14,4,0,6.2832); ctx.fill();
+    });
     /* channel chips */
     if(chips>0){
       const cc=[["#06c755","L"],["#5865f2","D"],["#0a7bc4","W"]];
@@ -1845,6 +1859,15 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
     const beltY=470;
     if(belt>0){
       ctx.save(); ctx.globalAlpha=env*belt;
+      /* depth: a faint floor grid receding behind the line */
+      ctx.strokeStyle="rgba(255,255,255,.04)"; ctx.lineWidth=1;
+      for(let gy=beltY+150;gy<=Hh-20;gy+=44){
+        ctx.beginPath(); ctx.moveTo(-10,gy); ctx.lineTo(W+10,gy); ctx.stroke();
+      }
+      const gshift=(t*260)%90;
+      for(let gx=-90+gshift;gx<W+90;gx+=90){
+        ctx.beginPath(); ctx.moveTo(gx,beltY+150); ctx.lineTo(gx-60,Hh-20); ctx.stroke();
+      }
       /* belt */
       ctx.strokeStyle=EDGE; ctx.lineWidth=3;
       ctx.beginPath(); ctx.moveTo(-10,beltY+120); ctx.lineTo(W+10,beltY+120); ctx.stroke();
@@ -1852,38 +1875,45 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
       ctx.fillStyle="#1c212c";
       for(let x=-64+roll;x<W+64;x+=64){ ctx.beginPath(); ctx.arc(x,beltY+134,9,0,6.2832); ctx.fill(); }
       /* stations: press / chips / ticks */
-      const st=[[300,"PRESS"],[620,"CHANNELS"],[900,"GOVERN"]];
+      const st=[[330,"PRESS"],[650,"CHANNELS"],[950,"GOVERN"]];
       st.forEach((s2,i)=>{
         ctx.fillStyle="#10131b"; ctx.strokeStyle=EDGE; ctx.lineWidth=2;
-        rr(s2[0]-70,64,140,44,10); ctx.fill(); ctx.stroke();
-        ctx.fillStyle=MUT; ctx.font="700 15px ui-monospace,Menlo,monospace";
+        rr(s2[0]-74,128,148,46,12); ctx.fill(); ctx.stroke();
+        ctx.fillStyle=MUT; ctx.font="700 16px ui-monospace,Menlo,monospace";
         ctx.textAlign="center"; ctx.textBaseline="middle";
-        ctx.fillText(s2[1],s2[0],86);
-        /* hanging arm */
-        ctx.strokeStyle=EDGE; ctx.beginPath(); ctx.moveTo(s2[0],108); ctx.lineTo(s2[0],150); ctx.stroke();
+        ctx.fillText(s2[1],s2[0],151);
+        /* hanging arm reaches down toward the card lane */
+        ctx.strokeStyle=EDGE; ctx.lineWidth=3;
+        ctx.beginPath(); ctx.moveTo(s2[0],174); ctx.lineTo(s2[0],300); ctx.stroke();
       });
       ctx.restore();
     }
 
     /* --- employee cards on the belt (act 3) --- */
     if(belt>0){
-      const speed=430;                                /* px per loop-second-fraction */
-      const spacing=300;
-      const run=(t-0.36)*DUR/1000*0.001*0;            /* placeholder, use time directly */
-      const px=(t)*speed*DUR/1000;                    /* monotonic */
-      for(let k=0;k<7;k++){
-        const x=((k*spacing - (t*DUR/1000)*150) % (W+spacing+340));
-        const cx=(x+W+spacing+340)%(W+spacing+340)-170;
-        if(cx<-180||cx>W+180) continue;
-        const stamp=ss(clamp((cx-300)/60+1,0,1));      /* gains the character at the press */
-        const chips=ss(clamp((cx-620)/70+1,0,1));
-        const tick=ss(clamp((cx-900)/60+1,0,1));
+      /* five cards on an exact 5-slot loop: even spacing, all roles distinct */
+      const spacing=380, range=5*spacing;
+      let pressHit=0;
+      for(let k=0;k<5;k++){
+        const cx=(((k*spacing - (t*DUR/1000)*150) % range)+range)%range - 190;
+        if(cx<-200||cx>W+200) continue;
+        const stamp=ss(clamp((cx-330)/60+1,0,1));
+        const chips=ss(clamp((cx-650)/70+1,0,1));
+        const tick=ss(clamp((cx-950)/60+1,0,1));
+        pressHit=Math.max(pressHit,Math.exp(-Math.pow((cx-330)/70,2)));
+        /* soft floor shadow under the card */
+        ctx.save(); ctx.globalAlpha=env*belt*0.35;
+        ctx.fillStyle="#000";
+        ctx.beginPath(); ctx.ellipse(cx,beltY+122,86,10,0,0,6.2832); ctx.fill();
+        ctx.restore();
         card(cx,beltY,1,k,stamp,chips,tick,env*belt);
       }
-      /* press animation: bobs when any card is under it */
+      /* press head: drops onto the card as it arrives, not on its own clock */
       ctx.save(); ctx.globalAlpha=env*belt;
-      const bob=Math.abs(Math.sin(t*DUR/1000*2.4))*14;
-      ctx.fillStyle=RED; rr(300-34,150+bob,68,26,8); ctx.fill();
+      const drop=pressHit*46;
+      ctx.strokeStyle=EDGE; ctx.lineWidth=6;
+      ctx.beginPath(); ctx.moveTo(330,174); ctx.lineTo(330,300+drop); ctx.stroke();
+      ctx.fillStyle=RED; rr(330-36,300+drop,72,26,9); ctx.fill();
       ctx.restore();
     }
 
