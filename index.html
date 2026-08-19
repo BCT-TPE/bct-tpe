@@ -348,29 +348,11 @@
   .prow-flip{grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
   .prow-flip .pcopy{order:2}
   .prow-flip .pvis{order:1}
-  /* Office Power: dark control plane, cycling log */
-  .op-vis{background:#0f1117;padding:22px 26px;display:flex;flex-direction:column;gap:18px;text-align:left}
-  .opv-bar{display:flex;align-items:center;gap:7px;font:600 11.5px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#8b93a3}
-  .opv-bar i{width:9px;height:9px;border-radius:50%;background:#2a2f3c}
-  .opv-bar i:first-child{background:#e14b4b}
-  .opv-bar span{margin-left:8px}
-  .opv-bar em{margin-left:auto;font-style:normal;color:#4ade80;letter-spacing:.12em}
-  .opv-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  .opv-stats div{background:#171b25;border:1px solid #232936;border-radius:10px;padding:14px 16px}
-  .opv-stats b{display:block;font-size:20px;color:#fff;font-weight:700}
-  .opv-stats span{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#77808f}
-  .opv-log{display:flex;flex-direction:column;gap:10px;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#aeb6c4}
-  .opv-log p{opacity:.28;animation:opline 10s infinite}
-  .opv-log b{font-weight:700;color:#e14b4b}
-  .opv-log p:nth-child(2){animation-delay:2s}
-  .opv-log p:nth-child(3){animation-delay:4s}
-  .opv-log p:nth-child(4){animation-delay:6s}
-  .opv-log p:nth-child(5){animation-delay:8s}
-  @keyframes opline{0%{opacity:.28}3%{opacity:1;transform:translateX(4px)}18%{opacity:1;transform:none}24%,100%{opacity:.28}}
-  /* NOVA: message -> page generation loop */
-  @media (prefers-reduced-motion:reduce){
-    .opv-log p{animation:none!important;opacity:1!important;transform:none!important}
-  }
+  /* Office Power: the factory story, drawn per frame on a canvas */
+  .op-vis{background:linear-gradient(150deg,#0b0d13 0%,#12151d 55%,#171b25 100%)}
+  .opcanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .opmark{position:absolute;left:26px;top:22px;font:700 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+    letter-spacing:.08em;color:rgba(255,255,255,.85)}
   #cases2 .wrap{width:88vw;max-width:none;padding:0;margin:0 auto;position:relative;text-align:center}  /* 6vw gutters like Six ways / case pages; undoes #act2 .wrap's 1080px cap + padding */
   #cases2 .lead{margin-inline:auto}   /* the 62ch lead is a left-hugging block by default; centre it under the h2 */
   .casestage{position:relative;height:min(64vh,560px);margin-top:20px}
@@ -838,13 +820,8 @@
     .pfeat{order:3;margin-top:18px}
     .prow .pvis,.prow-flip .pvis{order:4;margin-top:26px}   /* beats the desktop flip rule */
     .ptxt{order:5;margin-top:36px}
-    .prow-flip .ptxt{margin-top:48px}   /* the light NOVA panel has no dark shadow edge - needs more literal air to read equal */
     .pbtn{order:6;margin-top:20px;justify-self:start}       /* grid item: don't stretch full width */
     .pvis{min-height:0}   /* aspect-ratio governs: a min-height here would force the box wider than the column */
-    .op-vis{aspect-ratio:auto;padding:18px 20px;gap:14px}   /* HTML panel: size to content instead of cropping the log */
-    .opv-stats div{padding:11px 12px}
-    .opv-stats b{font-size:17px}
-    .opv-log{font-size:11.5px;gap:8px}
     .svc a{flex-wrap:wrap;gap:6px}
     .svc b{flex:0 0 100%}
     #cta2{padding:90px 0}
@@ -992,19 +969,8 @@
         <a class="pbtn rv" style="--d:.44s" href="https://officepower-website.pages.dev/" target="_blank" rel="noopener">Visit Office Power <span class="parr">&#8599;</span></a>
       </div>
       <div class="pvis op-vis rv" style="--d:.16s" aria-hidden="true">
-        <div class="opv-bar"><i></i><i></i><i></i><span>officepower.local / dashboard</span><em>LIVE</em></div>
-        <div class="opv-stats">
-          <div><b>$1,284</b><span>cost / mo</span></div>
-          <div><b>6</b><span>agents online</span></div>
-          <div><b>3,912</b><span>messages</span></div>
-        </div>
-        <div class="opv-log">
-          <p><b>&#9650; DEPLOY</b> HR helper &#8594; Discord</p>
-          <p><b>&#9940; GUARDRAIL</b> keyword "salary" blocked</p>
-          <p><b>$ BILLING</b> $1,284 of $3,000 budget</p>
-          <p><b>&#9671; UPLOAD</b> policy_v2 &middot; live instantly</p>
-          <p><b>&#10003; AUDIT</b> 3,912 conversations traceable</p>
-        </div>
+        <canvas class="opcanvas"></canvas>
+        <span class="opmark">officepower</span>
       </div>
     </div>
 
@@ -1725,6 +1691,236 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
     if(e.isIntersecting){ ensureThree(); if(!raf) raf=requestAnimationFrame(frame); }
     else if(raf){ cancelAnimationFrame(raf); raf=null; }
   }),{threshold:0.05,rootMargin:"400px 0px"}).observe(panel);
+})();
+
+/* ---------- Office Power panel: the factory story, drawn per frame.
+   Act 1 - a plain chat: you ask, the AI answers (looks like "a chatbot").
+   Act 2 - the camera pulls back: that chat is one slot on a production line.
+   Act 3 - the factory: employee cards ride the belt through three stations -
+   the press stamps in a clay coworker, channel chips snap on, governance
+   ticks approve - and finished AI employees roll off the line.
+   Characters are the clay figures in clay/assets/op-*.webp; swap the files
+   to recast. Deterministic in t, loop-safe, paused off screen. ---------- */
+(function(){
+  const panel=document.querySelector("#products .op-vis");
+  if(!panel) return;
+  const canvas=panel.querySelector(".opcanvas");
+  if(!canvas||!canvas.getContext) return;
+
+  const DUR=13000, W=1200, Hh=800;
+  const INK="#0b0d13", TILE="#171b25", EDGE="#2a3040",
+        TXT="#f2f4f8", MUT="#8b93a3", RED="#e14b4b", GRN="#4ade80";
+  const ROLES=[["hr","HR"],["sales","SALES"],["finance","FIN"],["support","CS"],["logistics","LOG"]];
+  const IMGS=ROLES.map(([k])=>{const i=new Image(); i.src="clay/assets/op-"+k+".webp"; return i;});
+
+  const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+  const ss=t=>{t=clamp(t,0,1);return t*t*t*(t*(t*6-15)+10);};
+  const lerp=(x,xs,ys)=>{ if(x<=xs[0])return ys[0];
+    for(let i=1;i<xs.length;i++) if(x<=xs[i]){const u=(x-xs[i-1])/(xs[i]-xs[i-1]);return ys[i-1]+(ys[i]-ys[i-1])*u;}
+    return ys[ys.length-1]; };
+
+  const ctx=canvas.getContext("2d");
+  function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+
+  /* one employee card: photo window + role bar (+ chips / tick as it earns them) */
+  function card(cx,cy,sc,idx,stamp,chips,tick,alpha){
+    const w=170,h=214;
+    ctx.save(); ctx.translate(cx,cy); ctx.scale(sc,sc); ctx.globalAlpha=alpha;
+    ctx.fillStyle=TILE; ctx.strokeStyle=EDGE; ctx.lineWidth=2;
+    rr(-w/2,-h/2,w,h,14); ctx.fill(); ctx.stroke();
+    /* photo window */
+    const pw=134;
+    rr(-pw/2,-h/2+16,pw,pw,10);
+    ctx.save(); ctx.clip();
+    const img=IMGS[idx%IMGS.length];
+    if(stamp>0&&img.complete&&img.naturalWidth){
+      ctx.globalAlpha=alpha*stamp;
+      const pop=0.86+0.14*stamp;
+      ctx.drawImage(img,-pw/2*pop,(-h/2+16)+pw*(1-pop)/2*0,pw*pop,pw*pop);
+      ctx.globalAlpha=alpha;
+    } else {
+      ctx.fillStyle="#10131b"; ctx.fillRect(-pw/2,-h/2+16,pw,pw);
+      ctx.strokeStyle="#232936"; ctx.setLineDash([6,6]);
+      rr(-pw/2+10,-h/2+26,pw-20,pw-20,8); ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.restore();
+    /* role bar */
+    ctx.fillStyle="#10131b"; rr(-w/2+14,h/2-56,w-28,28,8); ctx.fill();
+    ctx.fillStyle=stamp>0?TXT:MUT;
+    ctx.font="700 17px ui-monospace,Menlo,monospace"; ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillText(ROLES[idx%ROLES.length][1]+" AGENT",0,h/2-42);
+    /* channel chips */
+    if(chips>0){
+      const cc=[["#06c755","L"],["#5865f2","D"],["#0a7bc4","W"]];
+      cc.forEach((c,i)=>{
+        const a2=clamp(chips*3-i,0,1), pop=0.5+0.5*ss(a2);
+        if(a2<=0)return;
+        ctx.save(); ctx.globalAlpha=alpha*a2;
+        ctx.translate(-44+i*44,h/2-86); ctx.scale(pop,pop);
+        ctx.fillStyle=c[0]; ctx.beginPath(); ctx.arc(0,0,13,0,6.2832); ctx.fill();
+        ctx.fillStyle="#fff"; ctx.font="700 13px ui-monospace,Menlo,monospace";
+        ctx.fillText(c[1],0,1);
+        ctx.restore();
+      });
+    }
+    /* governance tick */
+    if(tick>0){
+      const pop=0.5+0.5*ss(tick);
+      ctx.save(); ctx.globalAlpha=alpha*tick;
+      ctx.translate(w/2-8,-h/2+8); ctx.scale(pop,pop);
+      ctx.fillStyle=GRN; ctx.beginPath(); ctx.arc(0,0,16,0,6.2832); ctx.fill();
+      ctx.strokeStyle="#0b0d13"; ctx.lineWidth=3.4; ctx.lineCap="round";
+      ctx.beginPath(); ctx.moveTo(-6,0); ctx.lineTo(-1.5,5); ctx.lineTo(7,-5); ctx.stroke();
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+
+  /* the chat card (act 1), scale-aware so it can shrink onto the line */
+  function chat(cx,cy,sc,typing,reply,alpha){
+    const w=640,h=380;
+    ctx.save(); ctx.translate(cx,cy); ctx.scale(sc,sc); ctx.globalAlpha=alpha;
+    ctx.fillStyle=TILE; ctx.strokeStyle=EDGE; ctx.lineWidth=2;
+    rr(-w/2,-h/2,w,h,18); ctx.fill(); ctx.stroke();
+    /* header */
+    ctx.fillStyle=RED; ctx.beginPath(); ctx.arc(-w/2+26,-h/2+26,6,0,6.2832); ctx.fill();
+    ctx.fillStyle="#2a2f3c";
+    ctx.beginPath(); ctx.arc(-w/2+46,-h/2+26,6,0,6.2832); ctx.fill();
+    ctx.beginPath(); ctx.arc(-w/2+66,-h/2+26,6,0,6.2832); ctx.fill();
+    ctx.fillStyle=MUT; ctx.font="600 16px ui-monospace,Menlo,monospace";
+    ctx.textAlign="left"; ctx.textBaseline="middle";
+    ctx.fillText("officepower / chat",-w/2+88,-h/2+26);
+    ctx.fillStyle=GRN; ctx.textAlign="right"; ctx.fillText("LIVE",w/2-24,-h/2+26);
+    /* user bubble (right) */
+    const msg="Set up an HR assistant";
+    const shown=msg.slice(0,Math.round(typing*msg.length));
+    if(typing>0){
+      ctx.font="500 21px 'General Sans',system-ui,sans-serif";
+      const tw=ctx.measureText(shown).width;
+      const bw=Math.max(60,tw+44);
+      ctx.fillStyle="#0a7bc4"; rr(w/2-28-bw,-h/2+64,bw,52,16); ctx.fill();
+      ctx.fillStyle="#fff"; ctx.textAlign="left"; ctx.fillText(shown,w/2-28-bw+22,-h/2+90);
+    }
+    /* AI reply (left) */
+    if(reply>0){
+      ctx.save(); ctx.globalAlpha=alpha*reply;
+      ctx.fillStyle="#10131b"; rr(-w/2+28,-h/2+140,404,52,16); ctx.fill();
+      ctx.fillStyle=TXT; ctx.font="500 21px 'General Sans',system-ui,sans-serif";
+      ctx.textAlign="left"; ctx.fillText("Done. HR helper is live on LINE",-w/2+50,-h/2+166);
+      ctx.fillStyle=GRN; ctx.font="700 21px ui-monospace,Menlo,monospace";
+      ctx.fillText("✓",-w/2+400,-h/2+166);
+      /* mini leave-card the agent produced */
+      ctx.fillStyle="#10131b"; rr(-w/2+28,-h/2+212,300,110,14); ctx.fill();
+      ctx.strokeStyle=EDGE; rr(-w/2+28,-h/2+212,300,110,14); ctx.stroke();
+      ctx.fillStyle=MUT; ctx.font="600 15px ui-monospace,Menlo,monospace";
+      ctx.fillText("LEAVE REQUEST",-w/2+52,-h/2+240);
+      ctx.fillStyle=TXT; ctx.font="500 18px 'General Sans',system-ui,sans-serif";
+      ctx.fillText("7/1 - 7/2 · approved",-w/2+52,-h/2+270);
+      ctx.fillStyle=GRN; ctx.beginPath(); ctx.arc(-w/2+300,-h/2+267,10,0,6.2832); ctx.fill();
+      ctx.strokeStyle="#0b0d13"; ctx.lineWidth=2.6; ctx.lineCap="round";
+      ctx.beginPath(); ctx.moveTo(-w/2+295,-h/2+267); ctx.lineTo(-w/2+299,-h/2+271); ctx.lineTo(-w/2+306,-h/2+262); ctx.stroke();
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+
+  function frame(now){
+    const t=(now%DUR)/DUR;
+    const cw=canvas.clientWidth, chh=canvas.clientHeight, dpr=Math.min(2,devicePixelRatio||1);
+    if(canvas.width!==Math.round(cw*dpr)){canvas.width=Math.round(cw*dpr);canvas.height=Math.round(chh*dpr);}
+    const sc=canvas.width/W;
+    ctx.setTransform(sc,0,0,sc,0,(canvas.height-Hh*sc)/2);
+    ctx.clearRect(-10,-Hh,W+20,Hh*3);
+    const env=lerp(t,[0,0.04,0.96,1],[0,1,1,0]);
+    ctx.globalAlpha=env;
+
+    /* --- act windows --- */
+    const typing=ss(lerp(t,[0.06,0.16],[0,1]));
+    const reply=ss(lerp(t,[0.18,0.24],[0,1]));
+    const pull=ss(lerp(t,[0.32,0.46],[0,1]));      /* chat shrinks onto the line */
+    const belt=ss(lerp(t,[0.36,0.48],[0,1]));      /* factory fades in */
+
+    /* --- belt + stations (visible from act 2) --- */
+    const beltY=470;
+    if(belt>0){
+      ctx.save(); ctx.globalAlpha=env*belt;
+      /* belt */
+      ctx.strokeStyle=EDGE; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.moveTo(-10,beltY+120); ctx.lineTo(W+10,beltY+120); ctx.stroke();
+      const roll=(t*900)%64;
+      ctx.fillStyle="#1c212c";
+      for(let x=-64+roll;x<W+64;x+=64){ ctx.beginPath(); ctx.arc(x,beltY+134,9,0,6.2832); ctx.fill(); }
+      /* stations: press / chips / ticks */
+      const st=[[300,"PRESS"],[620,"CHANNELS"],[900,"GOVERN"]];
+      st.forEach((s2,i)=>{
+        ctx.fillStyle="#10131b"; ctx.strokeStyle=EDGE; ctx.lineWidth=2;
+        rr(s2[0]-70,64,140,44,10); ctx.fill(); ctx.stroke();
+        ctx.fillStyle=MUT; ctx.font="700 15px ui-monospace,Menlo,monospace";
+        ctx.textAlign="center"; ctx.textBaseline="middle";
+        ctx.fillText(s2[1],s2[0],86);
+        /* hanging arm */
+        ctx.strokeStyle=EDGE; ctx.beginPath(); ctx.moveTo(s2[0],108); ctx.lineTo(s2[0],150); ctx.stroke();
+      });
+      ctx.restore();
+    }
+
+    /* --- employee cards on the belt (act 3) --- */
+    if(belt>0){
+      const speed=430;                                /* px per loop-second-fraction */
+      const spacing=300;
+      const run=(t-0.36)*DUR/1000*0.001*0;            /* placeholder, use time directly */
+      const px=(t)*speed*DUR/1000;                    /* monotonic */
+      for(let k=0;k<7;k++){
+        const x=((k*spacing - (t*DUR/1000)*150) % (W+spacing+340));
+        const cx=(x+W+spacing+340)%(W+spacing+340)-170;
+        if(cx<-180||cx>W+180) continue;
+        const stamp=ss(clamp((cx-300)/60+1,0,1));      /* gains the character at the press */
+        const chips=ss(clamp((cx-620)/70+1,0,1));
+        const tick=ss(clamp((cx-900)/60+1,0,1));
+        card(cx,beltY,1,k,stamp,chips,tick,env*belt);
+      }
+      /* press animation: bobs when any card is under it */
+      ctx.save(); ctx.globalAlpha=env*belt;
+      const bob=Math.abs(Math.sin(t*DUR/1000*2.4))*14;
+      ctx.fillStyle=RED; rr(300-34,150+bob,68,26,8); ctx.fill();
+      ctx.restore();
+    }
+
+    /* --- the chat, riding from centre stage onto the line --- */
+    if(pull<1){
+      const cx=lerp(pull,[0,1],[W/2,W/2]);
+      const cy=lerp(pull,[0,1],[330,beltY]);
+      const s2=lerp(pull,[0,1],[1,0.44]);
+      chat(cx,cy,s2,typing,reply,env*(1-belt*0.9));
+    }
+
+    /* --- captions --- */
+    const caps=[["One conversation",0.07,0.3],["...one of many",0.34,0.47],["A factory of AI employees",0.52,0.93]];
+    ctx.textAlign="center"; ctx.textBaseline="middle";
+    caps.forEach(c=>{
+      const a=lerp(t,[c[1],c[1]+0.04,c[2]-0.04,c[2]],[0,1,1,0]);
+      if(a<=0)return;
+      ctx.save(); ctx.globalAlpha=env*a;
+      ctx.fillStyle=TXT; ctx.font="600 30px 'General Sans',system-ui,sans-serif";
+      ctx.fillText(c[0],W/2,716);
+      ctx.restore();
+    });
+
+    ctx.globalAlpha=1;
+    raf=requestAnimationFrame(frame);
+  }
+
+  let raf=null;
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){
+    /* a single mid-factory frame */
+    requestAnimationFrame(now=>{ frame(DUR*0.7); cancelAnimationFrame(raf); raf=null; });
+    return;
+  }
+  new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting&&!raf) raf=requestAnimationFrame(frame);
+    else if(!e.isIntersecting&&raf){cancelAnimationFrame(raf);raf=null;}
+  }),{threshold:0.05}).observe(panel);
 })();
 
 /* products: the copy + panels reveal on entry and RESET once the section has
