@@ -260,12 +260,12 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
 .stat span{display:block;margin-top:10px;font-size:var(--text-small);color:var(--ink-3)}
 
 /* Claymation hero: grounded base plate + floating cut-out layers. */
-.office-hero{background:#F8F4ED;min-height:620px;padding:clamp(110px,16vh,160px) 0 28px;isolation:isolate}
+.office-hero{background:#FAFAFA;min-height:620px;padding:clamp(110px,16vh,160px) 0 28px;isolation:isolate}
 .clay-stage{position:absolute;inset:0;z-index:-2;overflow:hidden;container-type:size}
 .clay-frame{position:absolute;left:50%;bottom:0;transform:translateX(-50%);
   width:max(100%,calc(100cqh * 2752 / 1536));aspect-ratio:2752/1536}
 .clay-frame::before{content:"";position:absolute;bottom:100%;left:0;right:0;height:90px;
-  background:linear-gradient(180deg,rgba(248,244,237,0),#F1E4DB)}
+  background:linear-gradient(180deg,rgba(250,250,250,0),#FAFAFA)}
 .clay-base{position:absolute;inset:0;width:100%;height:100%;display:block}
 .clay-fl{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:auto;
   animation:clayfloat var(--dur,7s) ease-in-out var(--del,0s) infinite alternate;
@@ -279,8 +279,8 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
 .office-hero .wrap{max-width:none;padding-inline:6vw;display:flex;justify-content:center;align-items:flex-start}
 .office-hero .hero-top{align-items:center;text-align:center;gap:24px;max-width:960px}
 .office-hero h1{font-size:var(--text-display);max-width:960px}
-.office-hero .hero-intro{max-width:580px;color:var(--ink-2)}
-.office-hero .hero-outcome{color:var(--ink-3)}
+.office-hero .hero-intro{max-width:580px;color:#333B46;font-weight:500}
+.office-hero .hero-outcome{color:#2A323D}
 @media(max-width:760px){
  .office-hero{min-height:680px;padding-top:112px}
  .office-hero .hero-top{gap:20px}
@@ -678,18 +678,17 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
   <div class="clay-stage" aria-hidden="true">
     <div class="clay-frame">
       <img class="clay-base" src="assets/hero-clay-base.webp" width="2752" height="1536" alt="" fetchpriority="high">
-      <img class="clay-fl" style="--x:0.18%;--y:16.80%;--w:8.36%;--dur:7.4s;--del:-2.1s;--rot:-2.2deg;--amp:-12px;--p:8" src="assets/hero-fl-handcream.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:6.54%;--y:9.11%;--w:6.61%;--dur:6.2s;--del:-0.8s;--rot:6deg;--amp:-10px;--p:6" src="assets/hero-fl-asterisk.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:12.79%;--y:15.30%;--w:11.63%;--dur:8.1s;--del:-3.4s;--rot:-2.5deg;--amp:-13px;--p:8" src="assets/hero-fl-stickies.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:13.52%;--y:33.98%;--w:15.12%;--dur:7s;--del:-1.6s;--rot:2.6deg;--amp:-14px;--p:12" src="assets/hero-fl-headphones.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:3.34%;--y:45.44%;--w:7.12%;--dur:6.6s;--del:-2.9s;--rot:-5deg;--amp:-9px;--p:6" src="assets/hero-fl-gptknot.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:28.63%;--y:32.75%;--w:8.14%;--dur:5.8s;--del:-1.2s;--rot:3deg;--amp:-10px;--p:7" src="assets/hero-fl-peachnote.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:48.26%;--y:33.98%;--w:9.96%;--dur:6.9s;--del:-4.1s;--rot:-3deg;--amp:-12px;--p:9" src="assets/hero-fl-cursors.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:72.38%;--y:20.31%;--w:7.49%;--dur:6.1s;--del:-2.4s;--rot:4deg;--amp:-10px;--p:6" src="assets/hero-fl-flagcursor.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:56.32%;--y:27.02%;--w:17.15%;--dur:8.6s;--del:-0.5s;--rot:1.6deg;--amp:-15px;--p:14" src="assets/hero-fl-ginnylaptop.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:74.06%;--y:31.12%;--w:9.96%;--dur:7.7s;--del:-3.8s;--rot:-2.4deg;--amp:-12px;--p:10" src="assets/hero-fl-phone.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:78.05%;--y:8.98%;--w:7.41%;--dur:5.6s;--del:-1.9s;--rot:7deg;--amp:-9px;--p:5" src="assets/hero-fl-coin.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:84.59%;--y:11.07%;--w:15.41%;--dur:8.9s;--del:-2.6s;--rot:-1.8deg;--amp:-11px;--p:10" src="assets/hero-fl-beznote.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:0.0%;--y:17.32%;--w:9.34%;--dur:7.4s;--del:-2.1s;--rot:-2.2deg;--amp:-12px;--p:8" src="assets/hero-fl-handcream.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:7.49%;--y:9.7%;--w:5.41%;--dur:6.2s;--del:-0.8s;--rot:6.0deg;--amp:-10px;--p:6" src="assets/hero-fl-asterisk.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:13.12%;--y:16.34%;--w:10.68%;--dur:8.1s;--del:-3.4s;--rot:-2.5deg;--amp:-13px;--p:8" src="assets/hero-fl-stickies.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:14.79%;--y:35.09%;--w:14.21%;--dur:7.0s;--del:-1.6s;--rot:2.6deg;--amp:-14px;--p:12" src="assets/hero-fl-headphones.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:4.3%;--y:46.5%;--w:5.3%;--dur:6.6s;--del:-2.9s;--rot:-5.0deg;--amp:-9px;--p:6" src="assets/process-canvas/chatgpt-clay.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:29.22%;--y:32.36%;--w:7.56%;--dur:5.8s;--del:-1.2s;--rot:3.0deg;--amp:-10px;--p:7" src="assets/hero-fl-peachnote.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:49.31%;--y:33.46%;--w:7.41%;--dur:6.9s;--del:-4.1s;--rot:-3.0deg;--amp:-12px;--p:9" src="assets/hero-fl-cursors.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:42.0%;--y:7.0%;--w:5.81%;--dur:6.1s;--del:-2.4s;--rot:4.0deg;--amp:-10px;--p:6" src="assets/hero-fl-flagcursor.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:71.2%;--y:30.5%;--w:9.8%;--dur:8.6s;--del:-0.5s;--rot:1.6deg;--amp:-15px;--p:14" src="assets/hero-fl-phoneginny.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:79.29%;--y:10.42%;--w:5.6%;--dur:5.6s;--del:-1.9s;--rot:7.0deg;--amp:-9px;--p:5" src="assets/hero-fl-coin.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:85.65%;--y:14.13%;--w:14.35%;--dur:8.9s;--del:-2.6s;--rot:-1.8deg;--amp:-11px;--p:10" src="assets/hero-fl-beznote.webp" alt="" loading="lazy" decoding="async">
     </div>
   </div>
   <div class="wrap">
