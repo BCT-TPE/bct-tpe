@@ -2129,9 +2129,11 @@ document.getElementById("skip").onclick=()=>{
 /* header hides on scroll down, returns on scroll up (manyone-style) */
 (function(){
   const nav=document.getElementById("nav"); if(!nav) return;
-  let ly=scrollY;
+  let ly=null;
   addEventListener("scroll",()=>{
-    const y=scrollY, d=y-ly; ly=y;
+    const y=scrollY;
+    if(ly===null||Math.abs(y-ly)>1000){ly=y;return;}   /* restored/jumped scroll is not user intent */
+    const d=y-ly; ly=y;
     if(y<90||d<-2) nav.classList.remove("navhid");
     else if(d>6) nav.classList.add("navhid");
   },{passive:true});

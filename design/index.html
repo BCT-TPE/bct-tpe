@@ -849,7 +849,6 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   <div class="wrap">
     <div class="cta-card rv">
       <div>
-        <span class="kick">Let's talk</span>
         <h2 style="margin-top:18px">Got something that needs designing?</h2>
         <p>Bring a sketch, a problem or just a hunch. We'll work out the shape of it together, before a single line of code.</p>
         <div class="btns">
@@ -932,9 +931,11 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
       });
     }, {passive: true});
   }
-  let ly = scrollY;
+  let ly = null;
   addEventListener('scroll', () => {
-    const y = scrollY, d = y - ly; ly = y;
+    const y = scrollY;
+    if (ly === null || Math.abs(y - ly) > 1000) { ly = y; return; }  /* restored/jumped scroll is not user intent */
+    const d = y - ly; ly = y;
     if (y < 90 || d < -2) nav.classList.remove('navhid');
     else if (d > 6) nav.classList.add('navhid');
   }, {passive:true});
