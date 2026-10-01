@@ -385,6 +385,7 @@
     /* ---- Design studio page (design/index.html) + Team dropdown ---- */
     "Culture": "文化",
     "Design": "設計",
+    "Design Team": "設計團隊",
     "Build what’s next.": "打造下一個未來。",
     "Find the right problem. Make the complex feel simple.": "找對問題，讓複雜變簡單。",
     "We design alongside engineers to turn ideas into products people can use.":
