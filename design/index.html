@@ -304,9 +304,15 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
 .hero-intro span{display:block;text-wrap:balance}
 @media(max-width:760px){
   .office-hero{height:100vh;height:100svh;min-height:0;padding-top:calc(var(--header-height,72px) + 18px);padding-bottom:0}
-  .clay-frame{left:var(--fl,-45vw);transform:none;width:var(--fw,178vw);bottom:var(--fb,0px)}
-  .clay-hero .wrap{padding-top:var(--hero-shift,0px)}
+  .clay-frame{inset:0;left:0;width:auto;transform:none;aspect-ratio:auto}
   .clay-frame::before{display:none}
+  .clay-ground .tile-janet,.clay-ground .tile-candace{z-index:0}
+  .clay-fl{z-index:2}
+  .clay-base{position:absolute;inset:auto;height:auto;max-width:none;z-index:1;
+    -webkit-mask-image:linear-gradient(90deg,transparent 33.6%,#000 35%,#000 63.6%,transparent 65%),linear-gradient(180deg,transparent 44%,#000 47%,#000 91%,transparent 94%);
+    -webkit-mask-composite:source-in;
+    mask-image:linear-gradient(90deg,transparent 33.6%,#000 35%,#000 63.6%,transparent 65%),linear-gradient(180deg,transparent 44%,#000 47%,#000 91%,transparent 94%);
+    mask-composite:intersect}
   .clay-fl.m-off{display:none}
 }
 
@@ -1012,46 +1018,71 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   }
 
 
-  /* mobile: keep the desktop composition, scaled so the monitor leads the space under the copy.
-     Floats keep their desktop positions (same spacing as desktop); ones that fall outside the
-     visible window or would sit on the copy are hidden. */
+  /* mobile: the wide desktop scene is recomposed for a tall screen. The monitor group (cut from the
+     base with a feathered mask) leads in the middle, Janet + swatches and Candace + mug sit in the
+     bottom corners (their own video tiles), Ginny rides above the mug, and the small props gather
+     around the monitor at desktop-like distances. Sizes follow the space under the copy. */
   const mobFloats = [...hero.querySelectorAll('.clay-fl')];
+  mobFloats.forEach(el => { el.dataset.dx = el.style.getPropertyValue('--x');
+    el.dataset.dy = el.style.getPropertyValue('--y'); el.dataset.dw = el.style.getPropertyValue('--w'); });
   const mobMq = matchMedia('(max-width:760px)');
-  const intro = hero.querySelector('.hero-top'), mstage = hero.querySelector('.clay-stage');
+  const intro = hero.querySelector('.hero-top');
+  const mBase = hero.querySelector('.clay-base'), mJanet = hero.querySelector('.tile-janet'), mCand = hero.querySelector('.tile-candace');
+  /* cx: centre as share of screen width, cy: centre height above the bottom in units u, w: width in u, r: h/w */
+  const MOB = {
+    'cursors':    {cx:.64, cy:.92, w:.15, r:.88},
+    'peachnote':  {cx:.13, cy:.86, w:.13, r:.98},
+    'headphones': {cx:.11, cy:.53, w:.19, r:1.07},
+    'stickies':   {cx:.30, cy:.99, w:.14, r:.86},
+    'chatgpt':    {cx:.08, cy:.71, w:.09, r:1},
+    'coin':       {cx:.56, cy:.97, w:.065, r:1},
+    'asterisk':   {cx:.91, cy:.95, w:.075, r:1},
+    'flagcursor': {cx:.91, cy:.63, w:.10, r:1},
+    'handcream':  {cx:.45, cy:1.07, w:.065, r:1.37},
+    'beznote':    {off:true}
+  };
+  const clearMob = () => {
+    [mBase, mJanet, mCand].forEach(el => el && ['left','top','width','right','bottom'].forEach(k => el.style.removeProperty(k)));
+    mobFloats.forEach(el => { el.classList.remove('m-off'); const d = el.dataset;
+      el.style.setProperty('--x', d.dx); el.style.setProperty('--y', d.dy); el.style.setProperty('--w', d.dw); });
+  };
   const layoutMob = () => {
-    if (!mobMq.matches) {
-      mstage.style.removeProperty('--fw'); mstage.style.removeProperty('--fl'); mstage.style.removeProperty('--fb');
-      hero.style.removeProperty('--hero-shift');
-      mobFloats.forEach(el => el.classList.remove('m-off'));
-      return;
-    }
-    const vw = hero.clientWidth, hh = hero.clientHeight;
+    if (!mobMq.matches) { clearMob(); return; }
+    const V = hero.clientWidth, hh = hero.clientHeight;
     const wrap = intro.offsetParent;
-    const curShift = parseFloat(hero.style.getPropertyValue('--hero-shift')) || 0;
-    const baseBottom = (wrap ? wrap.offsetTop : 0) + intro.offsetTop + intro.offsetHeight - curShift;
-    const avail = hh - baseBottom;
-    /* the scene's top ~22% is empty sky and may tuck under the copy; the zoom stays between
-       1.78x and 1.92x the screen width so Janet, the monitor and Ginny always stay in frame */
-    const W = Math.min(vw * 1.92, Math.max(vw * 1.78, avail / .78 * 2752 / 1536)), H = W * 1536 / 2752;
-    const left = vw / 2 - W * .55;
-    /* on tall phones the scene stays on the bottom edge; the spare height moves the copy down
-       and leaves a little open sky between copy and scene */
-    const spare = Math.max(0, avail - H * .78), shift = Math.round(spare * .55);
-    hero.style.setProperty('--hero-shift', shift + 'px');
-    mstage.style.setProperty('--fb', '0px');
-    mstage.style.setProperty('--fw', W + 'px');
-    mstage.style.setProperty('--fl', left + 'px');
-    const textBottom = baseBottom + shift;
-    const frameTop = hh - H;
+    const T = (wrap ? wrap.offsetTop : 0) + intro.offsetTop + intro.offsetHeight;
+    const u = Math.min(V * 1.15, (hh - T - 8) / 1.0);
+    /* monitor group: base px x 999-1771, y 749-1396 -> 60% of u wide, centred, lifted .33u off the bottom
+       so it clears the swatches and the mug rim */
+    const k = .6 * u / 772;
+    mBase.style.width = (2752 * k) + 'px';
+    mBase.style.left = (V * .5 - 1385 * k) + 'px';
+    mBase.style.top = (hh - .33 * u - 1396 * k) + 'px';
+    /* character tiles anchored to the bottom corners, as on desktop */
+    const jw = .5 * u, cw = .52 * u;
+    Object.assign(mJanet.style, {width: jw + 'px', left: (-.04 * u) + 'px', top: (hh - jw) + 'px'});
+    Object.assign(mCand.style, {width: cw + 'px', left: (V - cw + .03 * u) + 'px', top: (hh - cw) + 'px'});
     mobFloats.forEach(el => {
-      const x = parseFloat(el.style.getPropertyValue('--x')), y = parseFloat(el.style.getPropertyValue('--y'));
-      const w = parseFloat(el.style.getPropertyValue('--w'));
-      const isVid = el.tagName === 'VIDEO';
-      /* the video tile is mostly empty margin; judge it by the figure in its middle */
-      const cx = left + W * (x + w / 2) / 100, half = W * w / 100 * (isVid ? .21 : .5);
-      const topPx = frameTop + H * y / 100 + (isVid ? W * w / 100 * 1.778 * .22 : 0);
-      const off = cx - half < 4 || cx + half > vw - 4 || topPx < textBottom + 6;
-      el.classList.toggle('m-off', off);
+      const src = el.getAttribute('src') || '';
+      if (el.tagName === 'VIDEO') {           /* Ginny on her phone, above the mug */
+        const w = .36 * u, h = w * 1.778;
+        const top = hh - .49 * u - .77 * h;
+        el.style.setProperty('--x', (V * .735 - w / 2) + 'px');
+        el.style.setProperty('--y', Math.max(top, T - .2 * h) + 'px');
+        el.style.setProperty('--w', w + 'px');
+        el.classList.remove('m-off');
+        return;
+      }
+      const key = Object.keys(MOB).find(n => src.includes(n));
+      const m = key && MOB[key];
+      if (!m) return;
+      if (m.off) { el.classList.add('m-off'); return; }
+      const w = m.w * u, h = w * m.r;
+      const left = m.cx * V - w / 2, top = hh - m.cy * u - h / 2;
+      el.style.setProperty('--x', left + 'px');
+      el.style.setProperty('--y', top + 'px');
+      el.style.setProperty('--w', w + 'px');
+      el.classList.toggle('m-off', top < T + 2 || left < -w * .2 || left + w > V + w * .2);
     });
   };
   mobMq.addEventListener('change', layoutMob);
