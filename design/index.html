@@ -307,15 +307,14 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
   .clay-frame{inset:0;left:0;width:auto;transform:none;aspect-ratio:auto}
   .clay-frame::before{display:none}
   .clay-ground .tile-janet,.clay-ground .tile-candace{z-index:2}
-  .clay-ground .tile-candace{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 15%),linear-gradient(90deg,transparent 0,transparent 8%,#000 26%);
-    mask-image:linear-gradient(180deg,transparent 0,#000 15%),linear-gradient(90deg,transparent 0,transparent 8%,#000 26%)}
+  .clay-ground .tile-candace{-webkit-mask-image:none;mask-image:none}
   .clay-ground .tile-janet{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 15%),linear-gradient(270deg,transparent 0,#000 9%);
     mask-image:linear-gradient(180deg,transparent 0,#000 15%),linear-gradient(270deg,transparent 0,#000 9%)}
   .clay-fl{z-index:3}
   .clay-base{position:absolute;inset:auto;height:auto;max-width:none;z-index:1;
-    -webkit-mask-image:linear-gradient(90deg,transparent 33.6%,#000 35%,#000 63.6%,transparent 65%),linear-gradient(180deg,transparent 44%,#000 47%,#000 91%,transparent 94%);
+    -webkit-mask-image:linear-gradient(90deg,transparent 35.9%,#000 36.6%,#000 55.7%,transparent 56.4%),linear-gradient(180deg,transparent 48.2%,#000 49.4%,#000 80.4%,transparent 81.4%);
     -webkit-mask-composite:source-in;
-    mask-image:linear-gradient(90deg,transparent 33.6%,#000 35%,#000 63.6%,transparent 65%),linear-gradient(180deg,transparent 44%,#000 47%,#000 91%,transparent 94%);
+    mask-image:linear-gradient(90deg,transparent 35.9%,#000 36.6%,#000 55.7%,transparent 56.4%),linear-gradient(180deg,transparent 48.2%,#000 49.4%,#000 80.4%,transparent 81.4%);
     mask-composite:intersect}
   .clay-fl.m-off{display:none}
 }
@@ -480,7 +479,7 @@ footer .fine{max-width:1080px;margin:0 auto;font-size:12.5px;color:#5d6673}
   #capabilities .wwd-head{grid-column:1;grid-row:1;margin-bottom:12px}
   #capabilities .svc-list{grid-column:1;grid-row:3}
   #capabilities .wwd-visual{grid-column:1;grid-row:2}
-  #capabilities .wwd-visual{height:min(calc(100vw - 32px),380px)}
+  #capabilities .wwd-visual{height:88vw}
   #capabilities .wwd-visual .svc-image{height:100%;min-height:0;padding:12px}
   #capabilities .svc{padding:12px 0}
   #capabilities .svc-detail{padding-top:12px}
@@ -1047,15 +1046,15 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   const mBase = hero.querySelector('.clay-base'), mJanet = hero.querySelector('.tile-janet'), mCand = hero.querySelector('.tile-candace');
   /* cx: centre as share of screen width, cy: centre height above the bottom in units u, w: width in u, r: h/w */
   const MOB = {
-    'cursors':    {cx:.64, cy:.92, w:.15, r:.88},
-    'peachnote':  {cx:.13, cy:.86, w:.13, r:.98},
-    'headphones': {cx:.11, cy:.53, w:.19, r:1.07},
-    'stickies':   {cx:.30, cy:.99, w:.14, r:.86},
-    'chatgpt':    {cx:.08, cy:.71, w:.09, r:1},
-    'coin':       {cx:.56, cy:.97, w:.065, r:1},
-    'asterisk':   {cx:.91, cy:.95, w:.075, r:1},
-    'flagcursor': {cx:.91, cy:.63, w:.10, r:1},
-    'handcream':  {cx:.45, cy:1.07, w:.065, r:1.37},
+    'coin':       {cx:.24, cy:.95, w:.06, r:1},
+    'cursors':    {cx:.68, cy:.97, w:.10, r:.88},
+    'asterisk':   {cx:.90, cy:.95, w:.07, r:1},
+    'peachnote':  {cx:.11, cy:.81, w:.12, r:.98},
+    'chatgpt':    {cx:.09, cy:.67, w:.08, r:1},
+    'headphones': {cx:.12, cy:.56, w:.17, r:1.07},
+    'stickies':   {off:true},
+    'flagcursor': {off:true},
+    'handcream':  {off:true},
     'beznote':    {off:true}
   };
   const clearMob = () => {
@@ -1069,12 +1068,12 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     const wrap = intro.offsetParent;
     const T = (wrap ? wrap.offsetTop : 0) + intro.offsetTop + intro.offsetHeight;
     const u = Math.min(V * 1.15, (hh - T - 8) / 1.0);
-    /* monitor group: base px x 999-1771, y 749-1396 -> 60% of u wide, centred, lifted .33u off the bottom
-       so it clears the swatches and the mug rim */
-    const k = .6 * u / 772;
+    /* monitor only (base px x 999-1541, y 749-1242): half of u wide, centred, its foot .55u off the
+       bottom so it sits clear above the character tiles */
+    const k = .5 * u / 542;
     mBase.style.width = (2752 * k) + 'px';
-    mBase.style.left = (V * .5 - 1385 * k) + 'px';
-    mBase.style.top = (hh - .33 * u - 1396 * k) + 'px';
+    mBase.style.left = (V * .5 - 1270 * k) + 'px';
+    mBase.style.top = (hh - .55 * u - 1242 * k) + 'px';
     /* character tiles anchored to the bottom corners, as on desktop */
     const jw = .5 * u, cw = .52 * u;
     Object.assign(mJanet.style, {width: jw + 'px', left: (-.13 * u) + 'px', top: (hh - jw) + 'px'});
