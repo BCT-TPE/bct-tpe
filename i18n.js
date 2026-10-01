@@ -478,6 +478,22 @@
     "Test with real users.": "找真實使用者測試。",
     "Check usability and value.": "檢驗易用性與價值。",
     "Improve through feedback.": "根據回饋持續改進。",
+
+    /* design page: Research carousel (Genome Cache) */
+    "A learning adventure.": "一場學習冒險，",
+    "A challenge to engage.": "一場投入其中的挑戰。",
+    "Hard-to-read text": "文字難以閱讀",
+    "Inconsistent UI": "介面風格不一致",
+    "Rigid screen layouts": "畫面版型僵化",
+    "Low motivation to explore": "缺乏探索動機",
+    "Turn friction": "把使用阻力",
+    "into discovery.": "化為探索。",
+    "Deep Focus": "深度聚焦",
+    "UI Design System": "UI 設計系統",
+    "Designed for": "為持續探索",
+    "continued discovery.": "而設計。",
+    "Time spent in app": "App 使用時間",
+    "User CSAT score": "使用者滿意度",
   };
 
   const KEY = "bct-lang";
