@@ -387,12 +387,9 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
 .cta-art .a{width:62%;aspect-ratio:1;left:0;top:6%;transform:rotate(-6deg)}
 .cta-art .b{width:48%;aspect-ratio:1;right:0;bottom:0;transform:rotate(7deg)}
 
-/* ---------- Footer ---------- */
-footer{padding:48px 0 40px;margin-top:clamp(72px,9vw,120px);border-top:1px solid var(--sand)}
-.foot{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;font-size:var(--text-small);color:var(--ink-3)}
-.foot img{height:26px}
-.foot nav{display:flex;gap:24px;flex-wrap:wrap}
-.foot nav a:hover{color:var(--ink)}
+/* ---------- Footer: same as the homepage ---------- */
+footer{border-top:1px solid #e6e1d8;padding:13px 6vw;font-size:14px;color:#4a5462;margin-top:clamp(72px,9vw,120px)}
+footer .fine{max-width:1080px;margin:0 auto;font-size:12.5px;color:#5d6673}
 
 /* ---------- Responsive ---------- */
 @media (max-width:860px){
@@ -564,10 +561,10 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .canvas-start-screen .studio-canvas{position:absolute;inset:0;min-height:0;height:100%;margin:0;border:0;border-radius:0;background:none;opacity:0}
 .canvas-object{width:22%;max-width:270px;transition:rotate .35s var(--ease);transform:none;rotate:var(--angle)}
 .canvas-object:hover,.canvas-object:focus-within,.canvas-object.is-open{transform:none;rotate:0deg}
-.canvas-object:nth-of-type(1){left:6%;top:28%;right:auto}
-.canvas-object:nth-of-type(2){left:28%;top:45%;right:auto}
+.canvas-object:nth-of-type(1){left:8%;top:28%;right:auto}
+.canvas-object:nth-of-type(2){left:29%;top:45%;right:auto}
 .canvas-object:nth-of-type(3){left:50%;top:23%;right:auto}
-.canvas-object:nth-of-type(4){left:72%;top:42%;right:auto;width:22%}
+.canvas-object:nth-of-type(4){left:70%;top:42%;right:auto;width:22%}
 .canvas-object img,.canvas-object:nth-of-type(3) img{height:clamp(130px,23svh,205px)}
 .canvas-sticker.one{top:76%;left:10%}
 .canvas-sticker.two{top:20%;left:34%}
@@ -643,8 +640,8 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .canvas-object .tool-pop{opacity:1;visibility:visible;transform:rotate(6deg);transition:none}
 @media(max-width:1080px){.canvas-object .tool-pop{display:none}
  .station-points{font-size:12px;max-width:150px}
- .canvas-object:nth-of-type(4){left:69%}
- .canvas-object:nth-of-type(1){left:4%}}
+ .canvas-object:nth-of-type(4){left:68%}
+ .canvas-object:nth-of-type(1){left:6%}}
 @media(max-width:700px){.station-points{font-size:11px;max-width:150px;margin-top:8px;padding-left:16px}}
 
 /* Micro-motion: flowing dashes, floating icons, bullets that light up */
@@ -870,17 +867,7 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
 </main>
 
 <footer>
-  <div class="wrap foot">
-    <img src="assets/logo_black.svg" alt="Bahwan CyberTek">
-    <nav>
-      <a href="../index.html">Home</a>
-      <a href="#capabilities">What we do</a>
-      <a href="#process">How we work</a>
-      <a href="#team">Team</a>
-      <a href="mailto:taipei-bct@bahwancybertek.com">Contact</a>
-    </nav>
-    <span>© 2026 BCT Taipei · Bahwan CyberTek Group</span>
-  </div>
+  <p class="fine" style="margin-top:0;text-align:center">&copy; 2026 BCT Taipei. All rights reserved. &middot; Bahwan CyberTek Group</p>
 </footer>
 
 <script>
