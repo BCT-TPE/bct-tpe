@@ -496,6 +496,7 @@
     "User CSAT score": "使用者滿意度",
 
     /* design page: Design (METERLiNK) and In-house (Weekday) carousels */
+    "Mockups": "設計稿",
     "Complex data.": "複雜的數據，",
     "Clear interfaces.": "清晰的介面。",
     "Many components.": "元件再多，",
