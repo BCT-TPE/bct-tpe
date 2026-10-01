@@ -306,12 +306,12 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
   .office-hero{height:100vh;height:100svh;min-height:0;padding-top:calc(var(--header-height,72px) + 18px);padding-bottom:0}
   .clay-frame{inset:0;left:0;width:auto;transform:none;aspect-ratio:auto}
   .clay-frame::before{display:none}
-  .clay-ground .tile-janet,.clay-ground .tile-candace{z-index:2}
+  .clay-ground .tile-janet,.clay-ground .tile-candace{z-index:1}
   .clay-ground .tile-candace{-webkit-mask-image:none;mask-image:none}
   .clay-ground .tile-janet{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 15%),linear-gradient(270deg,transparent 0,#000 9%);
     mask-image:linear-gradient(180deg,transparent 0,#000 15%),linear-gradient(270deg,transparent 0,#000 9%)}
   .clay-fl{z-index:3}
-  .clay-base{position:absolute;inset:auto;height:auto;max-width:none;z-index:1;
+  .clay-base{position:absolute;inset:auto;height:auto;max-width:none;z-index:2;
     -webkit-mask-image:linear-gradient(90deg,transparent 35.9%,#000 36.6%,#000 55.7%,transparent 56.4%),linear-gradient(180deg,transparent 48.2%,#000 49.4%,#000 80.4%,transparent 81.4%);
     -webkit-mask-composite:source-in;
     mask-image:linear-gradient(90deg,transparent 35.9%,#000 36.6%,#000 55.7%,transparent 56.4%),linear-gradient(180deg,transparent 48.2%,#000 49.4%,#000 80.4%,transparent 81.4%);
@@ -1070,7 +1070,7 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     const u = Math.min(V * 1.15, (hh - T - 8) / 1.0);
     /* monitor only (base px x 999-1541, y 749-1242): half of u wide, centred, its foot .55u off the
        bottom so it sits clear above the character tiles */
-    const footY = hh - .52 * u;
+    const footY = hh - .44 * u;
     const mH = Math.min(.455 * u, footY - (T + 26)), k = mH / 493;
     mBase.style.width = (2752 * k) + 'px';
     mBase.style.left = (V * .5 - 1270 * k) + 'px';
