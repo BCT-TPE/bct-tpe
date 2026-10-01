@@ -381,6 +381,83 @@
     "downloads": "次下載",
     "Ratings of": "評分",
     "/ 5 on Play & App Stores": "/ 5・雙平台商店",
+
+    /* ---- Design studio page (design/index.html) + Team dropdown ---- */
+    "Culture": "文化",
+    "Design": "設計",
+    "Build what’s next.": "打造下一個未來。",
+    "Find the right problem. Make the complex feel simple.": "找對問題，讓複雜變簡單。",
+    "We design alongside engineers to turn ideas into products people can use.":
+      "我們與工程師並肩設計，把想法變成人們真正能用的產品。",
+    "What we do": "我們做什麼",
+    "From understanding problems to building products.": "從理解問題，到打造產品。",
+    "Research": "研究",
+    "Find the right problem to solve. We explore user needs, review existing experiences and test assumptions to help teams decide what matters most—and where to go next.":
+      "找到值得解決的問題。我們探索使用者需求、檢視既有體驗並驗證假設，幫團隊決定什麼最重要、下一步往哪走。",
+    "UX Research": "使用者研究",
+    "Usability Testing": "易用性測試",
+    "Make complex products feel simple. We turn insights into clear interfaces, reusable design systems and interactive prototypes, helping teams align on the experience before development begins.":
+      "讓複雜的產品用起來簡單。我們把洞察化為清晰的介面、可複用的設計系統與互動原型，在開發開始前就讓團隊對體驗有共識。",
+    "UI Design": "介面設計",
+    "Design System": "設計系統",
+    "Prototype": "互動原型",
+    "In-house": "自家產品",
+    "We design for our own teams, too. From the BCT Website and presentation decks to Weekday, our work spans brand communication and tools for everyday work. We also explore AI products through Office Power, bringing AI agents into the workplace.":
+      "我們也為自己的團隊設計。從 BCT 網站、簡報到 Weekday，作品橫跨品牌溝通與日常工作工具；也透過 Office Power 探索 AI 產品，把 AI 員工帶進職場。",
+    "Office Power - AI product": "Office Power - AI 產品",
+    "How we work": "我們怎麼工作",
+    "Five steps, no surprises": "五個步驟，沒有意外",
+    "Every project moves through the same rhythm. You see progress every week, not a big reveal in week twelve.":
+      "每個專案都循著同樣的節奏推進。每週都看得到進度，不會等到第十二週才揭曉。",
+    "Discover": "探索",
+    "Understand the business, the users and the constraints.": "理解商業目標、使用者與限制。",
+    "Stakeholder interviews": "利害關係人訪談",
+    "Business analysis": "商業分析",
+    "Personas": "人物誌",
+    "Define": "定義",
+    "Agree on the problem before we solve it.": "先對齊問題，再動手解決。",
+    "User flows": "使用者流程",
+    "Information architecture": "資訊架構",
+    "Scope & goals": "範圍與目標",
+    "Sketch fast, then refine what works.": "快速發想，再打磨可行的方向。",
+    "Wireframes": "線框圖",
+    "Visual design": "視覺設計",
+    "Interactive prototypes": "互動原型",
+    "Validate": "驗證",
+    "Put it in front of real people and listen.": "拿到真實使用者面前，聽他們怎麼說。",
+    "Usability testing": "易用性測試",
+    "Design review with dev": "與工程一起設計審查",
+    "Iteration": "迭代",
+    "Deliver": "交付",
+    "Ship it together, then keep improving.": "一起上線，然後持續改進。",
+    "Dev-ready specs": "可開發的規格",
+    "Design system updates": "設計系統更新",
+    "Design QA": "設計驗收",
+    "Designers in the room": "設計師就在現場",
+    "We join the daily stand-up with engineers and PMs. Questions get answered in minutes, not tickets.":
+      "我們和工程師、PM 一起參加每日站會。問題幾分鐘內就有答案，不用開票等。",
+    "Test early, test often": "早點測，常常測",
+    "A rough prototype in front of users beats a polished guess. We validate before we polish.":
+      "拿粗略原型給使用者看，勝過精美的猜測。先驗證，再打磨。",
+    "Build once, reuse everywhere": "做一次，處處可用",
+    "Every component we make goes into the system, so the next product starts further ahead.":
+      "每個做好的元件都收進設計系統，下一個產品就從更前面開始。",
+    "Meet the people behind the pixels": "認識像素背後的人",
+    "Different backgrounds, one shared habit: asking \"why\" before \"what\".":
+      "背景各不相同，共同的習慣只有一個：先問「為什麼」，再問「做什麼」。",
+    "Design Lead": "設計負責人",
+    "Sr. UI/UX Designer": "資深 UI/UX 設計師",
+    "UI/UX Designer": "UI/UX 設計師",
+    "Designers in Taipei": "位設計師，在台北",
+    "Products in our case studies": "個產品收錄在案例中",
+    "Tools in daily use": "個每天都在用的工具",
+    "Let's talk": "聊聊吧",
+    "Got something that needs designing?": "有東西需要設計嗎？",
+    "Bring a sketch, a problem or just a hunch. We'll work out the shape of it together, before a single line of code.":
+      "帶著草圖、問題，或只是一個直覺來。在寫下第一行程式之前，我們一起把它的輪廓想清楚。",
+    "Start a project": "開始一個專案",
+    "Join the team": "加入我們",
+    "Home": "首頁",
   };
 
   const KEY = "bct-lang";
