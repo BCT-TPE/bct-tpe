@@ -479,6 +479,17 @@
     "Check usability and value.": "檢驗易用性與價值。",
     "Improve through feedback.": "根據回饋持續改進。",
 
+    /* design page: AI teammate cards in How we work */
+    "AI teammate": "AI 隊友",
+    "Turns research findings into a client-ready deck: web, PDF or editable PowerPoint.":
+      "把研究結果直接做成可交給客戶的簡報：網頁、PDF 或可編輯的 PowerPoint。",
+    "Interviews us, then writes the DESIGN.md every agent follows.":
+      "先訪談我們，再寫出每個 AI agent 都照著做的 DESIGN.md。",
+    "Names every icon in Figma and sets export formats, ready for handoff.":
+      "在 Figma 裡自動替每個圖示命名、設定匯出格式，直接交給工程。",
+    "Audits each screen against our design rules and ranks the gaps.":
+      "依照我們的設計規範檢查每個畫面，把問題依嚴重程度排序。",
+
     /* design page: Research carousel (Genome Cache) */
     "A learning adventure.": "一場學習冒險，",
     "A challenge to engage.": "一場投入其中的挑戰。",

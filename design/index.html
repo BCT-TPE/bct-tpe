@@ -306,8 +306,12 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
   .office-hero{height:100vh;height:100svh;min-height:0;padding-top:calc(var(--header-height,72px) + 18px);padding-bottom:0}
   .clay-frame{inset:0;left:0;width:auto;transform:none;aspect-ratio:auto}
   .clay-frame::before{display:none}
-  .clay-ground .tile-janet,.clay-ground .tile-candace{z-index:0}
-  .clay-fl{z-index:2}
+  .clay-ground .tile-janet,.clay-ground .tile-candace{z-index:2}
+  .clay-ground .tile-candace{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 15%),linear-gradient(90deg,transparent 0,transparent 8%,#000 26%);
+    mask-image:linear-gradient(180deg,transparent 0,#000 15%),linear-gradient(90deg,transparent 0,transparent 8%,#000 26%)}
+  .clay-ground .tile-janet{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 15%),linear-gradient(270deg,transparent 0,#000 9%);
+    mask-image:linear-gradient(180deg,transparent 0,#000 15%),linear-gradient(270deg,transparent 0,#000 9%)}
+  .clay-fl{z-index:3}
   .clay-base{position:absolute;inset:auto;height:auto;max-width:none;z-index:1;
     -webkit-mask-image:linear-gradient(90deg,transparent 33.6%,#000 35%,#000 63.6%,transparent 65%),linear-gradient(180deg,transparent 44%,#000 47%,#000 91%,transparent 94%);
     -webkit-mask-composite:source-in;
@@ -621,11 +625,11 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .canvas-start-screen .studio-canvas{position:absolute;inset:0;min-height:0;height:100%;margin:0;border:0;border-radius:0;background:none;opacity:0}
 .canvas-object{width:22%;max-width:270px;transition:rotate .35s var(--ease);transform:none;rotate:var(--angle)}
 .canvas-object:hover,.canvas-object:focus-within,.canvas-object.is-open{transform:none;rotate:0deg}
-.canvas-object:nth-of-type(1){left:8%;top:28%;right:auto}
-.canvas-object:nth-of-type(2){left:29%;top:45%;right:auto}
-.canvas-object:nth-of-type(3){left:50%;top:23%;right:auto}
-.canvas-object:nth-of-type(4){left:70%;top:42%;right:auto;width:22%}
-.canvas-object img,.canvas-object:nth-of-type(3) img{height:clamp(130px,23svh,205px)}
+.canvas-object:nth-of-type(1){left:8%;top:18%;right:auto}
+.canvas-object:nth-of-type(2){left:29%;top:31%;right:auto}
+.canvas-object:nth-of-type(3){left:50%;top:10%;right:auto}
+.canvas-object:nth-of-type(4){left:70%;top:27%;right:auto;width:22%}
+.canvas-object img,.canvas-object:nth-of-type(3) img{height:clamp(110px,18svh,185px)}
 .canvas-sticker.one{top:76%;left:10%}
 .canvas-sticker.two{top:20%;left:34%}
 .canvas-sticker.three{top:89%;right:5%}
@@ -724,7 +728,6 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .cv-dots{display:none}
 @media(max-width:700px){
   .canvas-start{height:460svh}
-  .canvas-flow{display:none}
   .canvas-object{position:absolute!important;left:0!important;right:0;top:50%!important;width:100%!important;max-width:none;
     display:flex;justify-content:center;padding:0 40px 0 56px;rotate:none;translate:0 -50%;
     opacity:0;transform:translateY(46px);pointer-events:none;
@@ -734,16 +737,30 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
   .canvas-object img,.canvas-object:nth-of-type(3) img{height:150px}
   .object-label{font-size:16px}
   .station-points{font-size:14px;max-width:250px;margin-top:10px}
-  .cv-dots{position:absolute;left:22px;top:50%;translate:0 -50%;z-index:4;display:flex;flex-direction:column;align-items:center;gap:30px}
-  .cv-dots::before{content:"";position:absolute;top:-34px;bottom:-34px;left:50%;width:2px;margin-left:-1px;
-    background:repeating-linear-gradient(to bottom,var(--blue) 0 5px,transparent 5px 13px);opacity:.55;animation:railflow 1.2s linear infinite}
+  .canvas-object{padding:0 32px}
+  .canvas-object.st-on .station-points li{opacity:1;translate:0 0}
+  .cv-dots{position:absolute;left:50%;bottom:26px;translate:-50% 0;z-index:4;display:flex;align-items:center;gap:22px}
+  .cv-dots::before{content:"";position:absolute;left:8px;right:8px;top:50%;height:2px;margin-top:-1px;
+    background:rgba(26,26,26,.13);border-radius:1px}
   .cv-dots button{position:relative;z-index:1;width:11px;height:11px;padding:0;border-radius:50%;border:none;cursor:pointer;
     background:#b8b0a2;transition:background .25s cubic-bezier(.22,.61,.36,1),box-shadow .25s cubic-bezier(.22,.61,.36,1)}
   .cv-dots button.on{background:var(--blue);
     box-shadow:0 0 0 3px var(--paper),0 0 0 6px rgba(10,123,196,.35),0 0 0 9px rgba(10,123,196,.12)}
 }
-@keyframes railflow{to{background-position:0 13px}}
-@media(prefers-reduced-motion:reduce){.cv-dots::before{animation:none}.canvas-object{transition:none}}
+@media(prefers-reduced-motion:reduce){.canvas-object{transition:none}}
+
+/* AI teammate card under each station: the team's own Claude Code skill for that step */
+.st-ai{margin-top:14px;max-width:250px;text-align:left;padding:10px 12px 11px;border:1px solid var(--sand);border-radius:12px;
+  background:rgba(255,253,249,.82);box-shadow:0 6px 16px rgba(26,26,26,.05);
+  opacity:0;translate:0 8px;transition:opacity .5s cubic-bezier(.22,.61,.36,1) .62s,translate .55s cubic-bezier(.22,.61,.36,1) .62s}
+.studio-canvas.cv-on .st-ai{opacity:1;translate:0 0}
+.st-ai-k{display:block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.st-ai code{display:inline-block;font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink);background:#E9E6E0;
+  padding:5px 8px;border-radius:6px;letter-spacing:0}
+.st-ai p{margin:7px 0 0;font-size:12.5px;line-height:1.45;color:var(--ink-2)}
+html[lang="zh-Hant"] .st-ai-k{letter-spacing:.14em}
+@media(max-width:700px){.st-ai{opacity:1;translate:none;margin-top:12px}}
+@media(prefers-reduced-motion:reduce){.st-ai{opacity:1;translate:none}}
 /* END merged How we work */
 
 /* Section tags: the homepage speech-bubble "kick" design and pop behavior */
@@ -890,10 +907,10 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     </article>
  <div class="studio-canvas">
   <svg class="canvas-flow" aria-hidden="true"><path class="canvas-flow-base"/><path class="canvas-flow-progress" pathLength="1"/></svg>
-  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/insight.webp" alt="" loading="lazy"><span class="object-label">Insight</span><ul class="station-points"><li>Understand user needs.</li><li>Identify key pain points.</li><li>Define the right problem.</li></ul></div></article>
-  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/figure-out.webp" alt="" loading="lazy"><span class="object-label">Figure out</span><ul class="station-points"><li>Explore ideas with ChatGPT.</li><li>Map user flows with AI.</li><li>Choose the strongest direction.</li></ul></div></article>
-  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/prototype.webp" alt="" loading="lazy"><span class="object-label">Prototype</span><ul class="station-points"><li>Build faster with Claude Code.</li><li>Create interactive prototypes.</li><li>Refine and iterate with AI.</li></ul></div></article>
-  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/verify.webp" alt="" loading="lazy"><span class="object-label">Verify</span><ul class="station-points"><li>Test with real users.</li><li>Check usability and value.</li><li>Improve through feedback.</li></ul></div></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/insight.webp" alt="" loading="lazy"><span class="object-label">Insight</span><ul class="station-points"><li>Understand user needs.</li><li>Identify key pain points.</li><li>Define the right problem.</li></ul><div class="st-ai"><code data-noi18n>/create-slide</code><p>Turns research findings into a client-ready deck: web, PDF or editable PowerPoint.</p></div></div></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/figure-out.webp" alt="" loading="lazy"><span class="object-label">Figure out</span><ul class="station-points"><li>Explore ideas with ChatGPT.</li><li>Map user flows with AI.</li><li>Choose the strongest direction.</li></ul><div class="st-ai"><code data-noi18n>/design-partner</code><p>Interviews us, then writes the DESIGN.md every agent follows.</p></div></div></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/prototype.webp" alt="" loading="lazy"><span class="object-label">Prototype</span><ul class="station-points"><li>Build faster with Claude Code.</li><li>Create interactive prototypes.</li><li>Refine and iterate with AI.</li></ul><div class="st-ai"><code data-noi18n>/export-assets</code><p>Names every icon in Figma and sets export formats, ready for handoff.</p></div></div></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/verify.webp" alt="" loading="lazy"><span class="object-label">Verify</span><ul class="station-points"><li>Test with real users.</li><li>Check usability and value.</li><li>Improve through feedback.</li></ul><div class="st-ai"><code data-noi18n>/design-partner</code><p>Audits each screen against our design rules and ranks the gaps.</p></div></div></article>
  </div>
   <div class="cv-dots" aria-label="Steps">
     <button type="button" aria-label="Insight" class="on"></button>
@@ -1060,14 +1077,14 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     mBase.style.top = (hh - .33 * u - 1396 * k) + 'px';
     /* character tiles anchored to the bottom corners, as on desktop */
     const jw = .5 * u, cw = .52 * u;
-    Object.assign(mJanet.style, {width: jw + 'px', left: (-.04 * u) + 'px', top: (hh - jw) + 'px'});
+    Object.assign(mJanet.style, {width: jw + 'px', left: (-.13 * u) + 'px', top: (hh - jw) + 'px'});
     Object.assign(mCand.style, {width: cw + 'px', left: (V - cw + .03 * u) + 'px', top: (hh - cw) + 'px'});
     mobFloats.forEach(el => {
       const src = el.getAttribute('src') || '';
       if (el.tagName === 'VIDEO') {           /* Ginny on her phone, above the mug */
         const w = .36 * u, h = w * 1.778;
         const top = hh - .49 * u - .77 * h;
-        el.style.setProperty('--x', (V * .735 - w / 2) + 'px');
+        el.style.setProperty('--x', (V * .80 - w / 2) + 'px');
         el.style.setProperty('--y', Math.max(top, T - .2 * h) + 'px');
         el.style.setProperty('--w', w + 'px');
         el.classList.remove('m-off');
@@ -1216,6 +1233,10 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
       x:object.offsetLeft + object.offsetWidth / 2,
       y:object.offsetTop + object.querySelector('img').offsetHeight / 2
     }));
+    const small=matchMedia('(max-width:700px)').matches;
+    if(small){const img=flowObjects[0].querySelector('img'),r=img.getBoundingClientRect(),cr=canvas.getBoundingClientRect();
+      const y=r.top-cr.top+r.height*.55,w=canvasSize.width;
+      points.splice(0,points.length,{x:w*.5,y});}
     const pointsWithEdges=[{x:-30,y:points[0].y},...points,{x:canvasSize.width+30,y:points.at(-1).y}];
     let path=`M ${pointsWithEdges[0].x} ${pointsWithEdges[0].y}`;
     for(let i=1;i<pointsWithEdges.length;i++){
@@ -1260,7 +1281,7 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
       object.style.opacity=amount;
     });
     cvDots.forEach((d,j)=>d.classList.toggle('on',j===step));
-    canvasMask.style.strokeDashoffset=reducedMotion.matches?0:1-smooth(clamp((progress-.48)/.4));
+    canvasMask.style.strokeDashoffset=(reducedMotion.matches||smallCanvas)?0:1-smooth(clamp((progress-.48)/.4));
     if(canvasVisual!==target)canvasFrame=requestAnimationFrame(syncCanvasFlow);
   };
   const requestCanvasUpdate = () => {if(!canvasFrame) canvasFrame=requestAnimationFrame(syncCanvasFlow);};
