@@ -678,6 +678,26 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .studio-canvas.cv-on .station-points li:nth-child(2){transition-delay:.28s}
 .studio-canvas.cv-on .station-points li:nth-child(3){transition-delay:.44s}
 @media(prefers-reduced-motion:reduce){.station-points li{opacity:1;translate:none}}
+
+/* Mobile canvas: one station per view, arrows + swipe */
+.cv-prev,.cv-next{display:none}
+@media(max-width:700px){
+  .canvas-flow{display:none}
+  .studio-canvas{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;align-items:center;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .studio-canvas::-webkit-scrollbar{display:none}
+  .canvas-object{position:static!important;flex:0 0 100%;width:100%!important;max-width:none;
+    scroll-snap-align:center;display:flex;justify-content:center;padding:0 28px;rotate:none}
+  .canvas-object img,.canvas-object:nth-of-type(3) img{height:150px}
+  .object-label{font-size:16px}
+  .station-points{font-size:14px;max-width:250px;margin-top:10px}
+  .cv-prev,.cv-next{display:grid;place-items:center;position:absolute;top:55%;z-index:4;
+    width:40px;height:40px;border-radius:50%;border:1px solid var(--sand);background:var(--paper);
+    color:var(--ink);font-size:24px;line-height:1;cursor:pointer;box-shadow:0 4px 12px rgba(26,26,26,.08)}
+  .cv-prev{left:10px}
+  .cv-next{right:10px}
+  .cv-prev:active,.cv-next:active{background:var(--sand-2)}
+}
 /* END merged How we work */
 
 /* Section tags: the homepage speech-bubble "kick" design and pop behavior */
@@ -829,6 +849,8 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   <article class="canvas-object"><div class="st"><img src="assets/process-canvas/prototype.webp" alt="" loading="lazy"><span class="object-label">Prototype</span><ul class="station-points"><li>Build faster with Claude Code.</li><li>Create interactive prototypes.</li><li>Refine and iterate with AI.</li></ul></div></article>
   <article class="canvas-object"><div class="st"><img src="assets/process-canvas/verify.webp" alt="" loading="lazy"><span class="object-label">Verify</span><ul class="station-points"><li>Test with real users.</li><li>Check usability and value.</li><li>Improve through feedback.</li></ul></div></article>
  </div>
+  <button class="cv-prev" type="button" aria-label="Previous step">&#8249;</button>
+  <button class="cv-next" type="button" aria-label="Next step">&#8250;</button>
  </div></div>
 </section>
 
@@ -1126,7 +1148,9 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     canvas.inert=reveal<.92;
     canvas.classList.toggle('cv-on',reveal>=.92);
     const directions=[[-1,-1],[-.4,1],[.4,-1],[1,1]];
+    const smallCanvas=matchMedia('(max-width:700px)').matches;
     flowObjects.forEach((object,index)=>{
+      if(smallCanvas){object.style.transform='';object.style.opacity='';return;}
       const amount=reducedMotion.matches?Number(reveal>.5):smooth(clamp((reveal-index*.035)/.88));
       const [x,y]=directions[index];
       object.style.transform=`translate(${x*(1-amount)*canvasSize.width*.5}px,${y*(1-amount)*canvasSize.height*.55}px) scale(${.25+amount*.75})`;
@@ -1136,6 +1160,12 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     if(canvasVisual!==target)canvasFrame=requestAnimationFrame(syncCanvasFlow);
   };
   const requestCanvasUpdate = () => {if(!canvasFrame) canvasFrame=requestAnimationFrame(syncCanvasFlow);};
+  const cvPrev=document.querySelector('.cv-prev'), cvNext=document.querySelector('.cv-next');
+  if(cvPrev&&cvNext){
+    const cvStep=dir=>canvas.scrollBy({left:dir*canvas.clientWidth,behavior:'smooth'});
+    cvPrev.addEventListener('click',()=>cvStep(-1));
+    cvNext.addEventListener('click',()=>cvStep(1));
+  }
   layoutCanvasFlow(); syncCanvasFlow();
   addEventListener('scroll', requestCanvasUpdate, {passive:true});
   addEventListener('resize', () => {layoutCanvasFlow(); requestCanvasUpdate();});
