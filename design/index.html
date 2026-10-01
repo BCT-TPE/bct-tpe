@@ -679,10 +679,9 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .studio-canvas.cv-on .station-points li:nth-child(3){transition-delay:.44s}
 @media(prefers-reduced-motion:reduce){.station-points li{opacity:1;translate:none}}
 
-/* Mobile canvas: one station per view, arrows + swipe */
-.cv-prev,.cv-next{display:none}
+/* Mobile canvas: one station per view, swipe + homepage-style dots */
+.cv-dots{display:none}
 @media(max-width:700px){
-  .canvas-flow{display:none}
   .studio-canvas{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;align-items:center;
     scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .studio-canvas::-webkit-scrollbar{display:none}
@@ -691,12 +690,14 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
   .canvas-object img,.canvas-object:nth-of-type(3) img{height:150px}
   .object-label{font-size:16px}
   .station-points{font-size:14px;max-width:250px;margin-top:10px}
-  .cv-prev,.cv-next{display:grid;place-items:center;position:absolute;top:55%;z-index:4;
-    width:40px;height:40px;border-radius:50%;border:1px solid var(--sand);background:var(--paper);
-    color:var(--ink);font-size:24px;line-height:1;cursor:pointer;box-shadow:0 4px 12px rgba(26,26,26,.08)}
-  .cv-prev{left:10px}
-  .cv-next{right:10px}
-  .cv-prev:active,.cv-next:active{background:var(--sand-2)}
+  .cv-dots{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:4;
+    display:flex;align-items:center;gap:22px}
+  .cv-dots::before{content:"";position:absolute;left:8px;right:8px;top:50%;height:2px;margin-top:-1px;
+    background:rgba(26,26,26,.13);border-radius:1px}
+  .cv-dots button{position:relative;z-index:1;width:11px;height:11px;border-radius:50%;border:none;cursor:pointer;
+    background:#b8b0a2;transition:background .25s cubic-bezier(.22,.61,.36,1),box-shadow .25s cubic-bezier(.22,.61,.36,1)}
+  .cv-dots button.on{background:var(--blue);
+    box-shadow:0 0 0 3px var(--paper),0 0 0 6px rgba(10,123,196,.35),0 0 0 9px rgba(10,123,196,.12)}
 }
 /* END merged How we work */
 
@@ -849,8 +850,12 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   <article class="canvas-object"><div class="st"><img src="assets/process-canvas/prototype.webp" alt="" loading="lazy"><span class="object-label">Prototype</span><ul class="station-points"><li>Build faster with Claude Code.</li><li>Create interactive prototypes.</li><li>Refine and iterate with AI.</li></ul></div></article>
   <article class="canvas-object"><div class="st"><img src="assets/process-canvas/verify.webp" alt="" loading="lazy"><span class="object-label">Verify</span><ul class="station-points"><li>Test with real users.</li><li>Check usability and value.</li><li>Improve through feedback.</li></ul></div></article>
  </div>
-  <button class="cv-prev" type="button" aria-label="Previous step">&#8249;</button>
-  <button class="cv-next" type="button" aria-label="Next step">&#8250;</button>
+  <div class="cv-dots" aria-label="Steps">
+    <button type="button" aria-label="Insight" class="on"></button>
+    <button type="button" aria-label="Figure out"></button>
+    <button type="button" aria-label="Prototype"></button>
+    <button type="button" aria-label="Verify"></button>
+  </div>
  </div></div>
 </section>
 
@@ -1111,8 +1116,9 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   let canvasFrame = 0;
   let canvasSize = {width:0, height:0, introWidth:0, introHeight:0};
   const layoutCanvasFlow = () => {
-    canvasSize = {width:canvas.clientWidth, height:canvas.clientHeight, introWidth:canvasStartScreen.clientWidth, introHeight:canvasStartScreen.clientHeight};
+    canvasSize = {width:canvas.scrollWidth, height:canvas.clientHeight, introWidth:canvasStartScreen.clientWidth, introHeight:canvasStartScreen.clientHeight};
     flowSVG.setAttribute('viewBox', `0 0 ${canvasSize.width} ${canvasSize.height}`);
+    flowSVG.style.width = canvasSize.width + 'px';
     const points = flowObjects.map(object => ({
       x:object.offsetLeft + object.offsetWidth / 2,
       y:object.offsetTop + object.querySelector('img').offsetHeight / 2
@@ -1160,11 +1166,11 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     if(canvasVisual!==target)canvasFrame=requestAnimationFrame(syncCanvasFlow);
   };
   const requestCanvasUpdate = () => {if(!canvasFrame) canvasFrame=requestAnimationFrame(syncCanvasFlow);};
-  const cvPrev=document.querySelector('.cv-prev'), cvNext=document.querySelector('.cv-next');
-  if(cvPrev&&cvNext){
-    const cvStep=dir=>canvas.scrollBy({left:dir*canvas.clientWidth,behavior:'smooth'});
-    cvPrev.addEventListener('click',()=>cvStep(-1));
-    cvNext.addEventListener('click',()=>cvStep(1));
+  const cvDots=[...document.querySelectorAll('.cv-dots button')];
+  if(cvDots.length){
+    const setDot=i=>cvDots.forEach((b,j)=>b.classList.toggle('on',j===i));
+    cvDots.forEach((b,i)=>b.addEventListener('click',()=>{setDot(i);canvas.scrollTo({left:i*canvas.clientWidth,behavior:'smooth'});}));
+    canvas.addEventListener('scroll',()=>setDot(Math.round(canvas.scrollLeft/Math.max(1,canvas.clientWidth))),{passive:true});
   }
   layoutCanvasFlow(); syncCanvasFlow();
   addEventListener('scroll', requestCanvasUpdate, {passive:true});
