@@ -586,7 +586,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 
 /* Clay tool marks emerge beside their corresponding canvas objects. */
 .canvas-object .tool-pop{position:absolute;right:-22px;top:-34px;z-index:4;display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none;opacity:0;visibility:hidden;transform:translate(-18px,24px) scale(.55) rotate(-12deg);transition:transform .4s cubic-bezier(.22,1,.36,1),opacity .22s,visibility .4s}
-.canvas-object .tool-pop img{width:86px;height:86px;object-fit:contain;filter:drop-shadow(0 5px 5px rgba(26,26,26,.1))}
+.canvas-object .tool-pop img{width:52px;height:52px;object-fit:contain;filter:drop-shadow(0 4px 4px rgba(26,26,26,.1))}
 .tool-pop > span{font-size:11px;font-weight:500;background:var(--paper);padding:4px 8px;border:1px solid var(--sand);border-radius:5px;white-space:nowrap}
 .canvas-object:hover .tool-pop,.canvas-object:focus-within .tool-pop{opacity:1;visibility:visible;transform:translate(0,0) scale(1) rotate(6deg)}
 @media(max-width:700px){
@@ -806,8 +806,8 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
  <div class="studio-canvas">
   <svg class="canvas-flow" aria-hidden="true"><path class="canvas-flow-base"/><path class="canvas-flow-progress" pathLength="1"/></svg>
   <article class="canvas-object"><div class="st"><img src="assets/process-canvas/insight.webp" alt="" loading="lazy"><span class="object-label">Insight</span><ul class="station-points"><li>Understand user needs.</li><li>Identify key pain points.</li><li>Define the right problem.</li></ul></div></article>
-  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/figure-out.webp" alt="" loading="lazy"><span class="object-label">Figure out</span><ul class="station-points"><li>Explore ideas with ChatGPT.</li><li>Map user flows with AI.</li><li>Choose the strongest direction.</li></ul></div><span class="tool-pop"><img src="assets/process-canvas/chatgpt-clay.webp" alt=""><span>ChatGPT</span></span></article>
-  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/prototype.webp" alt="" loading="lazy"><span class="object-label">Prototype</span><ul class="station-points"><li>Build faster with Claude Code.</li><li>Create interactive prototypes.</li><li>Refine and iterate with AI.</li></ul></div><span class="tool-pop"><img src="assets/process-canvas/claude-code-clay.webp" alt=""><span>Claude Code</span></span></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/figure-out.webp" alt="" loading="lazy"><span class="object-label">Figure out</span><ul class="station-points"><li>Explore ideas with ChatGPT.</li><li>Map user flows with AI.</li><li>Choose the strongest direction.</li></ul></div><span class="tool-pop"><img src="assets/process-canvas/chatgpt-clay.webp" alt="ChatGPT"></span></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/prototype.webp" alt="" loading="lazy"><span class="object-label">Prototype</span><ul class="station-points"><li>Build faster with Claude Code.</li><li>Create interactive prototypes.</li><li>Refine and iterate with AI.</li></ul></div><span class="tool-pop"><img src="assets/process-canvas/claude-code-clay.webp" alt="Claude Code"></span></article>
   <article class="canvas-object"><div class="st"><img src="assets/process-canvas/verify.webp" alt="" loading="lazy"><span class="object-label">Verify</span><ul class="station-points"><li>Test with real users.</li><li>Check usability and value.</li><li>Improve through feedback.</li></ul></div></article>
  </div>
  </div></div>
