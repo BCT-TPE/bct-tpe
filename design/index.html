@@ -261,20 +261,41 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
 
 /* Claymation hero: grounded base plate + floating cut-out layers. */
 .office-hero{background:#FAFAFA;min-height:620px;padding:clamp(110px,16vh,160px) 0 28px;isolation:isolate}
-.clay-stage{position:absolute;inset:0;z-index:-2;overflow:hidden;container-type:size}
+.clay-stage{position:absolute;inset:0;z-index:0;overflow:hidden;container-type:size}
+.clay-hero::before{display:none}
+.clay-hero .wrap{position:relative;z-index:2}
 .clay-frame{position:absolute;left:50%;bottom:0;transform:translateX(-50%);
   width:max(100%,calc(100cqh * 2752 / 1536));aspect-ratio:2752/1536}
 .clay-frame::before{content:"";position:absolute;bottom:100%;left:0;right:0;height:90px;
   background:linear-gradient(180deg,rgba(250,250,250,0),#FAFAFA)}
 .clay-base{position:absolute;inset:0;width:100%;height:100%;display:block}
-.clay-fl{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:auto;
-  animation:clayfloat var(--dur,7s) ease-in-out var(--del,0s) infinite alternate;
+.clay-fl{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:auto;opacity:0;
   transform:translate3d(calc(var(--mx,0)*var(--p,8)*1px),calc(var(--my,0)*var(--p,8)*.6px),0);
   transition:transform .7s cubic-bezier(.22,.61,.36,1);will-change:translate,transform}
+.clay-hero.heroin .clay-fl{animation:clayenter .95s cubic-bezier(.26,1.25,.44,1) var(--ed,.5s) both,
+  clayfloat var(--dur,7s) ease-in-out var(--del,0s) infinite alternate}
+@keyframes clayenter{0%{left:46%;top:60%;scale:.12;opacity:0}45%{opacity:1}100%{left:var(--x);top:var(--y);scale:1;opacity:1}}
+.clay-tile{position:absolute;display:block;height:auto;opacity:0}
+.clay-hero.heroin .clay-tile{animation:tilein .8s cubic-bezier(.22,.61,.36,1) .1s both}
+@keyframes tilein{from{opacity:0}to{opacity:1}}
+.tile-janet{left:0;top:35.22%;width:36.15%;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 34px),linear-gradient(270deg,transparent 0,#000 34px);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(180deg,transparent 0,#000 34px),linear-gradient(270deg,transparent 0,#000 34px);
+  mask-composite:intersect}
+.tile-candace{left:65.04%;top:37.37%;width:34.96%;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 34px),linear-gradient(90deg,transparent 0,#000 34px);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(180deg,transparent 0,#000 34px),linear-gradient(90deg,transparent 0,#000 34px);
+  mask-composite:intersect}
+.clay-vid{-webkit-mask-image:url(assets/hero-vmask-ginny.webp);-webkit-mask-size:100% 100%;
+  mask-image:url(assets/hero-vmask-ginny.webp);mask-size:100% 100%}
+.clay-hero .hero-top{opacity:0;translate:0 18px;transition:opacity .7s cubic-bezier(.22,.61,.36,1) .05s,translate .85s cubic-bezier(.22,.61,.36,1) .05s}
+.clay-hero.heroin .hero-top{opacity:1;translate:none}
 @keyframes clayfloat{from{translate:0 0;rotate:0deg}to{translate:0 var(--amp,-12px);rotate:var(--rot,2deg)}}
 .hero.motion-paused .clay-fl{animation-play-state:paused}
 @media(max-width:760px){.clay-frame{width:max(165%,calc(100cqh * 2752 / 1536 * .62))}}
-@media(prefers-reduced-motion:reduce){.clay-fl{animation:none;transform:none}}
+@media(prefers-reduced-motion:reduce){.clay-fl,.clay-tile,.clay-hero .hero-top{opacity:1;animation:none;transform:none;translate:none}}
 .office-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 32%,#fffdf9e6 0%,#fffdf999 25%,transparent 58%),linear-gradient(180deg,#fffdf955 0%,transparent 65%);z-index:-1;pointer-events:none}
 .office-hero .wrap{max-width:none;padding-inline:6vw;display:flex;justify-content:center;align-items:flex-start}
 .office-hero .hero-top{align-items:center;text-align:center;gap:24px;max-width:960px}
@@ -694,17 +715,19 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   <div class="clay-stage" aria-hidden="true">
     <div class="clay-frame">
       <img class="clay-base" src="assets/hero-clay-base.webp" width="2752" height="1536" alt="" fetchpriority="high">
-      <img class="clay-fl" style="--x:0.0%;--y:17.32%;--w:9.34%;--dur:7.4s;--del:-2.1s;--rot:-2.2deg;--amp:-12px;--p:8" src="assets/hero-fl-handcream.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:7.49%;--y:9.7%;--w:5.41%;--dur:6.2s;--del:-0.8s;--rot:6.0deg;--amp:-10px;--p:6" src="assets/hero-fl-asterisk.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:13.12%;--y:16.34%;--w:10.68%;--dur:8.1s;--del:-3.4s;--rot:-2.5deg;--amp:-13px;--p:8" src="assets/hero-fl-stickies.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:14.79%;--y:35.09%;--w:14.21%;--dur:7.0s;--del:-1.6s;--rot:2.6deg;--amp:-14px;--p:12" src="assets/hero-fl-headphones.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:4.3%;--y:46.5%;--w:5.3%;--dur:6.6s;--del:-2.9s;--rot:-5.0deg;--amp:-9px;--p:6" src="assets/process-canvas/chatgpt-clay.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:29.22%;--y:32.36%;--w:7.56%;--dur:5.8s;--del:-1.2s;--rot:3.0deg;--amp:-10px;--p:7" src="assets/hero-fl-peachnote.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:49.31%;--y:33.46%;--w:7.41%;--dur:6.9s;--del:-4.1s;--rot:-3.0deg;--amp:-12px;--p:9" src="assets/hero-fl-cursors.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:42.0%;--y:7.0%;--w:5.81%;--dur:6.1s;--del:-2.4s;--rot:4.0deg;--amp:-10px;--p:6" src="assets/hero-fl-flagcursor.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:71.2%;--y:30.5%;--w:9.8%;--dur:8.6s;--del:-0.5s;--rot:1.6deg;--amp:-15px;--p:14" src="assets/hero-fl-phoneginny.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:79.29%;--y:10.42%;--w:5.6%;--dur:5.6s;--del:-1.9s;--rot:7.0deg;--amp:-9px;--p:5" src="assets/hero-fl-coin.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" style="--x:85.65%;--y:14.13%;--w:14.35%;--dur:8.9s;--del:-2.6s;--rot:-1.8deg;--amp:-11px;--p:10" src="assets/hero-fl-beznote.webp" alt="" loading="lazy" decoding="async">
+      <video class="clay-tile tile-janet" src="assets/hero-vid-janet.mp4" poster="assets/hero-tile-janet.webp" width="960" height="960" muted loop playsinline preload="metadata"></video>
+      <video class="clay-tile tile-candace" src="assets/hero-vid-candace.mp4" poster="assets/hero-tile-candace.webp" width="960" height="960" muted loop playsinline preload="metadata"></video>
+      <img class="clay-fl" style="--x:0.0%;--y:17.32%;--w:9.34%;--dur:7.4s;--del:-2.1s;--rot:-2.2deg;--amp:-12px;--p:8;--ed:0.50s" src="assets/hero-fl-handcream.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:7.49%;--y:9.7%;--w:5.41%;--dur:6.2s;--del:-0.8s;--rot:6.0deg;--amp:-10px;--p:6;--ed:0.56s" src="assets/hero-fl-asterisk.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:13.12%;--y:16.34%;--w:10.68%;--dur:8.1s;--del:-3.4s;--rot:-2.5deg;--amp:-13px;--p:8;--ed:0.63s" src="assets/hero-fl-stickies.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:14.79%;--y:35.09%;--w:14.21%;--dur:7.0s;--del:-1.6s;--rot:2.6deg;--amp:-14px;--p:12;--ed:0.70s" src="assets/hero-fl-headphones.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:4.3%;--y:46.5%;--w:5.3%;--dur:6.6s;--del:-2.9s;--rot:-5.0deg;--amp:-9px;--p:6;--ed:0.76s" src="assets/process-canvas/chatgpt-clay.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:29.22%;--y:32.36%;--w:7.56%;--dur:5.8s;--del:-1.2s;--rot:3.0deg;--amp:-10px;--p:7;--ed:0.82s" src="assets/hero-fl-peachnote.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:49.31%;--y:33.46%;--w:7.41%;--dur:6.9s;--del:-4.1s;--rot:-3.0deg;--amp:-12px;--p:9;--ed:0.89s" src="assets/hero-fl-cursors.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:42.0%;--y:7.0%;--w:5.81%;--dur:6.1s;--del:-2.4s;--rot:4.0deg;--amp:-10px;--p:6;--ed:0.96s" src="assets/hero-fl-flagcursor.webp" alt="" loading="lazy" decoding="async">
+      <video class="clay-fl clay-vid" style="--x:66.94%;--y:16.26%;--w:18.7%;--dur:8.6s;--del:-0.5s;--rot:1.6deg;--amp:-15px;--p:14;--ed:1.02s" src="assets/hero-vid-ginny.mp4" poster="assets/hero-tile-ginny.webp" width="720" height="1280" muted loop playsinline preload="metadata"></video>
+      <img class="clay-fl" style="--x:79.29%;--y:10.42%;--w:5.6%;--dur:5.6s;--del:-1.9s;--rot:7.0deg;--amp:-9px;--p:5;--ed:1.08s" src="assets/hero-fl-coin.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:85.65%;--y:14.13%;--w:14.35%;--dur:8.9s;--del:-2.6s;--rot:-1.8deg;--amp:-11px;--p:10;--ed:1.15s" src="assets/hero-fl-beznote.webp" alt="" loading="lazy" decoding="async">
     </div>
   </div>
   <div class="wrap">
@@ -837,6 +860,37 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     new IntersectionObserver(([entry])=>hero.classList.toggle('motion-paused',!entry.isIntersecting)).observe(hero);
   }
   document.addEventListener('visibilitychange',()=>hero.classList.toggle('motion-paused',document.hidden || hero.getBoundingClientRect().bottom<=0));
+
+  /* clay hero: entrance replay + character loop videos */
+  const heroVids = [...hero.querySelectorAll('video')];
+  const heroReduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const heroPlay = on => heroVids.forEach(v => { if (on && !heroReduce) { v.play().catch(()=>{}); } else v.pause(); });
+  /* Chrome pauses muted video that plays while still invisible (opacity 0
+     before the entrance) - start each video once its entrance finishes,
+     and nudge it back if the browser paused it while the hero is on. */
+  heroVids.forEach(v => {
+    v.addEventListener('animationend', ev => {
+      if ((ev.animationName === 'clayenter' || ev.animationName === 'tilein') && !heroReduce &&
+          hero.classList.contains('heroin')) v.play().catch(()=>{});
+    });
+    v.addEventListener('pause', () => {
+      if (hero.classList.contains('heroin') && !heroReduce && document.visibilityState === 'visible')
+        setTimeout(() => { if (hero.classList.contains('heroin') && v.paused) v.play().catch(()=>{}); }, 350);
+    });
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && hero.classList.contains('heroin')) heroPlay(true);
+  });
+  let heroRaf = 0;
+  const syncHero = () => {
+    const b = hero.getBoundingClientRect();
+    const on = b.bottom > 0 && b.top < innerHeight && b.height > 0;
+    if (on && !hero.classList.contains('heroin')) { hero.classList.add('heroin'); heroPlay(true); }
+    else if (!on && hero.classList.contains('heroin')) { hero.classList.remove('heroin'); heroPlay(false); }
+  };
+  addEventListener('scroll', () => { if (!heroRaf) heroRaf = requestAnimationFrame(() => { heroRaf = 0; syncHero(); }); }, {passive:true});
+  addEventListener('resize', syncHero);
+  syncHero();
 
   /* clay hero: pointer parallax on the floating layers */
   const stage = document.querySelector('.clay-stage');
