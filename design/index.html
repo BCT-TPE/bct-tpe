@@ -601,6 +601,22 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 @media(max-width:700px){.canvas-card{width:min(340px,calc(100vw - 40px));padding:24px 18px}}
 
 /* END merged How we work */
+
+/* Section tags: the homepage speech-bubble "kick" design and pop behavior */
+.kick{display:inline-block;position:relative;background:var(--blue);color:#fff;
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:5px 11px;border-radius:999px;margin-bottom:14px;box-shadow:0 6px 16px rgba(10,123,196,.26);
+  opacity:0;transform:translateY(14px) scale(.5);transform-origin:left center}
+.kick::after{content:"";position:absolute;left:13px;bottom:-4px;width:8px;height:8px;
+  background:inherit;border-radius:50% 50% 50% 0;transform:rotate(-45deg)}
+.kick.in{animation:kickpop .62s .12s both}
+@keyframes kickpop{0%{opacity:0;transform:translateY(14px) scale(.5) rotate(-3.5deg)}
+  55%{opacity:1;transform:translateY(-4px) scale(1.1) rotate(-3.5deg)}78%{transform:translateY(1px) scale(.97) rotate(-3.5deg)}
+  100%{opacity:1;transform:rotate(-3.5deg)}}
+html[lang="zh-Hant"] .kick{font-size:11px;letter-spacing:.14em}
+.process-heading.kick{margin-bottom:28px;font-size:10px;letter-spacing:.1em}
+html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
+@media (prefers-reduced-motion:reduce){.kick{opacity:1;transform:rotate(-3.5deg)}.kick.in{animation:none}}
 </style>
 </head>
 <body>
@@ -722,7 +738,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
         <span class="process-topic" data-x="-10" data-y="43" data-rotation="6" style="--tx:-10vw;--ty:43svh;--tilt:6deg">Digital Products</span>
       </div>
       <div class="process-intro-copy">
-        <h2 class="process-heading" id="canvas-heading">How we work</h2>
+        <h2 class="process-heading kick" id="canvas-heading">How we work</h2>
         <h3>Uncover pain points.<span>Solve them faster with AI.</span></h3>
       </div>
     </article>
@@ -743,7 +759,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
   <div class="wrap">
     <div class="wwd-showcase">
     <div class="wwd-head">
-      <div><span class="eyebrow rv">What we do</span><h2 class="rv">From understanding problems to building products.</h2></div>
+      <div><span class="kick">What we do</span><h2 class="rv">From understanding problems to building products.</h2></div>
 
     </div>
       <div class="wwd-visual"><figure class="svc-media active" id="svc-visual-0" aria-hidden="false"><div class="svc-image graphic"><img src="assets/genome-research-visual.webp" alt="Genome Cache before and after: the v1.0 quiz screen with four problems marked, and the v2.0 redesign answering each with readable type, one UI kit, responsive layouts and rewards; results: 4.8 CSAT score and 40% more time in the app" width="1200" height="1200"></div></figure><figure class="svc-media" id="svc-visual-1" aria-hidden="true"><div class="svc-image graphic flir-g"><img src="assets/flir-design-visual.webp" alt="FLIR METERLiNK design: a FLIR DM166 thermal multimeter sends readings over Bluetooth to the app, shown as device cards for AC voltage, temperature, humidity and sound level, with a floating measurement chart card annotated with spec lines and the design system's colours, typefaces and button states below" width="1200" height="1200" loading="lazy"></div></figure><figure class="svc-media" id="svc-visual-2" aria-hidden="true"><div class="svc-image reel"><video class="svc-reel" src="assets/weekday-showreel.mp4" poster="assets/weekday-showreel-poster.jpg" muted playsinline preload="auto" aria-label="15-second Weekday showreel: booking a desk on the floor plan, managing workspaces and zones, and the app's design system"></video><div class="reel-still" aria-hidden="true"><img src="assets/officepower-visual.webp" alt="Office Power: an isometric 3D office where HR, IT, finance and sales AI agents each work at their own desk, with an HR agent chat preparing a leave request and a budget card showing $1,729 of $1,900 used" width="1200" height="1200" loading="lazy"></div></div></figure></div>
@@ -755,7 +771,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 <!-- ================= TEAM ================= -->
 <section id="team">
   <div class="wrap team-wrap">
-    <span class="tag ink rv">The Team</span>
+    <span class="kick">The Team</span>
     <h2 class="rv" style="--d:.08s;margin-top:18px">Meet the people behind the pixels</h2>
     <p class="lead rv" style="--d:.16s">Different backgrounds, one shared habit: asking "why" before "what".</p>
 
@@ -773,7 +789,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
   <div class="wrap">
     <div class="cta-card rv">
       <div>
-        <span class="tag">Let's talk</span>
+        <span class="kick">Let's talk</span>
         <h2 style="margin-top:18px">Got something that needs designing?</h2>
         <p>Bring a sketch, a problem or just a hunch. We'll work out the shape of it together, before a single line of code.</p>
         <div class="btns">
@@ -932,7 +948,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
   const svcFromHash=()=>{const i=svcItems.findIndex(item=>'#'+item.id===location.hash);if(i>=0)activateSvc(i);};
   addEventListener('hashchange',svcFromHash);svcFromHash();
 
-  const targets = document.querySelectorAll('.rv, #steps');
+  const targets = document.querySelectorAll('.rv, .kick');
   if (!('IntersectionObserver' in window)) { targets.forEach(el => el.classList.add('in')); return; }
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
