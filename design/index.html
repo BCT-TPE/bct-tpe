@@ -387,6 +387,16 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
 .cta-art .a{width:62%;aspect-ratio:1;left:0;top:6%;transform:rotate(-6deg)}
 .cta-art .b{width:48%;aspect-ratio:1;right:0;bottom:0;transform:rotate(7deg)}
 
+/* ---------- Team: bouncy entrance + living portraits ---------- */
+.team .member.rv{opacity:0;transform:none;transition:none}
+.team .member.rv.in{animation:memberpop .7s cubic-bezier(.26,1.35,.45,1) var(--d,0s) both}
+@keyframes memberpop{0%{opacity:0;translate:0 34px;scale:.8}60%{opacity:1}100%{opacity:1;translate:0 0;scale:1}}
+.member h3,.member p{opacity:0;translate:0 8px;
+  transition:opacity .5s cubic-bezier(.22,.61,.36,1) calc(var(--d,0s) + .32s),translate .55s cubic-bezier(.22,.61,.36,1) calc(var(--d,0s) + .32s)}
+.member.in h3,.member.in p{opacity:1;translate:0 0}
+.avatar video{width:100%;height:100%;object-fit:cover;display:block}
+@media(prefers-reduced-motion:reduce){.team .member.rv,.member h3,.member p{opacity:1;animation:none;translate:none}}
+
 /* ---------- Footer: same as the homepage ---------- */
 footer{border-top:1px solid #e6e1d8;padding:13px 6vw;font-size:14px;color:#4a5462;margin-top:clamp(72px,9vw,120px)}
 footer .fine{max-width:1080px;margin:0 auto;font-size:12.5px;color:#5d6673}
@@ -836,9 +846,9 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     <p class="lead rv" style="--d:.16s">Different backgrounds, one shared habit: asking "why" before "what".</p>
 
     <div class="team">
-      <div class="member rv" style="--r:-4deg"><div class="avatar"><img src="assets/ginny.webp" alt="Clay portrait of Ginny Chang"></div><h3>Ginny Chang</h3><p>Sr. UI/UX Designer</p></div>
-      <div class="member rv" style="--r:3deg;--d:.08s"><div class="avatar"><img src="assets/team-designer.webp" alt="Clay portrait of Candace Cheng"></div><h3>Candace Cheng</h3><p>Design Lead</p></div>
-      <div class="member rv" style="--r:-2deg;--d:.16s"><div class="avatar"><img src="assets/janet.webp" alt="Clay portrait of Janet Yu"></div><h3>Janet Yu</h3><p>UI/UX Designer</p></div>
+      <div class="member rv" style="--r:-4deg"><div class="avatar"><video src="assets/team-vid-ginny.mp4" poster="assets/ginny.webp" width="480" height="480" muted loop playsinline preload="metadata" aria-label="Clay portrait of Ginny Chang"></video></div><h3>Ginny Chang</h3><p>Sr. UI/UX Designer</p></div>
+      <div class="member rv" style="--r:3deg;--d:.08s"><div class="avatar"><video src="assets/team-vid-candace.mp4" poster="assets/team-designer.webp" width="480" height="480" muted loop playsinline preload="metadata" aria-label="Clay portrait of Candace Cheng"></video></div><h3>Candace Cheng</h3><p>Design Lead</p></div>
+      <div class="member rv" style="--r:-2deg;--d:.16s"><div class="avatar"><video src="assets/team-vid-janet.mp4" poster="assets/janet.webp" width="480" height="480" muted loop playsinline preload="metadata" aria-label="Clay portrait of Janet Yu"></video></div><h3>Janet Yu</h3><p>UI/UX Designer</p></div>
     </div>
 
   </div>
@@ -898,6 +908,22 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   addEventListener('scroll', () => { if (!heroRaf) heroRaf = requestAnimationFrame(() => { heroRaf = 0; syncHero(); }); }, {passive:true});
   addEventListener('resize', syncHero);
   syncHero();
+
+
+  /* team portraits: loop while the section is on screen */
+  const teamSec = document.getElementById('team');
+  if (teamSec) {
+    const teamVids = [...teamSec.querySelectorAll('video')];
+    let teamOn = false;
+    const tPlay = on => teamVids.forEach(v => { if (on && !heroReduce) { v.play().catch(()=>{}); } else v.pause(); });
+    teamVids.forEach(v => v.addEventListener('pause', () => {
+      if (teamOn && !heroReduce && document.visibilityState === 'visible')
+        setTimeout(() => { if (teamOn && v.paused) v.play().catch(()=>{}); }, 350);
+    }));
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(es => es.forEach(e => { teamOn = e.isIntersecting; tPlay(teamOn); }), {threshold:.15}).observe(teamSec);
+    } else { teamOn = true; tPlay(true); }
+  }
 
   /* clay hero: pointer parallax on the floating layers */
   const stage = document.querySelector('.clay-stage');
