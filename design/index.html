@@ -646,6 +646,22 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
  .canvas-object:nth-of-type(4){left:69%}
  .canvas-object:nth-of-type(1){left:4%}}
 @media(max-width:700px){.station-points{font-size:11px;max-width:150px;margin-top:8px;padding-left:16px}}
+
+/* Micro-motion: flowing dashes, floating icons, bullets that light up */
+@keyframes dashflow{to{stroke-dashoffset:-13}}
+.canvas-flow-base,.canvas-flow-progress{animation:dashflow 1.2s linear infinite}
+@keyframes stfloat{from{translate:0 0}to{translate:0 -7px}}
+.canvas-object .st img{animation:stfloat var(--fd,6s) ease-in-out var(--fdel,0s) infinite alternate}
+.canvas-object:nth-of-type(1) .st img{--fd:5.6s;--fdel:-1.2s}
+.canvas-object:nth-of-type(2) .st img{--fd:6.8s;--fdel:-3s}
+.canvas-object:nth-of-type(3) .st img{--fd:6.2s;--fdel:-2s}
+.canvas-object:nth-of-type(4) .st img{--fd:7.4s;--fdel:-.6s}
+.station-points li{opacity:0;translate:0 8px;transition:opacity .5s cubic-bezier(.22,.61,.36,1),translate .55s cubic-bezier(.22,.61,.36,1)}
+.studio-canvas.cv-on .station-points li{opacity:1;translate:0 0}
+.studio-canvas.cv-on .station-points li:nth-child(1){transition-delay:.12s}
+.studio-canvas.cv-on .station-points li:nth-child(2){transition-delay:.28s}
+.studio-canvas.cv-on .station-points li:nth-child(3){transition-delay:.44s}
+@media(prefers-reduced-motion:reduce){.station-points li{opacity:1;translate:none}}
 /* END merged How we work */
 
 /* Section tags: the homepage speech-bubble "kick" design and pop behavior */
@@ -1104,6 +1120,7 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     });
     canvas.style.opacity=reveal;
     canvas.inert=reveal<.92;
+    canvas.classList.toggle('cv-on',reveal>=.92);
     const directions=[[-1,-1],[-.4,1],[.4,-1],[1,1]];
     flowObjects.forEach((object,index)=>{
       const amount=reducedMotion.matches?Number(reveal>.5):smooth(clamp((reveal-index*.035)/.88));
