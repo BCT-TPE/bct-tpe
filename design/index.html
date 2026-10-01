@@ -300,7 +300,16 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
 .clay-hero.heroin .hero-top{opacity:1;translate:none}
 @keyframes clayfloat{from{translate:0 0;rotate:0deg}to{translate:0 var(--amp,-12px);rotate:var(--rot,2deg)}}
 .hero.motion-paused .clay-fl{animation-play-state:paused}
-@media(max-width:760px){.clay-frame{width:max(165%,calc(100cqh * 2752 / 1536 * .62))}}
+.clay-ground{position:absolute;inset:0}
+.hero-intro span{display:block;text-wrap:balance}
+@media(max-width:760px){
+  .office-hero{height:100vh;height:100svh;min-height:0;padding-top:calc(var(--header-height,72px) + 18px);padding-bottom:0}
+  .clay-frame{left:var(--fl,-45vw);transform:none;width:var(--fw,178vw);bottom:var(--fb,0px)}
+  .clay-hero .wrap{padding-top:var(--hero-shift,0px)}
+  .clay-frame::before{display:none}
+  .clay-fl.m-off{display:none}
+}
+
 @media(prefers-reduced-motion:reduce){.clay-fl,.clay-tile,.clay-hero .hero-top{opacity:1;animation:none;transform:none;translate:none}}
 .office-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 32%,#fffdf9e6 0%,#fffdf999 25%,transparent 58%),linear-gradient(180deg,#fffdf955 0%,transparent 65%);z-index:-1;pointer-events:none}
 .office-hero .wrap{max-width:none;padding-inline:6vw;display:flex;justify-content:center;align-items:flex-start}
@@ -309,7 +318,6 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
 .office-hero .hero-intro{max-width:580px;color:#333B46;font-weight:500}
 .office-hero .hero-outcome{color:#2A323D}
 @media(max-width:760px){
- .office-hero{min-height:680px;padding-top:112px}
  .office-hero .hero-top{gap:20px}
  .office-hero .office-backdrop{object-position:50% bottom}
  .office-hero::before{background:linear-gradient(180deg,#fffdf9d9 0%,#fffdf9b3 36%,#fffdf92b 58%,transparent 75%)}
@@ -466,7 +474,8 @@ footer .fine{max-width:1080px;margin:0 auto;font-size:12.5px;color:#5d6673}
   #capabilities .wwd-visual .svc-image{height:100%;min-height:0;padding:12px}
   #capabilities .svc{padding:12px 0}
   #capabilities .svc-detail{padding-top:12px}
-  #capabilities .svc-offerings{margin-top:12px}
+  #capabilities .svc-offerings{margin-top:14px;gap:6px}
+  #capabilities .svc-offerings .rs-jump{display:inline-block;padding:7px 0}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -705,26 +714,30 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .studio-canvas.cv-on .station-points li:nth-child(3){transition-delay:.44s}
 @media(prefers-reduced-motion:reduce){.station-points li{opacity:1;translate:none}}
 
-/* Mobile canvas: one station per view, swipe + homepage-style dots */
+/* Mobile canvas: page scroll steps through the stations vertically; dots ride a dashed rail */
 .cv-dots{display:none}
 @media(max-width:700px){
-  .studio-canvas{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;align-items:center;
-    scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  .studio-canvas::-webkit-scrollbar{display:none}
-  .canvas-object{position:static!important;flex:0 0 100%;width:100%!important;max-width:none;
-    scroll-snap-align:center;display:flex;justify-content:center;padding:0 28px;rotate:none}
+  .canvas-start{height:460svh}
+  .canvas-flow{display:none}
+  .canvas-object{position:absolute!important;left:0!important;right:0;top:50%!important;width:100%!important;max-width:none;
+    display:flex;justify-content:center;padding:0 40px 0 56px;rotate:none;translate:0 -50%;
+    opacity:0;transform:translateY(46px);pointer-events:none;
+    transition:opacity .45s cubic-bezier(.22,.61,.36,1),transform .6s cubic-bezier(.22,.61,.36,1)}
+  .canvas-object.st-on{opacity:1;transform:none;pointer-events:auto}
+  .canvas-object.st-past{transform:translateY(-46px)}
   .canvas-object img,.canvas-object:nth-of-type(3) img{height:150px}
   .object-label{font-size:16px}
   .station-points{font-size:14px;max-width:250px;margin-top:10px}
-  .cv-dots{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:4;
-    display:flex;align-items:center;gap:22px}
-  .cv-dots::before{content:"";position:absolute;left:8px;right:8px;top:50%;height:2px;margin-top:-1px;
-    background:rgba(26,26,26,.13);border-radius:1px}
-  .cv-dots button{position:relative;z-index:1;width:11px;height:11px;border-radius:50%;border:none;cursor:pointer;
+  .cv-dots{position:absolute;left:22px;top:50%;translate:0 -50%;z-index:4;display:flex;flex-direction:column;align-items:center;gap:30px}
+  .cv-dots::before{content:"";position:absolute;top:-34px;bottom:-34px;left:50%;width:2px;margin-left:-1px;
+    background:repeating-linear-gradient(to bottom,var(--blue) 0 5px,transparent 5px 13px);opacity:.55;animation:railflow 1.2s linear infinite}
+  .cv-dots button{position:relative;z-index:1;width:11px;height:11px;padding:0;border-radius:50%;border:none;cursor:pointer;
     background:#b8b0a2;transition:background .25s cubic-bezier(.22,.61,.36,1),box-shadow .25s cubic-bezier(.22,.61,.36,1)}
   .cv-dots button.on{background:var(--blue);
     box-shadow:0 0 0 3px var(--paper),0 0 0 6px rgba(10,123,196,.35),0 0 0 9px rgba(10,123,196,.12)}
 }
+@keyframes railflow{to{background-position:0 13px}}
+@media(prefers-reduced-motion:reduce){.cv-dots::before{animation:none}.canvas-object{transition:none}}
 /* END merged How we work */
 
 /* Section tags: the homepage speech-bubble "kick" design and pop behavior */
@@ -818,26 +831,26 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
 <section class="hero office-hero clay-hero" aria-label="Explore our design services">
   <div class="clay-stage" aria-hidden="true">
     <div class="clay-frame">
-      <img class="clay-base" src="assets/hero-clay-base.webp" width="2752" height="1536" alt="" fetchpriority="high">
+      <div class="clay-ground"><img class="clay-base" src="assets/hero-clay-base.webp" width="2752" height="1536" alt="" fetchpriority="high">
       <video class="clay-tile tile-janet" src="assets/hero-vid-janet.mp4" poster="assets/hero-tile-janet.webp" width="960" height="960" muted loop playsinline preload="metadata"></video>
-      <video class="clay-tile tile-candace" src="assets/hero-vid-candace.mp4" poster="assets/hero-tile-candace.webp" width="960" height="960" muted loop playsinline preload="metadata"></video>
-      <img class="clay-fl" data-mx="31%" data-my="28%" data-mw="5%" style="--x:0.0%;--y:17.32%;--w:9.34%;--dur:7.4s;--del:-2.1s;--rot:-2.2deg;--amp:-12px;--p:8;--ed:.55s" src="assets/hero-fl-handcream.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" data-mx="67%" data-my="40%" data-mw="3.5%" style="--x:7.49%;--y:9.7%;--w:5.41%;--dur:6.2s;--del:-0.8s;--rot:6.0deg;--amp:-10px;--p:6;--ed:.55s" src="assets/hero-fl-asterisk.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" data-mx="31%" data-my="52%" data-mw="6.5%" style="--x:13.12%;--y:16.34%;--w:10.68%;--dur:8.1s;--del:-3.4s;--rot:-2.5deg;--amp:-13px;--p:8;--ed:.55s" src="assets/hero-fl-stickies.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" data-mx="57%" data-my="56%" data-mw="8%" style="--x:14.79%;--y:35.09%;--w:14.21%;--dur:7.0s;--del:-1.6s;--rot:2.6deg;--amp:-14px;--p:12;--ed:.55s" src="assets/hero-fl-headphones.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" data-mx="31%" data-my="41%" data-mw="4.5%" style="--x:4.3%;--y:46.5%;--w:5.3%;--dur:6.6s;--del:-2.9s;--rot:-5.0deg;--amp:-9px;--p:6;--ed:.55s" src="assets/process-canvas/chatgpt-clay.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" data-mx="56%" data-my="40%" data-mw="5%" style="--x:29.22%;--y:32.36%;--w:7.56%;--dur:5.8s;--del:-1.2s;--rot:3.0deg;--amp:-10px;--p:7;--ed:.55s" src="assets/hero-fl-peachnote.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" data-mx="48.6%" data-my="40%" data-mw="6.5%" style="--x:48.6%;--y:40%;--w:7.41%;--dur:6.9s;--del:-4.1s;--rot:-3.0deg;--amp:-12px;--p:9;--ed:.55s" src="assets/hero-fl-cursors.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" data-mx="42%" data-my="7%" data-mw="5%" style="--x:42.0%;--y:7.0%;--w:5.81%;--dur:6.1s;--del:-2.4s;--rot:4.0deg;--amp:-10px;--p:6;--ed:.55s" src="assets/hero-fl-flagcursor.webp" alt="" loading="lazy" decoding="async">
-      <video class="clay-fl clay-vid" data-mx="58.5%" data-my="26%" data-mw="12%" style="--x:66.94%;--y:16.26%;--w:18.7%;--dur:8.6s;--del:-0.5s;--rot:1.6deg;--amp:-15px;--p:14;--ed:.55s" src="assets/hero-vid-ginny.mp4" poster="assets/hero-tile-ginny.webp" width="720" height="1280" muted loop playsinline preload="metadata"></video>
-      <img class="clay-fl" data-mx="44%" data-my="42%" data-mw="3.5%" style="--x:79.29%;--y:10.42%;--w:5.6%;--dur:5.6s;--del:-1.9s;--rot:7.0deg;--amp:-9px;--p:5;--ed:.55s" src="assets/hero-fl-coin.webp" alt="" loading="lazy" decoding="async">
-      <img class="clay-fl" data-mhide="1" style="--x:85.65%;--y:14.13%;--w:14.35%;--dur:8.9s;--del:-2.6s;--rot:-1.8deg;--amp:-11px;--p:10;--ed:.55s" src="assets/hero-fl-beznote.webp" alt="" loading="lazy" decoding="async">
+      <video class="clay-tile tile-candace" src="assets/hero-vid-candace.mp4" poster="assets/hero-tile-candace.webp" width="960" height="960" muted loop playsinline preload="metadata"></video></div>
+      <img class="clay-fl" style="--x:0.0%;--y:17.32%;--w:9.34%;--dur:7.4s;--del:-2.1s;--rot:-2.2deg;--amp:-12px;--p:8;--ed:.55s" src="assets/hero-fl-handcream.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:7.49%;--y:9.7%;--w:5.41%;--dur:6.2s;--del:-0.8s;--rot:6.0deg;--amp:-10px;--p:6;--ed:.55s" src="assets/hero-fl-asterisk.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:13.12%;--y:16.34%;--w:10.68%;--dur:8.1s;--del:-3.4s;--rot:-2.5deg;--amp:-13px;--p:8;--ed:.55s" src="assets/hero-fl-stickies.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:14.79%;--y:35.09%;--w:14.21%;--dur:7.0s;--del:-1.6s;--rot:2.6deg;--amp:-14px;--p:12;--ed:.55s" src="assets/hero-fl-headphones.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:4.3%;--y:46.5%;--w:5.3%;--dur:6.6s;--del:-2.9s;--rot:-5.0deg;--amp:-9px;--p:6;--ed:.55s" src="assets/process-canvas/chatgpt-clay.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:29.22%;--y:32.36%;--w:7.56%;--dur:5.8s;--del:-1.2s;--rot:3.0deg;--amp:-10px;--p:7;--ed:.55s" src="assets/hero-fl-peachnote.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:48.6%;--y:40%;--w:7.41%;--dur:6.9s;--del:-4.1s;--rot:-3.0deg;--amp:-12px;--p:9;--ed:.55s" src="assets/hero-fl-cursors.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:42.0%;--y:7.0%;--w:5.81%;--dur:6.1s;--del:-2.4s;--rot:4.0deg;--amp:-10px;--p:6;--ed:.55s" src="assets/hero-fl-flagcursor.webp" alt="" loading="lazy" decoding="async">
+      <video class="clay-fl clay-vid" style="--x:66.94%;--y:16.26%;--w:18.7%;--dur:8.6s;--del:-0.5s;--rot:1.6deg;--amp:-15px;--p:14;--ed:.55s" src="assets/hero-vid-ginny.mp4" poster="assets/hero-tile-ginny.webp" width="720" height="1280" muted loop playsinline preload="metadata"></video>
+      <img class="clay-fl" style="--x:79.29%;--y:10.42%;--w:5.6%;--dur:5.6s;--del:-1.9s;--rot:7.0deg;--amp:-9px;--p:5;--ed:.55s" src="assets/hero-fl-coin.webp" alt="" loading="lazy" decoding="async">
+      <img class="clay-fl" style="--x:85.65%;--y:14.13%;--w:14.35%;--dur:8.9s;--del:-2.6s;--rot:-1.8deg;--amp:-11px;--p:10;--ed:.55s" src="assets/hero-fl-beznote.webp" alt="" loading="lazy" decoding="async">
     </div>
   </div>
   <div class="wrap">
     <div class="hero-top">
       <h1 aria-label="Research. Design. Build what’s next."><span class="hero-word research-word" aria-hidden="true"><span class="research-char" style="--char-index:0">R</span><span class="research-char" style="--char-index:1">e</span><span class="research-char" style="--char-index:2">s</span><span class="research-char" style="--char-index:3">e</span><span class="research-char" style="--char-index:4">a</span><span class="research-char" style="--char-index:5">r</span><span class="research-char" style="--char-index:6">c</span><span class="research-char" style="--char-index:7">h</span><span class="research-char" style="--char-index:8">.</span></span> <span class="hero-word design-word" aria-hidden="true"><span class="design-solid">Design.</span><span class="design-outline">Design.</span><svg class="design-nodes" viewBox="0 0 240 74" preserveAspectRatio="none" aria-hidden="true"><path d="M2 12H238V61H2Z M44 12V61 M88 12V61 M126 12V61 M145 12V61 M190 12V61"/><rect x="0.30000000000000004" y="10.3" width="3.4" height="3.4"/><rect x="0.30000000000000004" y="59.3" width="3.4" height="3.4"/><rect x="42.3" y="10.3" width="3.4" height="3.4"/><rect x="42.3" y="59.3" width="3.4" height="3.4"/><rect x="86.3" y="10.3" width="3.4" height="3.4"/><rect x="86.3" y="59.3" width="3.4" height="3.4"/><rect x="124.3" y="10.3" width="3.4" height="3.4"/><rect x="124.3" y="59.3" width="3.4" height="3.4"/><rect x="143.3" y="10.3" width="3.4" height="3.4"/><rect x="143.3" y="59.3" width="3.4" height="3.4"/><rect x="188.3" y="10.3" width="3.4" height="3.4"/><rect x="188.3" y="59.3" width="3.4" height="3.4"/><rect x="236.3" y="10.3" width="3.4" height="3.4"/><rect x="236.3" y="59.3" width="3.4" height="3.4"/></svg></span><br><span class="hero-outcome">Build what’s next.</span></h1>
-      <p class="hero-intro">Find the right problem. Make the complex feel simple.<br>We design alongside engineers to turn ideas into products people can use.</p>
+      <p class="hero-intro"><span>Find the right problem. Make the complex feel simple.</span> <span>We design alongside engineers to turn ideas into products people can use.</span></p>
     </div>
   </div>
 </section>
@@ -999,56 +1012,52 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   }
 
 
-  /* mobile: denser float layout (inline desktop coords are remembered and restored) */
+  /* mobile: keep the desktop composition, scaled so the monitor leads the space under the copy.
+     Floats keep their desktop positions (same spacing as desktop); ones that fall outside the
+     visible window or would sit on the copy are hidden. */
   const mobFloats = [...hero.querySelectorAll('.clay-fl')];
-  mobFloats.forEach(el => { el.dataset.dx = el.style.getPropertyValue('--x');
-    el.dataset.dy = el.style.getPropertyValue('--y'); el.dataset.dw = el.style.getPropertyValue('--w'); });
   const mobMq = matchMedia('(max-width:760px)');
-  const applyMobLayout = () => mobFloats.forEach(el => {
-    const d = el.dataset, on = mobMq.matches;
-    if (on && d.mhide) { el.style.display = 'none'; return; }
-    el.style.display = '';
-    const x = on && d.mx ? d.mx : d.dx, y = on && d.my ? d.my : d.dy, w = on && d.mw ? d.mw : d.dw;
-    el.style.setProperty('--x', x); el.style.setProperty('--y', y); el.style.setProperty('--w', w);
-  });
-  mobMq.addEventListener('change', applyMobLayout);
-  applyMobLayout();
-
-
-  /* service carousels: auto-advance while their panel is showing and on screen; dots + swipe */
-  const rsCtl = new Map();
-  document.querySelectorAll('.rs').forEach(rs => {
-    const slides = [...rs.querySelectorAll('.rs-slide')], dots = [...rs.querySelectorAll('.rs-dots button')];
-    let cur = 0, timer = 0, hovering = false;
-    const go = i => {
-      cur = (i + slides.length) % slides.length;
-      slides.forEach((sl, j) => { sl.classList.toggle('on', j === cur); sl.setAttribute('aria-hidden', String(j !== cur)); });
-      dots.forEach((d, j) => d.classList.toggle('on', j === cur));
-    };
-    const visible = () => { const r = rs.getBoundingClientRect();
-      return rs.closest('figure').classList.contains('active') && r.bottom > 0 && r.top < innerHeight; };
-    const restart = () => { clearInterval(timer); timer = setInterval(() => {
-      if (!hovering && visible() && !heroReduce) go(cur + 1); }, 4500); };
-    dots.forEach((d, i) => d.addEventListener('click', () => { go(i); restart(); }));
-    rs.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') hovering = true; });
-    rs.addEventListener('pointerleave', () => { hovering = false; });
-    let sx = null;
-    rs.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, {passive:true});
-    rs.addEventListener('touchend', e => {
-      if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; sx = null;
-      if (Math.abs(dx) > 40) { go(cur + (dx < 0 ? 1 : -1)); restart(); }
-    }, {passive:true});
-    rsCtl.set(rs, i => { slides.forEach(sl => sl.classList.remove('on'));
-      setTimeout(() => { go(i); restart(); }, 260); });
-    restart();
-  });
-  document.querySelectorAll('button.rs-jump').forEach(b => b.addEventListener('click', () => {
-    const idx = svcItems.indexOf(b.closest('.svc'));
-    const rs = idx >= 0 && svcVisuals[idx].querySelector('.rs');
-    if (!rs) return;
-    rsCtl.get(rs)(+b.dataset.slide || 0);
-    if (matchMedia('(max-width:760px)').matches) rs.scrollIntoView({behavior:'smooth', block:'center'});
-  }));
+  const intro = hero.querySelector('.hero-top'), mstage = hero.querySelector('.clay-stage');
+  const layoutMob = () => {
+    if (!mobMq.matches) {
+      mstage.style.removeProperty('--fw'); mstage.style.removeProperty('--fl'); mstage.style.removeProperty('--fb');
+      hero.style.removeProperty('--hero-shift');
+      mobFloats.forEach(el => el.classList.remove('m-off'));
+      return;
+    }
+    const vw = hero.clientWidth, hh = hero.clientHeight;
+    const wrap = intro.offsetParent;
+    const curShift = parseFloat(hero.style.getPropertyValue('--hero-shift')) || 0;
+    const baseBottom = (wrap ? wrap.offsetTop : 0) + intro.offsetTop + intro.offsetHeight - curShift;
+    const avail = hh - baseBottom;
+    /* the scene's top ~22% is empty sky and may tuck under the copy; the zoom stays between
+       1.78x and 1.92x the screen width so Janet, the monitor and Ginny always stay in frame */
+    const W = Math.min(vw * 1.92, Math.max(vw * 1.78, avail / .78 * 2752 / 1536)), H = W * 1536 / 2752;
+    const left = vw / 2 - W * .55;
+    /* on tall phones the scene stays on the bottom edge; the spare height moves the copy down
+       and leaves a little open sky between copy and scene */
+    const spare = Math.max(0, avail - H * .78), shift = Math.round(spare * .55);
+    hero.style.setProperty('--hero-shift', shift + 'px');
+    mstage.style.setProperty('--fb', '0px');
+    mstage.style.setProperty('--fw', W + 'px');
+    mstage.style.setProperty('--fl', left + 'px');
+    const textBottom = baseBottom + shift;
+    const frameTop = hh - H;
+    mobFloats.forEach(el => {
+      const x = parseFloat(el.style.getPropertyValue('--x')), y = parseFloat(el.style.getPropertyValue('--y'));
+      const w = parseFloat(el.style.getPropertyValue('--w'));
+      const isVid = el.tagName === 'VIDEO';
+      /* the video tile is mostly empty margin; judge it by the figure in its middle */
+      const cx = left + W * (x + w / 2) / 100, half = W * w / 100 * (isVid ? .21 : .5);
+      const topPx = frameTop + H * y / 100 + (isVid ? W * w / 100 * 1.778 * .22 : 0);
+      const off = cx - half < 4 || cx + half > vw - 4 || topPx < textBottom + 6;
+      el.classList.toggle('m-off', off);
+    });
+  };
+  mobMq.addEventListener('change', layoutMob);
+  addEventListener('resize', layoutMob);
+  if ('ResizeObserver' in window) new ResizeObserver(layoutMob).observe(intro);
+  layoutMob();
 
   /* clay hero: pointer parallax on the floating layers */
   const stage = document.querySelector('.clay-stage');
@@ -1116,7 +1125,6 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   svcItems.forEach((item,index) => {
     const button=item.querySelector('button');
     button.addEventListener('click',()=>activateSvc(index));
-    button.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')activateSvc(index);});
     button.addEventListener('keydown',e=>{
       if(!['ArrowDown','ArrowUp','Home','End'].includes(e.key))return;
       e.preventDefault();
@@ -1186,6 +1194,7 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     }
     flowSVG.querySelectorAll('path').forEach(pathNode => pathNode.setAttribute('d',path));
   };
+  const cvDots=[...document.querySelectorAll('.cv-dots button')];
   let canvasVisual=null;
   const syncCanvasFlow = () => {
     canvasFrame = 0;
@@ -1209,23 +1218,26 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     canvas.classList.toggle('cv-on',reveal>=.92);
     const directions=[[-1,-1],[-.4,1],[.4,-1],[1,1]];
     const smallCanvas=matchMedia('(max-width:700px)').matches;
+    const step=Math.min(flowObjects.length-1,Math.floor(clamp((progress-.5)/.44)*flowObjects.length));
     flowObjects.forEach((object,index)=>{
-      if(smallCanvas){object.style.transform='';object.style.opacity='';return;}
+      if(smallCanvas){object.style.transform='';object.style.opacity='';
+        object.classList.toggle('st-on',index===step);object.classList.toggle('st-past',index<step);return;}
+      object.classList.remove('st-on','st-past');
       const amount=reducedMotion.matches?Number(reveal>.5):smooth(clamp((reveal-index*.035)/.88));
       const [x,y]=directions[index];
       object.style.transform=`translate(${x*(1-amount)*canvasSize.width*.5}px,${y*(1-amount)*canvasSize.height*.55}px) scale(${.25+amount*.75})`;
       object.style.opacity=amount;
     });
+    cvDots.forEach((d,j)=>d.classList.toggle('on',j===step));
     canvasMask.style.strokeDashoffset=reducedMotion.matches?0:1-smooth(clamp((progress-.48)/.4));
     if(canvasVisual!==target)canvasFrame=requestAnimationFrame(syncCanvasFlow);
   };
   const requestCanvasUpdate = () => {if(!canvasFrame) canvasFrame=requestAnimationFrame(syncCanvasFlow);};
-  const cvDots=[...document.querySelectorAll('.cv-dots button')];
-  if(cvDots.length){
-    const setDot=i=>cvDots.forEach((b,j)=>b.classList.toggle('on',j===i));
-    cvDots.forEach((b,i)=>b.addEventListener('click',()=>{setDot(i);canvas.scrollTo({left:i*canvas.clientWidth,behavior:'smooth'});}));
-    canvas.addEventListener('scroll',()=>setDot(Math.round(canvas.scrollLeft/Math.max(1,canvas.clientWidth))),{passive:true});
-  }
+  cvDots.forEach((b,i)=>b.addEventListener('click',()=>{
+    const p=.5+(i+.5)/flowObjects.length*.44;
+    const span=canvasStart.offsetHeight-canvasSize.introHeight;
+    scrollTo({top:canvasStart.getBoundingClientRect().top+scrollY-72+p*span,behavior:'smooth'});
+  }));
   layoutCanvasFlow(); syncCanvasFlow();
   addEventListener('scroll', requestCanvasUpdate, {passive:true});
   addEventListener('resize', () => {layoutCanvasFlow(); requestCanvasUpdate();});
