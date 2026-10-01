@@ -1046,12 +1046,12 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   const mBase = hero.querySelector('.clay-base'), mJanet = hero.querySelector('.tile-janet'), mCand = hero.querySelector('.tile-candace');
   /* cx: centre as share of screen width, cy: centre height above the bottom in units u, w: width in u, r: h/w */
   const MOB = {
-    'coin':       {cx:.24, cy:.95, w:.06, r:1},
-    'cursors':    {cx:.68, cy:.97, w:.10, r:.88},
     'asterisk':   {cx:.90, cy:.95, w:.07, r:1},
-    'peachnote':  {cx:.11, cy:.81, w:.12, r:.98},
-    'chatgpt':    {cx:.09, cy:.67, w:.08, r:1},
-    'headphones': {cx:.12, cy:.56, w:.17, r:1.07},
+    'peachnote':  {cx:.11, cy:.86, w:.12, r:.98},
+    'chatgpt':    {cx:.09, cy:.73, w:.08, r:1},
+    'headphones': {cx:.12, cy:.57, w:.17, r:1.07},
+    'coin':       {off:true},
+    'cursors':    {off:true},
     'stickies':   {off:true},
     'flagcursor': {off:true},
     'handcream':  {off:true},
@@ -1065,15 +1065,16 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   const layoutMob = () => {
     if (!mobMq.matches) { clearMob(); return; }
     const V = hero.clientWidth, hh = hero.clientHeight;
-    const wrap = intro.offsetParent;
-    const T = (wrap ? wrap.offsetTop : 0) + intro.offsetTop + intro.offsetHeight;
+    const ty = parseFloat((getComputedStyle(intro).translate || '0 0').split(' ')[1]) || 0;
+    const T = intro.getBoundingClientRect().bottom - hero.getBoundingClientRect().top - ty;
     const u = Math.min(V * 1.15, (hh - T - 8) / 1.0);
     /* monitor only (base px x 999-1541, y 749-1242): half of u wide, centred, its foot .55u off the
        bottom so it sits clear above the character tiles */
-    const k = .5 * u / 542;
+    const footY = hh - .52 * u;
+    const mH = Math.min(.455 * u, footY - (T + 26)), k = mH / 493;
     mBase.style.width = (2752 * k) + 'px';
     mBase.style.left = (V * .5 - 1270 * k) + 'px';
-    mBase.style.top = (hh - .55 * u - 1242 * k) + 'px';
+    mBase.style.top = (footY - 1242 * k) + 'px';
     /* character tiles anchored to the bottom corners, as on desktop */
     const jw = .5 * u, cw = .52 * u;
     Object.assign(mJanet.style, {width: jw + 'px', left: (-.13 * u) + 'px', top: (hh - jw) + 'px'});
@@ -1082,9 +1083,10 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
       const src = el.getAttribute('src') || '';
       if (el.tagName === 'VIDEO') {           /* Ginny on her phone, above the mug */
         const w = .36 * u, h = w * 1.778;
-        const top = hh - .49 * u - .77 * h;
+        /* phone rests level with the monitor's foot; her head never reaches the copy */
+        const top = footY - .02 * u - .78 * h;
         el.style.setProperty('--x', (V * .80 - w / 2) + 'px');
-        el.style.setProperty('--y', Math.max(top, T - .2 * h) + 'px');
+        el.style.setProperty('--y', Math.max(top, T - .16 * h) + 'px');
         el.style.setProperty('--w', w + 'px');
         el.classList.remove('m-off');
         return;
