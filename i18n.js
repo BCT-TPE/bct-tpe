@@ -494,6 +494,18 @@
     "continued discovery.": "而設計。",
     "Time spent in app": "App 使用時間",
     "User CSAT score": "使用者滿意度",
+
+    /* design page: Design (METERLiNK) and In-house (Weekday) carousels */
+    "Complex data.": "複雜的數據，",
+    "Clear interfaces.": "清晰的介面。",
+    "Many components.": "元件再多，",
+    "One shared language.": "說同一種語言。",
+    "Hybrid team.": "混合辦公，",
+    "Not enough desks.": "座位不夠。",
+    "Book a desk": "到公司之前，",
+    "before you arrive.": "先訂好座位。",
+    "Everyone": "每個人",
+    "has a seat.": "都有位子坐。",
   };
 
   const KEY = "bct-lang";
