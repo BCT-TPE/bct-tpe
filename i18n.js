@@ -458,6 +458,25 @@
     "Start a project": "開始一個專案",
     "Join the team": "加入我們",
     "Home": "首頁",
+
+    /* design page: How we work canvas */
+    "Uncover pain points.": "找出真正的痛點，",
+    "Solve them faster with AI.": "用 AI 更快解決。",
+    "Insight": "洞察",
+    "Figure out": "釐清",
+    "Verify": "驗證",
+    "Understand user needs.": "理解使用者需求。",
+    "Identify key pain points.": "找出關鍵痛點。",
+    "Define the right problem.": "定義對的問題。",
+    "Explore ideas with ChatGPT.": "用 ChatGPT 探索想法。",
+    "Map user flows with AI.": "用 AI 梳理使用者流程。",
+    "Choose the strongest direction.": "選出最有力的方向。",
+    "Build faster with Claude Code.": "用 Claude Code 加速打造。",
+    "Create interactive prototypes.": "做出可互動的原型。",
+    "Refine and iterate with AI.": "與 AI 一起打磨迭代。",
+    "Test with real users.": "找真實使用者測試。",
+    "Check usability and value.": "檢驗易用性與價值。",
+    "Improve through feedback.": "根據回饋持續改進。",
   };
 
   const KEY = "bct-lang";

@@ -330,34 +330,6 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
 @keyframes svc-reveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media(max-width:1080px){.wwd-showcase{grid-template-columns:minmax(270px,1fr) minmax(0,1.2fr);gap:28px}}
 @media(max-width:760px){.wwd-visual{grid-column:1;grid-row:1}.wwd-showcase>.svc-list{grid-column:1;grid-row:2}.wwd-head{margin-bottom:32px}.wwd-showcase{grid-template-columns:1fr;gap:24px;min-height:0}.wwd-visual .svc-image{height:360px}.svc{padding:18px 0}}
-/* ---------- Process ---------- */
-.process{background:var(--paper);border-radius:clamp(28px,4vw,48px);margin:0 clamp(8px,1.5vw,20px)}
-.steps{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:20px;counter-reset:s}
-.steps::before{
-  content:"";position:absolute;left:0;right:0;top:27px;height:2px;
-  background:repeating-linear-gradient(90deg,var(--stone) 0 6px,transparent 6px 14px);
-}
-.steps .fill{position:absolute;left:0;top:27px;height:2px;width:0;background:var(--blue);transition:width 1.8s var(--ease) .2s}
-.steps.in .fill{width:100%}
-.step{position:relative}
-.dot{
-  width:56px;height:56px;border-radius:50%;background:var(--bg);border:2px solid var(--sand);
-  display:grid;place-items:center;font-weight:700;font-size:var(--text-body);position:relative;z-index:1;
-  transition:background .4s,border-color .4s,color .4s;transition-delay:calc(var(--i)*.3s + .2s)
-}
-.steps.in .dot{background:var(--blue);border-color:var(--blue);color:#fff}
-.step h3{margin:22px 0 8px}
-.step p{font-size:var(--text-body);color:var(--ink-2)}
-.step ul{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:6px}
-.step li{font-size:var(--text-small);color:var(--ink-3);padding-left:16px;position:relative}
-.step li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--stone)}
-
-/* ---------- Principles (inside How we work) ---------- */
-.beliefs{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,40px);margin-top:clamp(56px,7vw,96px);padding-top:clamp(36px,4vw,56px);border-top:1px solid var(--sand)}
-.belief .p-ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:var(--text-subheading);margin-bottom:18px}
-.belief h3{font-size:var(--text-subheading);margin-bottom:8px}
-.belief p{font-size:var(--text-body);color:var(--ink-2)}
-
 /* ---------- Team ---------- */
 .team-wrap{text-align:center}
 .team-wrap .lead{margin:18px auto 0}
@@ -396,18 +368,10 @@ footer{padding:48px 0 40px;margin-top:clamp(72px,9vw,120px);border-top:1px solid
 .foot nav a:hover{color:var(--ink)}
 
 /* ---------- Responsive ---------- */
-@media (max-width:1080px){
-  .steps{grid-template-columns:repeat(2,1fr);row-gap:44px}
-  .steps::before,.steps .fill{display:none}
-}
 @media (max-width:860px){
   .cta-card,.wwd-head{grid-template-columns:1fr}
-  .beliefs{grid-template-columns:1fr}
   .wwd-head{align-items:flex-start;flex-direction:column;gap:24px;margin-bottom:40px}
   .cta-art{width:min(80%,300px)}
-}
-@media (max-width:560px){
-  .steps{grid-template-columns:1fr}
 }
 /* Fit the service gallery to one viewport; allow short screens to grow. */
 #capabilities{--section-pad:clamp(32px,5vh,64px);--section-top:calc(var(--header-height,72px) + var(--section-pad));min-height:100vh;min-height:100svh;padding:var(--section-top) 0 var(--section-pad);display:flex;align-items:center}
@@ -446,6 +410,197 @@ html[lang="zh-Hant"] body{line-height:1.85;line-break:strict}
 html[lang="zh-Hant"] h1,html[lang="zh-Hant"] h2,html[lang="zh-Hant"] h3{letter-spacing:normal}
 html[lang="zh-Hant"] #navmenu>a,html[lang="zh-Hant"] #navmenu .nm-worktrig{letter-spacing:normal}
 html[lang="zh-Hant"] #navmenu{gap:26px}
+
+/* BEGIN merged How we work */
+/* ---------- Process ---------- */
+.process-intro{position:absolute;inset:0;display:grid;place-items:center;z-index:2}
+.process-intro::before{content:"";position:absolute;inset:0;background-image:linear-gradient(to right,rgba(184,176,162,.18) 1px,transparent 1px),linear-gradient(to bottom,rgba(184,176,162,.18) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.process-intro-copy{position:relative;z-index:2;text-align:center;width:76%;max-width:920px;isolation:isolate}
+.process-intro-copy::before{content:"";position:absolute;z-index:-1;inset:-110px -100px;background:radial-gradient(ellipse at center,var(--paper) 0%,var(--paper) 35%,rgba(255,253,249,.94) 48%,rgba(255,253,249,0) 73%);pointer-events:none}
+.process-heading{display:inline-block;padding:9px 16px;border-radius:7px;background:var(--ink);color:var(--paper);font-size:13px;font-weight:500;letter-spacing:.02em;margin:0 0 28px}
+.process-intro h3{font-size:clamp(36px,5.5vw,80px);font-weight:600;letter-spacing:-.055em;line-height:1.08;margin:0}
+.process-intro h3 span{display:block;color:var(--blue);text-wrap:balance}
+.process-topics{position:absolute;inset:0;pointer-events:none}
+.process-topic{position:absolute;left:50%;top:50%;padding:10px 17px;border-radius:6px;white-space:nowrap;font-size:clamp(12px,1.15vw,17px);font-weight:500;background:var(--sand-2);color:var(--ink);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(var(--tilt));will-change:transform,opacity}
+.process-topic:nth-child(5n+1){background:var(--blue);color:var(--paper)}
+.process-topic:nth-child(5n+2){background:var(--mustard)}
+.process-topic:nth-child(5n+3){background:var(--peach)}
+.process-topic:nth-child(5n+4){background:var(--blue-soft)}
+.stage-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:24px;padding:0 20px}
+.stage-tags span{font-size:12px;font-weight:500;padding:8px 13px;border-radius:6px;background:var(--blue-soft);color:var(--ink)}
+.stage-tags span:nth-child(2){background:var(--sand-2)}
+.stage-tags span:nth-child(3){background:var(--mustard)}
+@media(max-width:700px){
+ .stage-tags{gap:6px;margin-top:18px}
+ .stage-tags span{font-size:10px;padding:7px 9px}
+ .process-intro-copy{width:91%}
+ .process-intro-copy::before{inset:-90px -45px}
+ .process-heading{margin-bottom:22px;font-size:12px}
+ .process-intro h3{font-size:clamp(32px,7.7vw,52px)}
+ .process-topic{font-size:11px;padding:8px 10px}
+ .process-topic:nth-child(n+13){display:none}
+}
+@media(prefers-reduced-motion:reduce){
+ .process-topic{will-change:auto}
+
+}
+
+/* ---------- Interactive studio canvas ---------- */
+.canvas-version{padding:64px 0 0;margin:0 clamp(8px,1.5vw,20px);scroll-margin-top:84px}
+.studio-canvas{position:relative;min-height:980px;border:1px solid var(--sand);border-radius:36px;background-color:var(--paper);background-image:radial-gradient(var(--sand) .8px,transparent .8px);background-size:22px 22px;isolation:isolate}
+.canvas-title{position:relative;z-index:1;text-align:center;padding:62px 20px 0;pointer-events:none}
+.canvas-title h2{font-size:clamp(34px,4.6vw,66px);line-height:1.08;letter-spacing:-.055em;margin:0 auto;max-width:840px}
+.canvas-title h2 span{display:block;color:var(--blue);text-wrap:balance}
+.canvas-title p{font-size:13px;color:var(--ink-3);margin:20px 0 0}
+.canvas-object{position:absolute;width:29%;max-width:350px;z-index:2;transform:rotate(var(--angle));transition:transform .35s var(--ease)}
+.canvas-object:nth-of-type(1){left:10%;top:310px;--angle:-9deg}
+.canvas-object:nth-of-type(2){right:8%;top:290px;--angle:8deg}
+.canvas-object:nth-of-type(3){left:31%;top:540px;--angle:-5deg}
+.canvas-object:nth-of-type(4){right:5%;top:640px;--angle:9deg;width:24%}
+.canvas-object:hover,.canvas-object:focus-within{z-index:5;transform:rotate(0deg) translateY(-8px)}
+.canvas-object button{display:flex;flex-direction:column;align-items:center;width:100%;padding:0;border:0;background:none;cursor:pointer;color:var(--ink);font:inherit}
+.canvas-object button:focus-visible{outline:2px solid var(--blue);outline-offset:8px;border-radius:18px}
+.canvas-object img{width:100%;height:220px;object-fit:contain;filter:drop-shadow(0 12px 12px rgba(26,26,26,.07));transition:transform .35s var(--ease)}
+.canvas-object:nth-of-type(3) img{height:240px}
+.canvas-object button:hover img{transform:scale(1.04)}
+.object-label{display:inline-flex;gap:20px;align-items:center;padding:9px 16px;border:1px solid var(--sand);border-radius:7px;background:var(--paper);font-size:15px;font-weight:500;box-shadow:0 5px 10px rgba(26,26,26,.04)}
+.object-label b{font-size:18px;color:var(--blue);font-weight:400}
+.canvas-sticker{position:absolute;padding:9px 15px;border-radius:4px;font-size:12px;background:var(--blue-soft);color:var(--ink);transform:rotate(-7deg);pointer-events:none}
+.canvas-sticker.one{left:5%;top:720px;background:var(--mustard)}
+.canvas-sticker.two{left:44%;top:430px;transform:rotate(8deg)}
+.canvas-sticker.three{right:8%;top:890px;background:var(--sand-2);transform:rotate(-4deg)}
+.canvas-object.is-open{z-index:8;transform:rotate(0deg)}
+.canvas-object > button{position:relative;z-index:2}
+.canvas-card{position:absolute;z-index:1;top:12px;left:50%;width:290px;padding:28px;border:1px solid var(--sand);border-radius:16px;background:var(--paper);box-shadow:0 14px 40px rgba(26,26,26,.12);opacity:0;visibility:hidden;transform:translateX(-50%) scale(.88);transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .3s,visibility .55s;pointer-events:none;text-align:left}
+.canvas-object.is-open .canvas-card{opacity:1;visibility:visible;transform:translateX(calc(-50% + var(--card-shift))) scale(1);pointer-events:auto}
+.canvas-card h3{font-size:25px;letter-spacing:-.04em;margin:8px 0 12px}
+.canvas-card p{font-size:13px;line-height:1.65;color:var(--ink-2)}
+.canvas-card .stage-tags{justify-content:flex-start;padding:0;gap:5px;margin-top:18px}
+.canvas-card .stage-tags span{font-size:10px;padding:6px 8px}
+.canvas-card .detail-close{position:absolute;right:8px;top:8px;width:28px;height:28px;display:grid;place-items:center;border:1px solid var(--sand);border-radius:50%;background:var(--paper);font-size:18px;cursor:pointer;z-index:3}
+@media(max-width:700px){
+ .canvas-card{top:170px;width:250px;padding:22px;z-index:3}
+ .canvas-object.is-open .object-label{opacity:0;pointer-events:none}
+ .canvas-object.is-open{z-index:10}
+}
+@media(max-width:700px){
+ .studio-canvas{min-height:1000px;border-radius:26px}
+ .canvas-title{padding:40px 16px 0}
+ .canvas-title h2{font-size:34px}
+ .canvas-title p{font-size:12px}
+ .canvas-object{width:46%;max-width:none}
+ .canvas-object:nth-of-type(1){left:3%;top:340px}
+ .canvas-object:nth-of-type(2){right:3%;top:430px}
+ .canvas-object:nth-of-type(3){left:3%;top:670px}
+ .canvas-object:nth-of-type(4){right:3%;top:740px;width:43%}
+ .canvas-object img,.canvas-object:nth-of-type(3) img{height:160px}
+ .object-label{font-size:13px;padding:8px 11px;gap:12px}
+ .canvas-sticker.one{top:590px;left:8%}
+ .canvas-sticker.two{top:300px;left:58%}
+ .canvas-sticker.three{top:960px}
+}
+@media(prefers-reduced-motion:reduce){.canvas-object,.canvas-object img,.object-preview,.canvas-card{transition:none}}
+
+/* Pinned opening screen. */
+.canvas-start{position:relative;height:180svh}
+.canvas-start-screen{position:sticky;top:72px;height:calc(100svh - 72px);background:var(--paper);border-radius:clamp(28px,4vw,48px);overflow:hidden;isolation:isolate}
+.canvas-start .process-intro{z-index:1}
+.studio-canvas{min-height:820px;margin-top:20px;background-image:linear-gradient(to right,rgba(184,176,162,.14) 1px,transparent 1px),linear-gradient(to bottom,rgba(184,176,162,.14) 1px,transparent 1px);background-size:40px 40px}
+.canvas-flow{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:0}
+.canvas-flow path{fill:none;stroke:var(--blue);stroke-width:2;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.canvas-flow-base{opacity:.12}
+.canvas-flow-progress{stroke-dasharray:1;stroke-dashoffset:1}
+.canvas-object:nth-of-type(1){top:110px}
+.canvas-object:nth-of-type(2){top:90px}
+.canvas-object:nth-of-type(3){top:340px}
+.canvas-object:nth-of-type(4){top:440px}
+.canvas-sticker.one{top:520px}
+.canvas-sticker.two{top:230px}
+.canvas-sticker.three{top:750px}
+@media(max-width:700px){
+ .studio-canvas{min-height:850px}
+ .canvas-object:nth-of-type(1){top:140px}
+ .canvas-object:nth-of-type(2){top:230px}
+ .canvas-object:nth-of-type(3){top:470px}
+ .canvas-object:nth-of-type(4){top:540px}
+ .canvas-sticker.one{top:390px}
+ .canvas-sticker.two{top:100px}
+ .canvas-sticker.three{top:810px}
+}
+
+/* Horizontal flow on one pinned canvas. */
+.canvas-flow-progress{stroke-dasharray:5 8;stroke-dashoffset:0}
+.canvas-flow-base{stroke-dasharray:5 8}
+.canvas-start{height:300svh}
+.canvas-start-screen{overflow:hidden;background-image:linear-gradient(to right,rgba(184,176,162,.14) 1px,transparent 1px),linear-gradient(to bottom,rgba(184,176,162,.14) 1px,transparent 1px);background-size:40px 40px}
+.canvas-start .process-intro{z-index:3;pointer-events:none}
+.canvas-start-screen .studio-canvas{position:absolute;inset:0;min-height:0;height:100%;margin:0;border:0;border-radius:0;background:none;opacity:0}
+.canvas-object{width:22%;max-width:270px;transition:rotate .35s var(--ease);transform:none;rotate:var(--angle)}
+.canvas-object:hover,.canvas-object:focus-within,.canvas-object.is-open{transform:none;rotate:0deg}
+.canvas-object:nth-of-type(1){left:2%;top:28%;right:auto}
+.canvas-object:nth-of-type(2){left:26%;top:45%;right:auto}
+.canvas-object:nth-of-type(3){left:50%;top:23%;right:auto}
+.canvas-object:nth-of-type(4){left:76%;top:42%;right:auto;width:22%}
+.canvas-object img,.canvas-object:nth-of-type(3) img{height:clamp(130px,23svh,205px)}
+.canvas-sticker.one{top:76%;left:10%}
+.canvas-sticker.two{top:20%;left:34%}
+.canvas-sticker.three{top:80%;right:15%}
+.canvas-card{width:260px;padding:24px}
+@media(max-width:700px){
+ .canvas-object{width:27%}
+ .canvas-object:nth-of-type(1){left:0%;top:20%}
+ .canvas-object:nth-of-type(2){left:24%;top:50%}
+ .canvas-object:nth-of-type(3){left:48%;top:20%}
+ .canvas-object:nth-of-type(4){left:73%;top:50%;width:27%}
+ .canvas-object img,.canvas-object:nth-of-type(3) img{height:120px}
+ .object-label{font-size:11px;padding:7px;gap:4px}
+ .canvas-card{top:90px;width:250px;max-height:38svh;overflow:auto}
+ .canvas-sticker.one{top:82%;left:4%}
+ .canvas-sticker.two{top:9%;left:35%}
+ .canvas-sticker.three{top:86%;right:4%}
+}
+
+/* Clay tool marks emerge beside their corresponding canvas objects. */
+.canvas-object .tool-pop{position:absolute;right:-22px;top:-34px;z-index:4;display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none;opacity:0;visibility:hidden;transform:translate(-18px,24px) scale(.55) rotate(-12deg);transition:transform .4s cubic-bezier(.22,1,.36,1),opacity .22s,visibility .4s}
+.canvas-object .tool-pop img{width:86px;height:86px;object-fit:contain;filter:drop-shadow(0 5px 5px rgba(26,26,26,.1))}
+.tool-pop > span{font-size:11px;font-weight:500;background:var(--paper);padding:4px 8px;border:1px solid var(--sand);border-radius:5px;white-space:nowrap}
+.canvas-object:hover .tool-pop,.canvas-object:focus-within .tool-pop{opacity:1;visibility:visible;transform:translate(0,0) scale(1) rotate(6deg)}
+@media(max-width:700px){
+ .canvas-object .tool-pop{right:-8px;top:-46px}
+ .canvas-object .tool-pop img{width:62px;height:62px}
+ .tool-pop > span{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){.canvas-object .tool-pop{transition:none}}
+
+/* Soft clay surfaces and more readable, concise topic cards. */
+.canvas-card{width:330px;padding:30px 28px 28px;border:2px solid var(--paper);border-radius:30px;background:linear-gradient(145deg,var(--paper),var(--sand-2));box-shadow:inset 3px 4px 5px rgba(255,255,255,.95),inset -4px -7px 10px rgba(184,176,162,.24),0 7px 0 var(--sand),0 18px 32px rgba(26,26,26,.14)}
+.canvas-card[data-topic="figure-out"]{background:linear-gradient(145deg,color-mix(in srgb,var(--blue-soft) 35%,var(--paper)),var(--blue-soft))}
+.canvas-card[data-topic="prototype"]{background:linear-gradient(145deg,color-mix(in srgb,var(--mustard) 20%,var(--paper)),color-mix(in srgb,var(--mustard) 55%,var(--paper)))}
+.canvas-card h3{font-size:29px;margin:6px 0 20px;line-height:1.15}
+.card-points{margin:0;padding-left:20px;list-style:disc;color:var(--ink-2);font-size:16px;line-height:1.5}
+.card-points li{padding-left:3px;margin:0 0 13px}
+.card-points li:last-child{margin-bottom:0}
+.card-points li::marker{color:var(--blue)}
+.card-points strong{font-weight:600;color:var(--ink)}
+.canvas-card .stage-tags{margin-top:23px;gap:6px}
+.canvas-card .stage-tags span{font-size:11px;padding:7px 9px;background:rgba(255,253,249,.72);border:1px solid rgba(255,253,249,.9);border-radius:8px}
+.canvas-card .detail-close{width:32px;height:32px;right:11px;top:11px;box-shadow:inset 1px 2px 2px white,0 3px 0 var(--sand);background:var(--paper)}
+@media(max-width:700px){
+ .canvas-card{width:min(310px,calc(100vw - 48px));padding:26px 22px;max-height:38svh;scrollbar-width:thin;overscroll-behavior:contain;border-radius:25px}
+ .canvas-card h3{font-size:26px;margin-bottom:16px}
+ .card-points{font-size:16px}
+}
+
+.canvas-card h3{font-size:16px;line-height:1.5;letter-spacing:0;margin:4px 24px 8px 0;font-weight:600}
+.canvas-card .card-copy{font-size:16px;line-height:1.5;color:var(--ink-2);margin:0}
+
+.canvas-card{width:350px}
+.canvas-card .card-points{font-size:16px;line-height:1.5;padding-left:18px}
+.canvas-card .card-points li{padding-left:0;margin-bottom:8px}
+.canvas-card .card-points li:last-child{margin-bottom:0}
+@media(max-width:700px){.canvas-card{width:min(340px,calc(100vw - 40px));padding:24px 18px}}
+
+/* END merged How we work */
 </style>
 </head>
 <body>
@@ -545,6 +700,45 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
   </div>
 </section>
 
+<!-- ================= HOW WE WORK ================= -->
+<section id="process" class="canvas-version" aria-labelledby="canvas-heading">
+ <div class="canvas-start"><div class="canvas-start-screen">
+    <article class="process-intro" id="canvas-intro">
+      <div class="process-topics" data-noi18n aria-hidden="true">
+        <span class="process-topic" data-x="-30" data-y="-35" data-rotation="-8" style="--tx:-30vw;--ty:-35svh;--tilt:-8deg">Finance</span>
+        <span class="process-topic" data-x="-7" data-y="-39" data-rotation="4" style="--tx:-7vw;--ty:-39svh;--tilt:4deg">UX Strategy</span>
+        <span class="process-topic" data-x="23" data-y="-34" data-rotation="-5" style="--tx:23vw;--ty:-34svh;--tilt:-5deg">Application</span>
+        <span class="process-topic" data-x="35" data-y="-17" data-rotation="7" style="--tx:35vw;--ty:-17svh;--tilt:7deg">Vision Pro</span>
+        <span class="process-topic" data-x="-37" data-y="-13" data-rotation="-5" style="--tx:-37vw;--ty:-13svh;--tilt:-5deg">Innovation</span>
+        <span class="process-topic" data-x="-27" data-y="25" data-rotation="5" style="--tx:-27vw;--ty:25svh;--tilt:5deg">User Research</span>
+        <span class="process-topic" data-x="1" data-y="34" data-rotation="-4" style="--tx:1vw;--ty:34svh;--tilt:-4deg">Design Systems</span>
+        <span class="process-topic" data-x="29" data-y="27" data-rotation="7" style="--tx:29vw;--ty:27svh;--tilt:7deg">Prototyping</span>
+        <span class="process-topic" data-x="-29" data-y="40" data-rotation="-3" style="--tx:-29vw;--ty:40svh;--tilt:-3deg">Accessibility</span>
+        <span class="process-topic" data-x="31" data-y="41" data-rotation="-5" style="--tx:31vw;--ty:41svh;--tilt:-5deg">Interaction</span>
+        <span class="process-topic" data-x="-6" data-y="-25" data-rotation="3" style="--tx:-6vw;--ty:-25svh;--tilt:3deg">User Flows</span>
+        <span class="process-topic" data-x="3" data-y="45" data-rotation="4" style="--tx:3vw;--ty:45svh;--tilt:4deg">AI Chat</span>
+        <span class="process-topic" data-x="-39" data-y="16" data-rotation="5" style="--tx:-39vw;--ty:16svh;--tilt:5deg">Journey Mapping</span>
+        <span class="process-topic" data-x="37" data-y="17" data-rotation="-6" style="--tx:37vw;--ty:17svh;--tilt:-6deg">Data Visualization</span>
+        <span class="process-topic" data-x="8" data-y="-43" data-rotation="-3" style="--tx:8vw;--ty:-43svh;--tilt:-3deg">Usability Testing</span>
+        <span class="process-topic" data-x="-10" data-y="43" data-rotation="6" style="--tx:-10vw;--ty:43svh;--tilt:6deg">Digital Products</span>
+      </div>
+      <div class="process-intro-copy">
+        <h2 class="process-heading" id="canvas-heading">How we work</h2>
+        <h3>Uncover pain points.<span>Solve them faster with AI.</span></h3>
+      </div>
+    </article>
+ <div class="studio-canvas">
+  <svg class="canvas-flow" aria-hidden="true"><path class="canvas-flow-base"/><path class="canvas-flow-progress" pathLength="1"/></svg>
+  <article class="canvas-object"><button type="button" data-topic="insight" aria-expanded="false" aria-label="Explore Insight"><img src="assets/process-canvas/insight.webp" alt="" loading="lazy"><span class="object-label">Insight<b aria-hidden="true">↗</b></span></button></article>
+  <article class="canvas-object"><button type="button" data-topic="figure-out" aria-expanded="false" aria-label="Explore Figure out"><img src="assets/process-canvas/figure-out.webp" alt="" loading="lazy"><span class="object-label">Figure out<b aria-hidden="true">↗</b></span></button><span class="tool-pop"><img src="assets/process-canvas/chatgpt-clay.webp" alt=""><span>ChatGPT</span></span></article>
+  <article class="canvas-object"><button type="button" data-topic="prototype" aria-expanded="false" aria-label="Explore Prototype"><img src="assets/process-canvas/prototype.webp" alt="" loading="lazy"><span class="object-label">Prototype<b aria-hidden="true">↗</b></span></button><span class="tool-pop"><img src="assets/process-canvas/claude-code-clay.webp" alt=""><span>Claude Code</span></span></article>
+  <article class="canvas-object"><button type="button" data-topic="verify" aria-expanded="false" aria-label="Explore Verify"><img src="assets/process-canvas/verify.webp" alt="" loading="lazy"><span class="object-label">Verify<b aria-hidden="true">↗</b></span></button></article>
+  <span class="canvas-sticker one" data-noi18n aria-hidden="true">Rapid Delivery</span><span class="canvas-sticker two" data-noi18n aria-hidden="true">Speed</span><span class="canvas-sticker three" data-noi18n aria-hidden="true">Innovation</span>
+ </div>
+ </div></div>
+</section>
+
+
 <!-- ================= WHAT WE DO ================= -->
 <section id="capabilities">
   <div class="wrap">
@@ -555,67 +749,6 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
     </div>
       <div class="wwd-visual"><figure class="svc-media active" id="svc-visual-0" aria-hidden="false"><div class="svc-image graphic"><img src="assets/genome-research-visual.webp" alt="Genome Cache before and after: the v1.0 quiz screen with four problems marked, and the v2.0 redesign answering each with readable type, one UI kit, responsive layouts and rewards; results: 4.8 CSAT score and 40% more time in the app" width="1200" height="1200"></div></figure><figure class="svc-media" id="svc-visual-1" aria-hidden="true"><div class="svc-image graphic flir-g"><img src="assets/flir-design-visual.webp" alt="FLIR METERLiNK design: a FLIR DM166 thermal multimeter sends readings over Bluetooth to the app, shown as device cards for AC voltage, temperature, humidity and sound level, with a floating measurement chart card annotated with spec lines and the design system's colours, typefaces and button states below" width="1200" height="1200" loading="lazy"></div></figure><figure class="svc-media" id="svc-visual-2" aria-hidden="true"><div class="svc-image reel"><video class="svc-reel" src="assets/weekday-showreel.mp4" poster="assets/weekday-showreel-poster.jpg" muted playsinline preload="auto" aria-label="15-second Weekday showreel: booking a desk on the floor plan, managing workspaces and zones, and the app's design system"></video><div class="reel-still" aria-hidden="true"><img src="assets/officepower-visual.webp" alt="Office Power: an isometric 3D office where HR, IT, finance and sales AI agents each work at their own desk, with an HR agent chat preparing a leave request and a budget card showing $1,729 of $1,900 used" width="1200" height="1200" loading="lazy"></div></div></figure></div>
       <ol class="svc-list"><li class="svc active" id="service-research"><h3><button class="svc-toggle" id="svc-toggle-0" aria-expanded="true" aria-controls="svc-detail-0"><span class="svc-title"><span class="svc-number" aria-hidden="true">01</span><span>Research</span></span></button></h3><div class="svc-detail" id="svc-detail-0" role="region" aria-labelledby="svc-toggle-0"><p>Find the right problem to solve. We explore user needs, review existing experiences and test assumptions to help teams decide what matters most—and where to go next.</p><ul class="svc-offerings" aria-label="Research services"><li>UX Research</li><li>Usability Testing</li></ul></div></li><li class="svc" id="service-ui"><h3><button class="svc-toggle" id="svc-toggle-1" aria-expanded="false" aria-controls="svc-detail-1"><span class="svc-title"><span class="svc-number" aria-hidden="true">02</span><span>Design</span></span></button></h3><div class="svc-detail" id="svc-detail-1" role="region" aria-labelledby="svc-toggle-1" hidden><p>Make complex products feel simple. We turn insights into clear interfaces, reusable design systems and interactive prototypes, helping teams align on the experience before development begins.</p><ul class="svc-offerings" aria-label="Design services"><li>UI Design</li><li>Design System</li><li>Prototype</li></ul></div></li><li class="svc" id="service-inhouse"><h3><button class="svc-toggle" id="svc-toggle-2" aria-expanded="false" aria-controls="svc-detail-2"><span class="svc-title"><span class="svc-number" aria-hidden="true">03</span><span>In-house</span></span></button></h3><div class="svc-detail" id="svc-detail-2" role="region" aria-labelledby="svc-toggle-2" hidden><p>We design for our own teams, too. From the BCT Website and presentation decks to Weekday, our work spans brand communication and tools for everyday work. We also explore AI products through Office Power, bringing AI agents into the workplace.</p><ul class="svc-offerings" aria-label="In-house services"><li>Weekday</li><li>Office Power - AI product</li></ul></div></li></ol>
-    </div>
-  </div>
-</section>
-
-<!-- ================= PROCESS ================= -->
-<section id="process" class="process">
-  <div class="wrap">
-    <div class="sec-head">
-      <div>
-        <span class="eyebrow rv">How we work</span>
-        <h2 class="rv" style="--d:.08s">Five steps, no surprises</h2>
-      </div>
-      <p class="lead rv" style="--d:.16s">Every project moves through the same rhythm. You see progress every week, not a big reveal in week twelve.</p>
-    </div>
-
-    <div class="steps" id="steps">
-      <div class="fill"></div>
-      <div class="step" style="--i:0">
-        <div class="dot">1</div>
-        <h3>Discover</h3>
-        <p>Understand the business, the users and the constraints.</p>
-        <ul><li>Stakeholder interviews</li><li>Business analysis</li><li>Personas</li></ul>
-      </div>
-      <div class="step" style="--i:1">
-        <div class="dot">2</div>
-        <h3>Define</h3>
-        <p>Agree on the problem before we solve it.</p>
-        <ul><li>User flows</li><li>Information architecture</li><li>Scope &amp; goals</li></ul>
-      </div>
-      <div class="step" style="--i:2">
-        <div class="dot">3</div>
-        <h3>Design</h3>
-        <p>Sketch fast, then refine what works.</p>
-        <ul><li>Wireframes</li><li>Visual design</li><li>Interactive prototypes</li></ul>
-      </div>
-      <div class="step" style="--i:3">
-        <div class="dot">4</div>
-        <h3>Validate</h3>
-        <p>Put it in front of real people and listen.</p>
-        <ul><li>Usability testing</li><li>Design review with dev</li><li>Iteration</li></ul>
-      </div>
-      <div class="step" style="--i:4">
-        <div class="dot">5</div>
-        <h3>Deliver</h3>
-        <p>Ship it together, then keep improving.</p>
-        <ul><li>Dev-ready specs</li><li>Design system updates</li><li>Design QA</li></ul>
-      </div>
-    </div>
-    <div class="beliefs">
-      <div class="belief rv">
-        <div class="p-ico" style="background:#FBE3D3">🤝</div>
-        <h3>Designers in the room</h3><p>We join the daily stand-up with engineers and PMs. Questions get answered in minutes, not tickets.</p>
-      </div>
-      <div class="belief rv" style="--d:.08s">
-        <div class="p-ico" style="background:var(--blue-soft)">🧪</div>
-        <h3>Test early, test often</h3><p>A rough prototype in front of users beats a polished guess. We validate before we polish.</p>
-      </div>
-      <div class="belief rv" style="--d:.16s">
-        <div class="p-ico" style="background:#F6EACB">🧩</div>
-        <h3>Build once, reuse everywhere</h3><p>Every component we make goes into the system, so the next product starts further ahead.</p>
-      </div>
     </div>
   </div>
 </section>
@@ -807,6 +940,173 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
   }, {threshold:.18, rootMargin:'0px 0px -40px 0px'});
   targets.forEach(el => io.observe(el));
 })();
+</script>
+<script>
+/* BEGIN merged How we work */
+(() => {
+  /* Scroll-driven canvas and accessible topic cards. */
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const clamp = value => Math.max(0, Math.min(1, value));
+  const smooth = value => value * value * (3 - 2 * value);
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const makeRouteMask = (svg, path, id) => {
+    path.removeAttribute('pathLength');
+    const defs = document.createElementNS(svgNS,'defs');
+    const mask = document.createElementNS(svgNS,'mask');
+    mask.id=id; mask.setAttribute('maskUnits','userSpaceOnUse');
+    mask.setAttribute('x','-100'); mask.setAttribute('y','-100'); mask.setAttribute('width','4000'); mask.setAttribute('height','2000');
+    const reveal = document.createElementNS(svgNS,'path');
+    reveal.setAttribute('fill','none'); reveal.setAttribute('stroke','white'); reveal.setAttribute('stroke-width','12'); reveal.setAttribute('pathLength','1');
+    reveal.style.stroke='white'; reveal.style.strokeWidth='12';
+    reveal.style.strokeDasharray='1'; reveal.style.strokeDashoffset='1';
+    mask.append(reveal); defs.append(mask); svg.append(defs);
+    path.setAttribute('mask',`url(#${id})`);
+    return reveal;
+  };
+  const canvasTopics = {"insight": {"title": "Insight", "bullets": ["Understand user needs.", "Identify key pain points.", "Define the right problem."]}, "figure-out": {"title": "Figure out", "bullets": ["Explore ideas with ChatGPT.", "Map user flows with AI.", "Choose the strongest direction."]}, "prototype": {"title": "Prototype", "bullets": ["Build faster with Claude Code.", "Create interactive prototypes.", "Refine and iterate with AI."]}, "verify": {"title": "Verify", "bullets": ["Test with real users.", "Check usability and value.", "Improve through feedback."]}};
+  const canvas = document.querySelector('.studio-canvas');
+  const canvasButtons = [...canvas.querySelectorAll('[data-topic]')];
+  let openObject = null;
+  let pinnedCard = false;
+  let hoverCloseTimer = 0;
+  const closeCanvasCard = (restoreFocus = false) => {
+    clearTimeout(hoverCloseTimer);
+    pinnedCard = false;
+    if (!openObject) return;
+    const button = openObject.querySelector('[data-topic]');
+    openObject.classList.remove('is-open');
+    button.setAttribute('aria-expanded', 'false');
+    openObject.querySelector('.canvas-card').inert = true;
+    if (restoreFocus) button.focus({preventScroll:true});
+    openObject = null;
+  };
+  const placeCanvasCard = object => {
+    const button = object.querySelector('[data-topic]');
+    const card = object.querySelector('.canvas-card');
+    const bounds = canvas.getBoundingClientRect();
+    const rect = button.getBoundingClientRect();
+    const center = rect.left + rect.width / 2;
+    const width = card.offsetWidth;
+    const direction = center < bounds.left + bounds.width / 2 ? 1 : -1;
+    const desired = center + direction * (rect.width / 2 + width / 2 - 25);
+    const cardCenter = Math.max(bounds.left + width / 2 + 12, Math.min(bounds.right - width / 2 - 12, desired));
+    object.style.setProperty('--card-shift', `${cardCenter - center}px`);
+  };
+  canvasButtons.forEach(button => {
+    const object = button.closest('.canvas-object');
+    const topic = canvasTopics[button.dataset.topic];
+    const card = document.createElement('div');
+    card.className = 'canvas-card';
+    card.id = `card-${button.dataset.topic}`;
+    card.setAttribute('role', 'region');
+    card.setAttribute('aria-label', `${topic.title} details`);
+    card.inert = true;
+    const close = document.createElement('button');
+    close.className = 'detail-close'; close.type = 'button'; close.textContent = '×';
+    close.setAttribute('aria-label', `Close ${topic.title} details`);
+    close.addEventListener('click', () => closeCanvasCard(true));
+    const title = document.createElement('h3'); title.textContent = topic.title;
+    const copy = document.createElement('ul'); copy.className = 'card-points';
+    topic.bullets.forEach(text => {
+      const item = document.createElement('li'); item.textContent = text; copy.append(item);
+    });
+    card.dataset.topic = button.dataset.topic;
+    card.append(close, title, copy); object.append(card);
+    button.setAttribute('aria-controls', card.id);
+    const showCard = () => {
+      clearTimeout(hoverCloseTimer);
+      if (openObject === object) return;
+      closeCanvasCard();
+      placeCanvasCard(object);
+      object.classList.add('is-open');
+      button.setAttribute('aria-expanded', 'true'); card.inert = false;
+      openObject = object;
+    };
+    object.addEventListener('pointerenter', event => {
+      if (event.pointerType !== 'mouse') return;
+      showCard();
+    });
+    object.addEventListener('pointerleave', event => {
+      if (event.pointerType !== 'mouse' || pinnedCard) return;
+      hoverCloseTimer = setTimeout(() => {
+        if (openObject === object && !pinnedCard && !object.contains(document.activeElement)) closeCanvasCard();
+      }, 180);
+    });
+    button.addEventListener('click', () => {
+      if (openObject === object && pinnedCard) { closeCanvasCard(); return; }
+      showCard();
+      pinnedCard = true;
+    });
+  });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') closeCanvasCard(true); });
+  document.addEventListener('click', event => { if (openObject && !openObject.contains(event.target)) closeCanvasCard(); });
+  addEventListener('resize', () => { if (openObject) placeCanvasCard(openObject); });
+
+  const canvasStart = document.querySelector('.canvas-start');
+  const canvasStartScreen = document.querySelector('.canvas-start-screen');
+  const canvasIntroTags = [...canvasStart.querySelectorAll('.process-topic')];
+  const flowSVG = canvas.querySelector('.canvas-flow');
+  const flowProgress = canvas.querySelector('.canvas-flow-progress');
+  const canvasMask = makeRouteMask(flowSVG,flowProgress,'route-b-mask');
+  const canvasIntro = document.getElementById('canvas-intro');
+  const flowObjects = [...canvas.querySelectorAll('.canvas-object')];
+  let canvasFrame = 0;
+  let canvasSize = {width:0, height:0, introWidth:0, introHeight:0};
+  const layoutCanvasFlow = () => {
+    canvasSize = {width:canvas.clientWidth, height:canvas.clientHeight, introWidth:canvasStartScreen.clientWidth, introHeight:canvasStartScreen.clientHeight};
+    flowSVG.setAttribute('viewBox', `0 0 ${canvasSize.width} ${canvasSize.height}`);
+    const points = flowObjects.map(object => ({
+      x:object.offsetLeft + object.offsetWidth / 2,
+      y:object.offsetTop + object.querySelector('img').offsetHeight / 2
+    }));
+    const pointsWithEdges=[{x:-30,y:points[0].y},...points,{x:canvasSize.width+30,y:points.at(-1).y}];
+    let path=`M ${pointsWithEdges[0].x} ${pointsWithEdges[0].y}`;
+    for(let i=1;i<pointsWithEdges.length;i++){
+      const a=pointsWithEdges[i-1],b=pointsWithEdges[i],middle=(a.x+b.x)/2;
+      const wave=(i%2?1:-1)*Math.min(70,canvasSize.height*.1);
+      path+=` C ${middle} ${a.y+wave} ${middle} ${b.y-wave} ${b.x} ${b.y}`;
+    }
+    flowSVG.querySelectorAll('path').forEach(pathNode => pathNode.setAttribute('d',path));
+  };
+  let canvasVisual=null;
+  const syncCanvasFlow = () => {
+    canvasFrame = 0;
+    const target=clamp((72-canvasStart.getBoundingClientRect().top)/Math.max(1,canvasStart.offsetHeight-canvasSize.introHeight));
+    if(canvasVisual===null||reducedMotion.matches)canvasVisual=target;
+    canvasVisual+=(target-canvasVisual)*.16;
+    if(Math.abs(target-canvasVisual)<.0002)canvasVisual=target;
+    const progress=canvasVisual;
+    const gather = reducedMotion.matches ? 0 : smooth(clamp((progress-.08)/.3));
+    const reveal = smooth(clamp((progress-.3)/.45));
+    canvasIntro.style.opacity=1-smooth(clamp((progress-.3)/.2));
+    canvasIntro.style.visibility=progress>.52?'hidden':'visible';
+    canvasIntro.setAttribute('aria-hidden',String(progress>.52));
+    canvasIntroTags.forEach((tag,index) => {
+      const amount = smooth(clamp((gather-(index%4)*.035)/.895));
+      tag.style.transform = `translate(-50%,-50%) translate(${tag.dataset.x*canvasSize.introWidth/100*(1-amount)}px,${tag.dataset.y*canvasSize.introHeight/100*(1-amount)}px) rotate(${tag.dataset.rotation*(1-amount)}deg) scale(${1-amount*.65})`;
+      tag.style.opacity = 1-smooth(clamp(amount/.82));
+    });
+    canvas.style.opacity=reveal;
+    canvas.inert=reveal<.92;
+    const directions=[[-1,-1],[-.4,1],[.4,-1],[1,1]];
+    flowObjects.forEach((object,index)=>{
+      const amount=reducedMotion.matches?Number(reveal>.5):smooth(clamp((reveal-index*.035)/.88));
+      const [x,y]=directions[index];
+      object.style.transform=`translate(${x*(1-amount)*canvasSize.width*.5}px,${y*(1-amount)*canvasSize.height*.55}px) scale(${.25+amount*.75})`;
+      object.style.opacity=amount;
+    });
+    canvasMask.style.strokeDashoffset=reducedMotion.matches?0:1-smooth(clamp((progress-.48)/.4));
+    if(canvasVisual!==target)canvasFrame=requestAnimationFrame(syncCanvasFlow);
+  };
+  const requestCanvasUpdate = () => {if(!canvasFrame) canvasFrame=requestAnimationFrame(syncCanvasFlow);};
+  layoutCanvasFlow(); syncCanvasFlow();
+  addEventListener('scroll', requestCanvasUpdate, {passive:true});
+  addEventListener('resize', () => {layoutCanvasFlow(); requestCanvasUpdate();});
+  reducedMotion.addEventListener('change', requestCanvasUpdate);
+  document.fonts.ready.then(() => {layoutCanvasFlow(); requestCanvasUpdate();});
+
+})();
+/* END merged How we work */
 </script>
 <script src="../i18n.js"></script>
 </body>
