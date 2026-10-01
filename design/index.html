@@ -448,7 +448,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .process-intro h3{font-size:clamp(30px,4.2vw,52px);font-weight:700;letter-spacing:-.015em;line-height:1.28;margin:0}
 .process-intro h3 span{display:block;color:var(--blue);text-wrap:balance}
 .process-topics{position:absolute;inset:0;pointer-events:none}
-.process-topic{position:absolute;left:50%;top:50%;padding:10px 17px;border-radius:6px;white-space:nowrap;font-size:clamp(12px,1.15vw,17px);font-weight:500;background:var(--sand-2);color:var(--ink);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(var(--tilt));will-change:transform,opacity}
+.process-topic{position:absolute;left:50%;top:50%;padding:7px 12px;border-radius:6px;white-space:nowrap;font-size:clamp(10px,.95vw,13px);font-weight:500;background:var(--sand-2);color:var(--ink);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(var(--tilt));will-change:transform,opacity}
 .process-topic:nth-child(5n+1){background:var(--blue);color:var(--paper)}
 .process-topic:nth-child(5n+2){background:var(--mustard)}
 .process-topic:nth-child(5n+3){background:var(--peach)}
@@ -464,7 +464,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
  .process-intro-copy::before{inset:-90px -45px}
  .process-heading{margin-bottom:22px;font-size:12px}
 
- .process-topic{font-size:11px;padding:8px 10px}
+ .process-topic{font-size:10px;padding:6px 8px}
  .process-topic:nth-child(n+13){display:none}
 }
 @media(prefers-reduced-motion:reduce){
@@ -564,10 +564,10 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .canvas-start-screen .studio-canvas{position:absolute;inset:0;min-height:0;height:100%;margin:0;border:0;border-radius:0;background:none;opacity:0}
 .canvas-object{width:22%;max-width:270px;transition:rotate .35s var(--ease);transform:none;rotate:var(--angle)}
 .canvas-object:hover,.canvas-object:focus-within,.canvas-object.is-open{transform:none;rotate:0deg}
-.canvas-object:nth-of-type(1){left:2%;top:28%;right:auto}
-.canvas-object:nth-of-type(2){left:26%;top:45%;right:auto}
+.canvas-object:nth-of-type(1){left:6%;top:28%;right:auto}
+.canvas-object:nth-of-type(2){left:28%;top:45%;right:auto}
 .canvas-object:nth-of-type(3){left:50%;top:23%;right:auto}
-.canvas-object:nth-of-type(4){left:76%;top:42%;right:auto;width:22%}
+.canvas-object:nth-of-type(4){left:72%;top:42%;right:auto;width:22%}
 .canvas-object img,.canvas-object:nth-of-type(3) img{height:clamp(130px,23svh,205px)}
 .canvas-sticker.one{top:76%;left:10%}
 .canvas-sticker.two{top:20%;left:34%}
@@ -632,6 +632,8 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .canvas-object{rotate:none}
 .canvas-object:hover,.canvas-object:focus-within{rotate:none;z-index:2}
 .canvas-object .st{display:flex;flex-direction:column;align-items:center}
+.object-label{border:0;background:none;box-shadow:none;padding:4px 0 0;font-size:17px;font-weight:700;letter-spacing:-.01em}
+@media(max-width:700px){.object-label{font-size:13px;padding-top:2px}}
 .canvas-object .st img{rotate:var(--angle)}
 .station-points{list-style:disc;margin:12px 0 0;padding-left:20px;text-align:left;width:max-content;max-width:240px;
   font-size:14px;line-height:1.55;color:var(--ink-2)}
@@ -640,7 +642,9 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .station-points li::marker{color:var(--blue)}
 .canvas-object .tool-pop{opacity:1;visibility:visible;transform:rotate(6deg);transition:none}
 @media(max-width:1080px){.canvas-object .tool-pop{display:none}
- .station-points{font-size:12px;max-width:170px}}
+ .station-points{font-size:12px;max-width:150px}
+ .canvas-object:nth-of-type(4){left:69%}
+ .canvas-object:nth-of-type(1){left:4%}}
 @media(max-width:700px){.station-points{font-size:11px;max-width:150px;margin-top:8px;padding-left:16px}}
 /* END merged How we work */
 
@@ -792,7 +796,6 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   <article class="canvas-object"><div class="st"><img src="assets/process-canvas/figure-out.webp" alt="" loading="lazy"><span class="object-label">Figure out</span><ul class="station-points"><li>Explore ideas with ChatGPT.</li><li>Map user flows with AI.</li><li>Choose the strongest direction.</li></ul></div><span class="tool-pop"><img src="assets/process-canvas/chatgpt-clay.webp" alt=""><span>ChatGPT</span></span></article>
   <article class="canvas-object"><div class="st"><img src="assets/process-canvas/prototype.webp" alt="" loading="lazy"><span class="object-label">Prototype</span><ul class="station-points"><li>Build faster with Claude Code.</li><li>Create interactive prototypes.</li><li>Refine and iterate with AI.</li></ul></div><span class="tool-pop"><img src="assets/process-canvas/claude-code-clay.webp" alt=""><span>Claude Code</span></span></article>
   <article class="canvas-object"><div class="st"><img src="assets/process-canvas/verify.webp" alt="" loading="lazy"><span class="object-label">Verify</span><ul class="station-points"><li>Test with real users.</li><li>Check usability and value.</li><li>Improve through feedback.</li></ul></div></article>
-  <span class="canvas-sticker one" data-noi18n aria-hidden="true">Rapid Delivery</span><span class="canvas-sticker two" data-noi18n aria-hidden="true">Speed</span><span class="canvas-sticker three" data-noi18n aria-hidden="true">Innovation</span>
  </div>
  </div></div>
 </section>
@@ -820,8 +823,8 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     <p class="lead rv" style="--d:.16s">Different backgrounds, one shared habit: asking "why" before "what".</p>
 
     <div class="team">
-      <div class="member rv" style="--r:-4deg"><div class="avatar"><img src="assets/team-designer.jpg" alt="Clay portrait of Candace Cheng"></div><h3>Candace Cheng</h3><p>Design Lead</p></div>
-      <div class="member rv" style="--r:3deg;--d:.08s"><div class="avatar"><img src="assets/ginny.jpg" alt="Clay portrait of Ginny Chang"></div><h3>Ginny Chang</h3><p>Sr. UI/UX Designer</p></div>
+      <div class="member rv" style="--r:-4deg"><div class="avatar"><img src="assets/ginny.jpg" alt="Clay portrait of Ginny Chang"></div><h3>Ginny Chang</h3><p>Sr. UI/UX Designer</p></div>
+      <div class="member rv" style="--r:3deg;--d:.08s"><div class="avatar"><img src="assets/team-designer.jpg" alt="Clay portrait of Candace Cheng"></div><h3>Candace Cheng</h3><p>Design Lead</p></div>
       <div class="member rv" style="--r:-2deg;--d:.16s"><div class="avatar"><img src="assets/janet.jpg" alt="Clay portrait of Janet Yu"></div><h3>Janet Yu</h3><p>UI/UX Designer</p></div>
     </div>
 
