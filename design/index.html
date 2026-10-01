@@ -441,11 +441,11 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 /* BEGIN merged How we work */
 /* ---------- Process ---------- */
 .process-intro{position:absolute;inset:0;display:grid;place-items:center;z-index:2}
-.process-intro::before{content:"";position:absolute;inset:0;background-image:linear-gradient(to right,rgba(184,176,162,.18) 1px,transparent 1px),linear-gradient(to bottom,rgba(184,176,162,.18) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.process-intro::before{content:"";position:absolute;inset:0;background-image:linear-gradient(to right,rgba(184,176,162,.09) 1px,transparent 1px),linear-gradient(to bottom,rgba(184,176,162,.09) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
 .process-intro-copy{position:relative;z-index:2;text-align:center;width:76%;max-width:920px;isolation:isolate}
 .process-intro-copy::before{content:"";position:absolute;z-index:-1;inset:-110px -100px;background:radial-gradient(ellipse at center,var(--paper) 0%,var(--paper) 35%,rgba(255,253,249,.94) 48%,rgba(255,253,249,0) 73%);pointer-events:none}
 .process-heading{display:inline-block;padding:9px 16px;border-radius:7px;background:var(--ink);color:var(--paper);font-size:13px;font-weight:500;letter-spacing:.02em;margin:0 0 28px}
-.process-intro h3{font-size:clamp(36px,5.5vw,80px);font-weight:600;letter-spacing:-.055em;line-height:1.08;margin:0}
+.process-intro h3{font-size:clamp(30px,4.2vw,52px);font-weight:700;letter-spacing:-.015em;line-height:1.28;margin:0}
 .process-intro h3 span{display:block;color:var(--blue);text-wrap:balance}
 .process-topics{position:absolute;inset:0;pointer-events:none}
 .process-topic{position:absolute;left:50%;top:50%;padding:10px 17px;border-radius:6px;white-space:nowrap;font-size:clamp(12px,1.15vw,17px);font-weight:500;background:var(--sand-2);color:var(--ink);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(var(--tilt));will-change:transform,opacity}
@@ -463,7 +463,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
  .process-intro-copy{width:91%}
  .process-intro-copy::before{inset:-90px -45px}
  .process-heading{margin-bottom:22px;font-size:12px}
- .process-intro h3{font-size:clamp(32px,7.7vw,52px)}
+
  .process-topic{font-size:11px;padding:8px 10px}
  .process-topic:nth-child(n+13){display:none}
 }
@@ -532,7 +532,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .canvas-start{position:relative;height:180svh}
 .canvas-start-screen{position:sticky;top:72px;height:calc(100svh - 72px);background:var(--paper);border-radius:clamp(28px,4vw,48px);overflow:hidden;isolation:isolate}
 .canvas-start .process-intro{z-index:1}
-.studio-canvas{min-height:820px;margin-top:20px;background-image:linear-gradient(to right,rgba(184,176,162,.14) 1px,transparent 1px),linear-gradient(to bottom,rgba(184,176,162,.14) 1px,transparent 1px);background-size:40px 40px}
+.studio-canvas{min-height:820px;margin-top:20px;background-image:linear-gradient(to right,rgba(184,176,162,.07) 1px,transparent 1px),linear-gradient(to bottom,rgba(184,176,162,.07) 1px,transparent 1px);background-size:40px 40px}
 .canvas-flow{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:0}
 .canvas-flow path{fill:none;stroke:var(--blue);stroke-width:2;stroke-linecap:round;vector-effect:non-scaling-stroke}
 .canvas-flow-base{opacity:.12}
@@ -559,7 +559,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .canvas-flow-progress{stroke-dasharray:5 8;stroke-dashoffset:0}
 .canvas-flow-base{stroke-dasharray:5 8}
 .canvas-start{height:300svh}
-.canvas-start-screen{overflow:hidden;background-image:linear-gradient(to right,rgba(184,176,162,.14) 1px,transparent 1px),linear-gradient(to bottom,rgba(184,176,162,.14) 1px,transparent 1px);background-size:40px 40px}
+.canvas-start-screen{overflow:hidden;background-image:linear-gradient(to right,rgba(184,176,162,.07) 1px,transparent 1px),linear-gradient(to bottom,rgba(184,176,162,.07) 1px,transparent 1px);background-size:40px 40px}
 .canvas-start .process-intro{z-index:3;pointer-events:none}
 .canvas-start-screen .studio-canvas{position:absolute;inset:0;min-height:0;height:100%;margin:0;border:0;border-radius:0;background:none;opacity:0}
 .canvas-object{width:22%;max-width:270px;transition:rotate .35s var(--ease);transform:none;rotate:var(--angle)}
@@ -571,7 +571,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .canvas-object img,.canvas-object:nth-of-type(3) img{height:clamp(130px,23svh,205px)}
 .canvas-sticker.one{top:76%;left:10%}
 .canvas-sticker.two{top:20%;left:34%}
-.canvas-sticker.three{top:80%;right:15%}
+.canvas-sticker.three{top:89%;right:5%}
 .canvas-card{width:260px;padding:24px}
 @media(max-width:700px){
  .canvas-object{width:27%}
@@ -627,6 +627,21 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .canvas-card .card-points li:last-child{margin-bottom:0}
 @media(max-width:700px){.canvas-card{width:min(340px,calc(100vw - 40px));padding:24px 18px}}
 
+
+/* Static stations: upright labels, always-visible bullet lists, no hover */
+.canvas-object{rotate:none}
+.canvas-object:hover,.canvas-object:focus-within{rotate:none;z-index:2}
+.canvas-object .st{display:flex;flex-direction:column;align-items:center}
+.canvas-object .st img{rotate:var(--angle)}
+.station-points{list-style:disc;margin:12px 0 0;padding-left:20px;text-align:left;width:max-content;max-width:240px;
+  font-size:14px;line-height:1.55;color:var(--ink-2)}
+.station-points li{margin:0 0 6px;padding-left:2px}
+.station-points li:last-child{margin-bottom:0}
+.station-points li::marker{color:var(--blue)}
+.canvas-object .tool-pop{opacity:1;visibility:visible;transform:rotate(6deg);transition:none}
+@media(max-width:1080px){.canvas-object .tool-pop{display:none}
+ .station-points{font-size:12px;max-width:170px}}
+@media(max-width:700px){.station-points{font-size:11px;max-width:150px;margin-top:8px;padding-left:16px}}
 /* END merged How we work */
 
 /* Section tags: the homepage speech-bubble "kick" design and pop behavior */
@@ -773,10 +788,10 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     </article>
  <div class="studio-canvas">
   <svg class="canvas-flow" aria-hidden="true"><path class="canvas-flow-base"/><path class="canvas-flow-progress" pathLength="1"/></svg>
-  <article class="canvas-object"><button type="button" data-topic="insight" aria-expanded="false" aria-label="Explore Insight"><img src="assets/process-canvas/insight.webp" alt="" loading="lazy"><span class="object-label">Insight<b aria-hidden="true">↗</b></span></button></article>
-  <article class="canvas-object"><button type="button" data-topic="figure-out" aria-expanded="false" aria-label="Explore Figure out"><img src="assets/process-canvas/figure-out.webp" alt="" loading="lazy"><span class="object-label">Figure out<b aria-hidden="true">↗</b></span></button><span class="tool-pop"><img src="assets/process-canvas/chatgpt-clay.webp" alt=""><span>ChatGPT</span></span></article>
-  <article class="canvas-object"><button type="button" data-topic="prototype" aria-expanded="false" aria-label="Explore Prototype"><img src="assets/process-canvas/prototype.webp" alt="" loading="lazy"><span class="object-label">Prototype<b aria-hidden="true">↗</b></span></button><span class="tool-pop"><img src="assets/process-canvas/claude-code-clay.webp" alt=""><span>Claude Code</span></span></article>
-  <article class="canvas-object"><button type="button" data-topic="verify" aria-expanded="false" aria-label="Explore Verify"><img src="assets/process-canvas/verify.webp" alt="" loading="lazy"><span class="object-label">Verify<b aria-hidden="true">↗</b></span></button></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/insight.webp" alt="" loading="lazy"><span class="object-label">Insight</span><ul class="station-points"><li>Understand user needs.</li><li>Identify key pain points.</li><li>Define the right problem.</li></ul></div></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/figure-out.webp" alt="" loading="lazy"><span class="object-label">Figure out</span><ul class="station-points"><li>Explore ideas with ChatGPT.</li><li>Map user flows with AI.</li><li>Choose the strongest direction.</li></ul></div><span class="tool-pop"><img src="assets/process-canvas/chatgpt-clay.webp" alt=""><span>ChatGPT</span></span></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/prototype.webp" alt="" loading="lazy"><span class="object-label">Prototype</span><ul class="station-points"><li>Build faster with Claude Code.</li><li>Create interactive prototypes.</li><li>Refine and iterate with AI.</li></ul></div><span class="tool-pop"><img src="assets/process-canvas/claude-code-clay.webp" alt=""><span>Claude Code</span></span></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/verify.webp" alt="" loading="lazy"><span class="object-label">Verify</span><ul class="station-points"><li>Test with real users.</li><li>Check usability and value.</li><li>Improve through feedback.</li></ul></div></article>
   <span class="canvas-sticker one" data-noi18n aria-hidden="true">Rapid Delivery</span><span class="canvas-sticker two" data-noi18n aria-hidden="true">Speed</span><span class="canvas-sticker three" data-noi18n aria-hidden="true">Innovation</span>
  </div>
  </div></div>
@@ -1038,84 +1053,7 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     path.setAttribute('mask',`url(#${id})`);
     return reveal;
   };
-  const canvasTopics = {"insight": {"title": "Insight", "bullets": ["Understand user needs.", "Identify key pain points.", "Define the right problem."]}, "figure-out": {"title": "Figure out", "bullets": ["Explore ideas with ChatGPT.", "Map user flows with AI.", "Choose the strongest direction."]}, "prototype": {"title": "Prototype", "bullets": ["Build faster with Claude Code.", "Create interactive prototypes.", "Refine and iterate with AI."]}, "verify": {"title": "Verify", "bullets": ["Test with real users.", "Check usability and value.", "Improve through feedback."]}};
   const canvas = document.querySelector('.studio-canvas');
-  const canvasButtons = [...canvas.querySelectorAll('[data-topic]')];
-  let openObject = null;
-  let pinnedCard = false;
-  let hoverCloseTimer = 0;
-  const closeCanvasCard = (restoreFocus = false) => {
-    clearTimeout(hoverCloseTimer);
-    pinnedCard = false;
-    if (!openObject) return;
-    const button = openObject.querySelector('[data-topic]');
-    openObject.classList.remove('is-open');
-    button.setAttribute('aria-expanded', 'false');
-    openObject.querySelector('.canvas-card').inert = true;
-    if (restoreFocus) button.focus({preventScroll:true});
-    openObject = null;
-  };
-  const placeCanvasCard = object => {
-    const button = object.querySelector('[data-topic]');
-    const card = object.querySelector('.canvas-card');
-    const bounds = canvas.getBoundingClientRect();
-    const rect = button.getBoundingClientRect();
-    const center = rect.left + rect.width / 2;
-    const width = card.offsetWidth;
-    const direction = center < bounds.left + bounds.width / 2 ? 1 : -1;
-    const desired = center + direction * (rect.width / 2 + width / 2 - 25);
-    const cardCenter = Math.max(bounds.left + width / 2 + 12, Math.min(bounds.right - width / 2 - 12, desired));
-    object.style.setProperty('--card-shift', `${cardCenter - center}px`);
-  };
-  canvasButtons.forEach(button => {
-    const object = button.closest('.canvas-object');
-    const topic = canvasTopics[button.dataset.topic];
-    const card = document.createElement('div');
-    card.className = 'canvas-card';
-    card.id = `card-${button.dataset.topic}`;
-    card.setAttribute('role', 'region');
-    card.setAttribute('aria-label', `${topic.title} details`);
-    card.inert = true;
-    const close = document.createElement('button');
-    close.className = 'detail-close'; close.type = 'button'; close.textContent = '×';
-    close.setAttribute('aria-label', `Close ${topic.title} details`);
-    close.addEventListener('click', () => closeCanvasCard(true));
-    const title = document.createElement('h3'); title.textContent = topic.title;
-    const copy = document.createElement('ul'); copy.className = 'card-points';
-    topic.bullets.forEach(text => {
-      const item = document.createElement('li'); item.textContent = text; copy.append(item);
-    });
-    card.dataset.topic = button.dataset.topic;
-    card.append(close, title, copy); object.append(card);
-    button.setAttribute('aria-controls', card.id);
-    const showCard = () => {
-      clearTimeout(hoverCloseTimer);
-      if (openObject === object) return;
-      closeCanvasCard();
-      placeCanvasCard(object);
-      object.classList.add('is-open');
-      button.setAttribute('aria-expanded', 'true'); card.inert = false;
-      openObject = object;
-    };
-    object.addEventListener('pointerenter', event => {
-      if (event.pointerType !== 'mouse') return;
-      showCard();
-    });
-    object.addEventListener('pointerleave', event => {
-      if (event.pointerType !== 'mouse' || pinnedCard) return;
-      hoverCloseTimer = setTimeout(() => {
-        if (openObject === object && !pinnedCard && !object.contains(document.activeElement)) closeCanvasCard();
-      }, 180);
-    });
-    button.addEventListener('click', () => {
-      if (openObject === object && pinnedCard) { closeCanvasCard(); return; }
-      showCard();
-      pinnedCard = true;
-    });
-  });
-  document.addEventListener('keydown', event => { if (event.key === 'Escape') closeCanvasCard(true); });
-  document.addEventListener('click', event => { if (openObject && !openObject.contains(event.target)) closeCanvasCard(); });
-  addEventListener('resize', () => { if (openObject) placeCanvasCard(openObject); });
 
   const canvasStart = document.querySelector('.canvas-start');
   const canvasStartScreen = document.querySelector('.canvas-start-screen');
