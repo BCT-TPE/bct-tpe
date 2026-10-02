@@ -481,8 +481,8 @@
 
     /* design page: AI teammate cards in How we work */
     "AI teammate": "AI 隊友",
-    "Turns research findings into a client-ready deck: web, PDF or editable PowerPoint.":
-      "把研究結果直接做成可交給客戶的簡報：網頁、PDF 或可編輯的 PowerPoint。",
+    "Learns BCT’s style from our own slide library, then turns findings into on-brand decks.":
+      "從 BCT 自己的簡報庫學會設計風格，把研究結果直接做成品牌一致的簡報。",
     "Writes the DESIGN.md every agent follows, then audits screens against it.":
       "寫出每個 AI agent 都照著做的 DESIGN.md，再依它檢查每個畫面。",
     "Names every icon in Figma and sets export formats, ready for handoff.":
