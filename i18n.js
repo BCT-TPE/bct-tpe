@@ -546,6 +546,8 @@
     "Same experience.": "體驗一致。",
     "From screens to": "從螢幕畫面，",
     "real interactions.": "到真實操作。",
+    "Motion that": "用動態，",
+    "explains everything.": "把一切說清楚。",
     "One coherent experience.": "體驗始終如一。",
     "Hybrid team.": "混合辦公，",
     "Not enough desks.": "座位不夠。",

@@ -414,9 +414,12 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
 .rs-stage{position:absolute;inset:0;container-type:size;overflow:hidden;border-radius:12px}
 .rs-slide{position:absolute;inset:0;opacity:0;transition:opacity .8s cubic-bezier(.22,.61,.36,1)}
 .rs-slide.on{opacity:1}
+/* every story slide: the image fades in, then its title rises in (replays each time the slide turns on) */
+.rs-slide.on .rs-t{animation:rstin .7s cubic-bezier(.22,.61,.36,1) .18s both}
+@keyframes rstin{from{opacity:0;translate:0 12px}to{opacity:1;translate:none}}
 .rs-art{position:absolute;left:50%;top:50%;translate:-50% -50%;container-type:inline-size;
   width:min(max(100cqw,100cqh),calc(min(100cqw,100cqh) * 1.08));aspect-ratio:1}
-.rs-art img{width:100%;height:100%;object-fit:cover;display:block}
+.rs-art img,.rs-art video{width:100%;height:100%;object-fit:cover;display:block}
 .rs-jump{all:unset;cursor:pointer;color:inherit;border-bottom:1px solid transparent;transition:border-color .2s}
 .rs-jump:not(:disabled):hover{border-bottom-color:currentColor}
 .rs-jump:disabled{cursor:default;color:var(--stone)}
@@ -449,9 +452,10 @@ html[lang="zh-Hant"] .rs-kpis span{font-size:max(9px,2.9cqi)}
 .op-steps li{position:absolute;top:73.9%;translate:-50% 0;width:min-content;text-align:center;
   font-size:max(7px,2.05cqi);font-weight:500;line-height:1.1;color:#2B3245}
 html[lang="zh-Hant"] .op-steps li{width:auto;white-space:nowrap}
-/* Prototype slide 1: code-drawn flow — portrait meter → portrait wireframe → rotate → landscape wireframe → landscape meter */
+/* Prototype slide 1 (dashes march once on entrance, then rest): code-drawn flow — portrait meter → portrait wireframe → rotate → landscape wireframe → landscape meter */
 .pf{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.pf .ln{fill:none;stroke:#8D96A3;stroke-width:2.6;stroke-dasharray:7 7;stroke-linecap:round;animation:pfmarch 1.4s linear infinite}
+.pf .ln{fill:none;stroke:#8D96A3;stroke-width:2.6;stroke-dasharray:7 7;stroke-linecap:round}
+.rs-slide.on .pf .ln{animation:pfmarch 1.6s cubic-bezier(.22,.61,.36,1) var(--d,0s) both}
 .pf .ah{fill:none;stroke:#8D96A3;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 .pf .frame{fill:rgba(255,255,255,.66);stroke:#8A929E;stroke-width:2.2}
 .pf .blk{fill:#C5CBD3}
@@ -459,7 +463,7 @@ html[lang="zh-Hant"] .op-steps li{width:auto;white-space:nowrap}
 .rs-slide .pf>g{opacity:0}
 .rs-slide.on .pf>g{animation:pfin .6s cubic-bezier(.22,.61,.36,1) var(--d,0s) both}
 @keyframes pfin{from{opacity:0;translate:0 8px}to{opacity:1;translate:none}}
-@keyframes pfmarch{to{stroke-dashoffset:-14}}
+@keyframes pfmarch{from{stroke-dashoffset:42}to{stroke-dashoffset:0}}
 @media(prefers-reduced-motion:reduce){.rs-slide .pf>g{opacity:1}}
 /* RideLife food-map slide: UI copy laid onto the blank notification, tooltip and start button */
 .rl-notif{position:absolute;left:55%;top:22.2%;width:26.5%;rotate:-1.8deg;transform-origin:0 0;color:#1d2433;line-height:1.3}
@@ -1021,7 +1025,8 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
 <g style="--d:1.45s"><path class="ln" d="M881 440V590"/><path class="ah" d="M874 583l7 8 7-8"/></g>
 </svg><p class="rs-t">Different orientations.<span>Same experience.</span></p></div></div>
 <div class="rs-slide" aria-hidden="true" style="background:linear-gradient(#ededed,#eaeaea)"><div class="rs-art"><img src="assets/prototype-2.webp" srcset="assets/prototype-2.webp 1080w, assets/prototype-2-1600.webp 1600w" sizes="(max-width:760px) 100vw, 52vw" alt="Turning the DM266 dial steps through measurement modes on the screen" width="1080" height="1080" decoding="async" loading="lazy"><p class="rs-t">From screens to<span>real interactions.</span></p></div></div>
-</div><div class="rs-nav"><button type="button" class="rs-prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><span class="rs-count" data-noi18n aria-live="polite">1 / 2</span><button type="button" class="rs-next" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div></figure><figure class="svc-media" id="svc-visual-2" aria-hidden="true"><div class="svc-image graphic rs" data-rs="weekday" aria-roledescription="carousel" aria-label="Weekday app story"><div class="rs-stage">
+<div class="rs-slide" aria-hidden="true" style="background:#e6e8e9"><div class="rs-art"><video class="rs-vid" src="assets/prototype-3.mp4" muted playsinline preload="none" aria-label="Animated DM266 prototype: the screen follows the dial and rotates with the device"></video><p class="rs-t">Motion that<span>explains everything.</span></p></div></div>
+</div><div class="rs-nav"><button type="button" class="rs-prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><span class="rs-count" data-noi18n aria-live="polite">1 / 3</span><button type="button" class="rs-next" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div></figure><figure class="svc-media" id="svc-visual-2" aria-hidden="true"><div class="svc-image graphic rs" data-rs="weekday" aria-roledescription="carousel" aria-label="Weekday app story"><div class="rs-stage">
 <div class="rs-slide on" aria-hidden="false" style="background:linear-gradient(#1f183d,#130f24)"><div class="rs-art"><img src="assets/weekday-1.webp" srcset="assets/weekday-1.webp 1080w, assets/weekday-1-1600.webp 1600w" sizes="(max-width:760px) 100vw, 52vw" alt="Office floor map with desk conflicts" width="1080" height="1080" decoding="async"><p class="rs-t rs-violet">Hybrid team.<span>Not enough desks.</span></p></div></div>
 <div class="rs-slide" aria-hidden="true" style="background:linear-gradient(#1f183d,#151028)"><div class="rs-art"><img src="assets/weekday-2.webp" srcset="assets/weekday-2.webp 1080w, assets/weekday-2-1600.webp 1600w" sizes="(max-width:760px) 100vw, 52vw" alt="Booking a desk in the Weekday app" width="1080" height="1080" decoding="async" loading="lazy"><p class="rs-t rs-violet">Book a desk<span>before you arrive.</span></p></div></div>
 <div class="rs-slide" aria-hidden="true" style="background:linear-gradient(#1f183d,#120e23)"><div class="rs-art"><img src="assets/weekday-3.webp" srcset="assets/weekday-3.webp 1080w, assets/weekday-3-1600.webp 1600w" sizes="(max-width:760px) 100vw, 52vw" alt="Every desk booked on the Weekday floor map" width="1080" height="1080" decoding="async" loading="lazy"><p class="rs-t rs-violet">Everyone<span>has a seat.</span></p></div></div>
@@ -1230,15 +1235,28 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     let cur = 0, timer = 0, hovering = false;
     /* once someone flips slides by hand, the carousel stops advancing on its own */
     const manual = i => { clearInterval(timer); timer = 0; go(i); };
+    /* a video slide plays from the start while it is showing; under auto-advance the story
+       moves on when the clip ends, after a manual flip it simply loops */
+    const vids = slides.map(sl => sl.querySelector('video'));
     const go = i => {
       cur = (i + slides.length) % slides.length;
       slides.forEach((sl, j) => { sl.classList.toggle('on', j === cur); sl.setAttribute('aria-hidden', String(j !== cur)); });
       if (count) count.textContent = (cur + 1) + ' / ' + slides.length;
+      vids.forEach((v, j) => { if (!v) return;
+        v.preload = 'auto';
+        if (j !== cur) { v.pause(); return; }
+        if (heroReduce) { v.currentTime = 2.5; return; }
+        v.currentTime = 0; const p = v.play(); if (p) p.catch(() => {}); });
     };
+    vids.forEach(v => v && v.addEventListener('ended', () => {
+      if (!visible() || rs.hidden) return;
+      if (timer && !hovering) go(cur + 1);
+      else { v.currentTime = 0; const p = v.play(); if (p) p.catch(() => {}); }
+    }));
     const visible = () => { const r = rs.getBoundingClientRect();
       return rs.closest('figure').classList.contains('active') && r.bottom > 0 && r.top < innerHeight; };
     const restart = () => { clearInterval(timer); timer = setInterval(() => {
-      if (!hovering && visible() && !heroReduce) go(cur + 1); }, 4500); };
+      if (!hovering && visible() && !heroReduce && !vids[cur]) go(cur + 1); }, 4500); };
     rs.querySelector('.rs-prev').addEventListener('click', () => manual(cur - 1));
     rs.querySelector('.rs-next').addEventListener('click', () => manual(cur + 1));
     rs.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') hovering = true; });
@@ -1251,13 +1269,20 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     }, {passive:true});
     rsCtl.set(rs, i => { slides.forEach(sl => sl.classList.remove('on'));
       setTimeout(() => { go(i); restart(); }, 260); });
-    rsReset.set(rs, () => { go(0); restart(); });
+    rsReset.set(rs, () => { slides.forEach(sl => sl.classList.remove('on')); void rs.offsetWidth; go(0); restart(); });
     restart();
   });
   /* a hidden story's first slide is lazy; start fetching it as soon as its offering is hovered or focused */
   const warmRs = b => { const fig = document.getElementById('svc-visual-' + b.closest('.svc-detail').id.split('-').pop());
     const img = fig && fig.querySelector('.rs[data-rs="' + b.dataset.rs + '"] .rs-slide img');
     if (img) img.loading = 'eager'; };
+  const wwdVis = document.querySelector('.wwd-visual');
+  if (wwdVis && 'IntersectionObserver' in window) {
+    const seen = new IntersectionObserver(es => { if (!es.some(e => e.isIntersecting)) return; seen.disconnect();
+      const rs = [...document.querySelectorAll('.wwd-visual figure.active .rs')].find(r => !r.hidden);
+      const r = rs && rsReset.get(rs); if (r) r(); }, {threshold:.35});
+    seen.observe(wwdVis);
+  }
   document.querySelectorAll('button.rs-jump:not(:disabled)').forEach(b => {
     b.addEventListener('pointerenter', () => warmRs(b), {once:true});
     b.addEventListener('focus', () => warmRs(b), {once:true});
@@ -1267,7 +1292,7 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     const all = fig ? [...fig.querySelectorAll('.rs')] : [];
     const rs = all.find(r => r.dataset.rs === b.dataset.rs) || all[0];
     if (!rs) return;
-    all.forEach(r => { r.hidden = r !== rs; });
+    all.forEach(r => { r.hidden = r !== rs; if (r !== rs) r.querySelectorAll('video').forEach(v => v.pause()); });
     rsCtl.get(rs)(+b.dataset.slide || 0);
     if (matchMedia('(max-width:760px)').matches) rs.scrollIntoView({behavior:'smooth', block:'center'});
   }));
@@ -1302,6 +1327,7 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
       svcVisuals[i].setAttribute('aria-hidden',String(i!==index));
     });
     /* reopening a panel always starts its default story from slide 1, auto-advancing again */
+    svcVisuals.forEach((f,i)=>{ if(i!==index) f.querySelectorAll('video').forEach(v=>v.pause()); });
     svcVisuals[index].querySelectorAll('.rs').forEach((rs,k)=>{ rs.hidden=k>0; const r=rsReset.get(rs); if(r) r(); });
     if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
       const after=svcItems.map(item=>item.getBoundingClientRect().height);
@@ -1445,6 +1471,6 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
 })();
 /* END merged How we work */
 </script>
-<script src="../i18n.js?v=20261002e"></script>
+<script src="../i18n.js?v=20261002f"></script>
 </body>
 </html>
