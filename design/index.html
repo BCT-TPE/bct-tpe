@@ -423,10 +423,15 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
 .rs-stats div{position:absolute;top:77%;translate:-50% 0;text-align:center;color:#fff;white-space:nowrap}
 .rs-stats b{display:block;font-size:max(18px,8.4cqi);font-weight:600;line-height:1;letter-spacing:-.01em}
 .rs-stats span{display:block;margin-top:.5em;font-size:max(9px,2.9cqi);font-weight:500;color:#dbe7ef}
-.rs-dots{position:absolute;left:50%;bottom:10px;translate:-50% 0;display:flex;gap:8px;z-index:2}
-.rs-dots button{width:7px;height:7px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;
-  transition:width .3s cubic-bezier(.22,.61,.36,1),background .3s}
-.rs-dots button.on{width:20px;border-radius:4px;background:#fff}
+.rs-nav{position:absolute;left:50%;bottom:9px;translate:-50% 0;z-index:2;display:flex;align-items:center;gap:10px}
+.rs-nav button{width:30px;height:30px;padding:0;display:grid;place-items:center;border-radius:50%;cursor:pointer;
+  border:1px solid rgba(255,255,255,.28);background:rgba(10,14,24,.42);color:#fff;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .2s,border-color .2s,transform .2s}
+.rs-nav button:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.6)}
+.rs-nav button:active{transform:scale(.94)}
+.rs-nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.rs-nav svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.rs-count{min-width:38px;text-align:center;font-size:12px;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.85)}
 html[lang="zh-Hant"] .rs-t{letter-spacing:.01em}
 @media(prefers-reduced-motion:reduce){.rs-slide{transition:none}}
 
@@ -933,14 +938,14 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
 <div class="rs-slide on" aria-hidden="false" style="background:linear-gradient(#012036,#001c2f)"><div class="rs-art"><img src="assets/research-1.webp" alt="Genome Cache v1.0 quiz screens" width="1080" height="1080"><p class="rs-t">A learning adventure.<span>A challenge to engage.</span></p><ul class="rs-pains"><li style="left:5.7%;top:74.3%">Hard-to-read text</li><li style="left:51.6%;top:74.3%">Inconsistent UI</li><li style="left:5.7%;top:85.1%">Rigid screen layouts</li><li style="left:51.6%;top:85.1%">Low motivation to explore</li></ul></div></div>
 <div class="rs-slide" aria-hidden="true" style="background:linear-gradient(#012e47,#01253b)"><div class="rs-art"><img src="assets/research-2.webp" alt="From the old app through user flows to the redesigned Genome Cache" width="1080" height="1080" loading="lazy"><p class="rs-t">Turn friction<span>into discovery.</span></p><ol class="rs-steps"><li style="left:19.7%">UX Research</li><li style="left:50%">Deep Focus</li><li style="left:80.2%">UI Design System</li></ol></div></div>
 <div class="rs-slide" aria-hidden="true" style="background:linear-gradient(#01263c,#002235)"><div class="rs-art"><img src="assets/research-3.webp" alt="The redesigned Genome Cache: quiz, scientist cards and rewards" width="1080" height="1080" loading="lazy"><p class="rs-t rs-c">Designed for<span>continued discovery.</span></p><div class="rs-stats"><div style="left:28.5%"><b>+40%</b><span>Time spent in app</span></div><div style="left:71.7%"><b>4.8</b><span>User CSAT score</span></div></div></div></div>
-</div><div class="rs-dots"><button type="button" class="on" aria-label="Slide 1"></button><button type="button" aria-label="Slide 2"></button><button type="button" aria-label="Slide 3"></button></div></div></figure><figure class="svc-media" id="svc-visual-1" aria-hidden="true"><div class="svc-image graphic rs" aria-roledescription="carousel" aria-label="FLIR METERLiNK design story"><div class="rs-stage">
+</div><div class="rs-nav"><button type="button" class="rs-prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><span class="rs-count" data-noi18n aria-live="polite">1 / 3</span><button type="button" class="rs-next" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div></figure><figure class="svc-media" id="svc-visual-1" aria-hidden="true"><div class="svc-image graphic rs" aria-roledescription="carousel" aria-label="FLIR METERLiNK design story"><div class="rs-stage">
 <div class="rs-slide on" aria-hidden="false" style="background:linear-gradient(#121212,#1d2b3e)"><div class="rs-art"><img src="assets/design-1.webp" alt="FLIR METERLiNK app held in hand with a measurement card" width="1080" height="1080"><p class="rs-t rs-white">Complex data.<span>Clear interfaces.</span></p></div></div>
 <div class="rs-slide" aria-hidden="true" style="background:linear-gradient(#101111,#163056)"><div class="rs-art"><img src="assets/design-2.webp" alt="METERLiNK UI components laid out as a kit" width="1080" height="1080" loading="lazy"><p class="rs-t rs-white rs-c">Many components.<span>One shared language.</span></p></div></div>
-</div><div class="rs-dots"><button type="button" class="on" aria-label="Slide 1"></button><button type="button" aria-label="Slide 2"></button></div></div></figure><figure class="svc-media" id="svc-visual-2" aria-hidden="true"><div class="svc-image graphic rs" aria-roledescription="carousel" aria-label="Weekday app story"><div class="rs-stage">
+</div><div class="rs-nav"><button type="button" class="rs-prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><span class="rs-count" data-noi18n aria-live="polite">1 / 2</span><button type="button" class="rs-next" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div></figure><figure class="svc-media" id="svc-visual-2" aria-hidden="true"><div class="svc-image graphic rs" aria-roledescription="carousel" aria-label="Weekday app story"><div class="rs-stage">
 <div class="rs-slide on" aria-hidden="false" style="background:linear-gradient(#1f183d,#130f24)"><div class="rs-art"><img src="assets/weekday-1.webp" alt="Office floor map with desk conflicts" width="1080" height="1080"><p class="rs-t rs-violet">Hybrid team.<span>Not enough desks.</span></p></div></div>
 <div class="rs-slide" aria-hidden="true" style="background:linear-gradient(#1f183d,#151028)"><div class="rs-art"><img src="assets/weekday-2.webp" alt="Booking a desk in the Weekday app" width="1080" height="1080" loading="lazy"><p class="rs-t rs-violet">Book a desk<span>before you arrive.</span></p></div></div>
 <div class="rs-slide" aria-hidden="true" style="background:linear-gradient(#1f183d,#120e23)"><div class="rs-art"><img src="assets/weekday-3.webp" alt="Every desk booked on the Weekday floor map" width="1080" height="1080" loading="lazy"><p class="rs-t rs-violet">Everyone<span>has a seat.</span></p></div></div>
-</div><div class="rs-dots"><button type="button" class="on" aria-label="Slide 1"></button><button type="button" aria-label="Slide 2"></button><button type="button" aria-label="Slide 3"></button></div></div></figure></div>
+</div><div class="rs-nav"><button type="button" class="rs-prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><span class="rs-count" data-noi18n aria-live="polite">1 / 3</span><button type="button" class="rs-next" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div></figure></div>
       <ol class="svc-list"><li class="svc active" id="service-research"><h3><button class="svc-toggle" id="svc-toggle-0" aria-expanded="true" aria-controls="svc-detail-0"><span class="svc-title"><span class="svc-number" aria-hidden="true">01</span><span>Research</span></span></button></h3><div class="svc-detail" id="svc-detail-0" role="region" aria-labelledby="svc-toggle-0"><p>Find the right problem to solve. We explore user needs, review existing experiences and test assumptions to help teams decide what matters most—and where to go next.</p><ul class="svc-offerings" aria-label="Research services"><li><button type="button" class="rs-jump" data-slide="0">UX Research</button></li><li><button type="button" class="rs-jump" disabled aria-disabled="true">Usability Testing</button></li></ul></div></li><li class="svc" id="service-ui"><h3><button class="svc-toggle" id="svc-toggle-1" aria-expanded="false" aria-controls="svc-detail-1"><span class="svc-title"><span class="svc-number" aria-hidden="true">02</span><span>Design</span></span></button></h3><div class="svc-detail" id="svc-detail-1" role="region" aria-labelledby="svc-toggle-1" hidden><p>Make complex products feel simple. We turn insights into clear interfaces, reusable design systems and interactive prototypes, helping teams align on the experience before development begins.</p><ul class="svc-offerings" aria-label="Design services"><li><button type="button" class="rs-jump" data-slide="0">Mockups</button></li><li><button type="button" class="rs-jump" disabled aria-disabled="true">Prototype</button></li></ul></div></li><li class="svc" id="service-inhouse"><h3><button class="svc-toggle" id="svc-toggle-2" aria-expanded="false" aria-controls="svc-detail-2"><span class="svc-title"><span class="svc-number" aria-hidden="true">03</span><span>In-house</span></span></button></h3><div class="svc-detail" id="svc-detail-2" role="region" aria-labelledby="svc-toggle-2" hidden><p>We design for our own teams, too. From the BCT Website and presentation decks to Weekday, our work spans brand communication and tools for everyday work. We also explore AI products through Office Power, bringing AI agents into the workplace.</p><ul class="svc-offerings" aria-label="In-house services"><li><button type="button" class="rs-jump" data-slide="0">Weekday App</button></li><li><button type="button" class="rs-jump" disabled aria-disabled="true">Office Power - AI product</button></li></ul></div></li></ol>
     </div>
   </div>
@@ -1129,6 +1134,43 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     if (y < 90 || d < -2) nav.classList.remove('navhid');
     else if (d > 6) nav.classList.add('navhid');
   }, {passive:true});
+
+  /* service carousels (What we do): auto-advance while their panel is showing and on screen;
+     prev / next arrows and swipe; the blue offerings restart their panel's carousel */
+  const rsCtl = new Map();
+  document.querySelectorAll('.rs').forEach(rs => {
+    const slides = [...rs.querySelectorAll('.rs-slide')], count = rs.querySelector('.rs-count');
+    let cur = 0, timer = 0, hovering = false;
+    const go = i => {
+      cur = (i + slides.length) % slides.length;
+      slides.forEach((sl, j) => { sl.classList.toggle('on', j === cur); sl.setAttribute('aria-hidden', String(j !== cur)); });
+      if (count) count.textContent = (cur + 1) + ' / ' + slides.length;
+    };
+    const visible = () => { const r = rs.getBoundingClientRect();
+      return rs.closest('figure').classList.contains('active') && r.bottom > 0 && r.top < innerHeight; };
+    const restart = () => { clearInterval(timer); timer = setInterval(() => {
+      if (!hovering && visible() && !heroReduce) go(cur + 1); }, 4500); };
+    rs.querySelector('.rs-prev').addEventListener('click', () => { go(cur - 1); restart(); });
+    rs.querySelector('.rs-next').addEventListener('click', () => { go(cur + 1); restart(); });
+    rs.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') hovering = true; });
+    rs.addEventListener('pointerleave', () => { hovering = false; });
+    let sx = null;
+    rs.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, {passive:true});
+    rs.addEventListener('touchend', e => {
+      if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; sx = null;
+      if (Math.abs(dx) > 40) { go(cur + (dx < 0 ? 1 : -1)); restart(); }
+    }, {passive:true});
+    rsCtl.set(rs, i => { slides.forEach(sl => sl.classList.remove('on'));
+      setTimeout(() => { go(i); restart(); }, 260); });
+    restart();
+  });
+  document.querySelectorAll('button.rs-jump:not(:disabled)').forEach(b => b.addEventListener('click', () => {
+    const fig = document.getElementById('svc-visual-' + b.closest('.svc-detail').id.split('-').pop());
+    const rs = fig && fig.querySelector('.rs');
+    if (!rs) return;
+    rsCtl.get(rs)(+b.dataset.slide || 0);
+    if (matchMedia('(max-width:760px)').matches) rs.scrollIntoView({behavior:'smooth', block:'center'});
+  }));
 
   /* hamburger -> full-screen menu overlay (mobile) */
   const burger = nav.querySelector('.navburger'), navmenu = document.getElementById('navmenu');
