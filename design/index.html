@@ -632,12 +632,12 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .canvas-start-screen{overflow:hidden;background-image:linear-gradient(to right,rgba(184,176,162,.07) 1px,transparent 1px),linear-gradient(to bottom,rgba(184,176,162,.07) 1px,transparent 1px);background-size:40px 40px}
 .canvas-start .process-intro{z-index:3;pointer-events:none}
 .canvas-start-screen .studio-canvas{position:absolute;inset:0;min-height:0;height:100%;margin:0;border:0;border-radius:0;background:none;opacity:0}
-.canvas-object{width:22%;max-width:270px;transition:rotate .35s var(--ease);transform:none;rotate:var(--angle)}
+.canvas-object{width:21%;max-width:300px;transition:rotate .35s var(--ease);transform:none;rotate:var(--angle)}
 .canvas-object:hover,.canvas-object:focus-within,.canvas-object.is-open{transform:none;rotate:0deg}
-.canvas-object:nth-of-type(1){left:8%;top:18%;right:auto}
-.canvas-object:nth-of-type(2){left:29%;top:31%;right:auto}
-.canvas-object:nth-of-type(3){left:50%;top:10%;right:auto}
-.canvas-object:nth-of-type(4){left:70%;top:13%;right:auto;width:22%}
+.canvas-object:nth-of-type(1){left:4%;top:18%;right:auto}
+.canvas-object:nth-of-type(2){left:27.67%;top:31%;right:auto}
+.canvas-object:nth-of-type(3){left:51.33%;top:10%;right:auto}
+.canvas-object:nth-of-type(4){left:75%;top:13%;right:auto;width:21%}
 .canvas-object img,.canvas-object:nth-of-type(3) img{height:clamp(110px,18svh,185px)}
 .canvas-sticker.one{top:76%;left:10%}
 .canvas-sticker.two{top:20%;left:34%}
@@ -705,7 +705,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .object-label{border:0;background:none;box-shadow:none;padding:4px 0 0;font-size:17px;font-weight:700;letter-spacing:-.01em}
 @media(max-width:700px){.object-label{font-size:13px;padding-top:2px}}
 .canvas-object .st img{rotate:var(--angle)}
-.station-points{list-style:disc;margin:12px 0 0;padding-left:20px;text-align:left;width:max-content;max-width:240px;
+.station-points{list-style:disc;margin:12px 0 0;padding-left:20px;text-align:left;width:max-content;max-width:min(240px,100%);box-sizing:border-box;
   font-size:14px;line-height:1.55;color:var(--ink-2)}
 .station-points li{margin:0 0 6px;padding-left:2px}
 .station-points li:last-child{margin-bottom:0}
@@ -713,8 +713,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .canvas-object .tool-pop{opacity:1;visibility:visible;transform:rotate(6deg);transition:none}
 @media(max-width:1080px){.canvas-object .tool-pop{display:none}
  .station-points{font-size:12px;max-width:150px}
- .canvas-object:nth-of-type(4){left:68%}
- .canvas-object:nth-of-type(1){left:6%}}
+}
 @media(max-width:700px){.station-points{font-size:11px;max-width:150px;margin-top:8px;padding-left:16px}}
 
 /* Micro-motion: flowing dashes, floating icons, bullets that light up */
@@ -737,8 +736,8 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .cv-dots{display:none}
 @media(max-width:700px){
   .canvas-start{height:460svh}
-  .canvas-object{position:absolute!important;left:0!important;right:0;top:50%!important;width:100%!important;max-width:none;
-    display:flex;justify-content:center;padding:0 40px 0 56px;rotate:none;translate:0 -50%;
+  .canvas-object{position:absolute!important;left:0!important;right:0;top:13%!important;width:100%!important;max-width:none;
+    display:flex;justify-content:center;padding:0 40px 0 56px;rotate:none;translate:0 0;
     opacity:0;transform:translateY(46px);pointer-events:none;
     transition:opacity .45s cubic-bezier(.22,.61,.36,1),transform .6s cubic-bezier(.22,.61,.36,1)}
   .canvas-object.st-on{opacity:1;transform:none;pointer-events:auto}
@@ -759,7 +758,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 @media(prefers-reduced-motion:reduce){.canvas-object{transition:none}}
 
 /* AI teammate card under each station: the team's own Claude Code skill for that step */
-.st-ai{margin-top:12px;max-width:272px;text-align:left;padding:10px 12px 11px;border:1px solid var(--sand);border-radius:12px;
+.st-ai{margin-top:12px;width:100%;max-width:272px;box-sizing:border-box;text-align:left;padding:10px 12px 11px;border:1px solid var(--sand);border-radius:12px;
   background:rgba(255,253,249,.82);box-shadow:0 6px 16px rgba(26,26,26,.05);
   opacity:0;translate:0 8px;transition:opacity .5s cubic-bezier(.22,.61,.36,1) .62s,translate .55s cubic-bezier(.22,.61,.36,1) .62s}
 .studio-canvas.cv-on .st-ai{opacity:1;translate:0 0}
@@ -1290,8 +1289,9 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
       y:object.offsetTop + object.querySelector('img').offsetHeight / 2
     }));
     const small=matchMedia('(max-width:700px)').matches;
-    if(small){const img=flowObjects[0].querySelector('img'),r=img.getBoundingClientRect(),cr=canvas.getBoundingClientRect();
-      const y=r.top-cr.top+r.height*.55,w=canvasSize.width;
+    if(small){const o=flowObjects[0],img=o.querySelector('img');
+      /* resting layout position (offsets ignore the slide-in transform) */
+      const y=o.offsetTop+img.offsetTop+img.offsetHeight*.55,w=canvasSize.width;
       points.splice(0,points.length,{x:w*.5,y});}
     const pointsWithEdges=[{x:-30,y:points[0].y},...points,{x:canvasSize.width+30,y:points.at(-1).y}];
     let path=`M ${pointsWithEdges[0].x} ${pointsWithEdges[0].y}`;
