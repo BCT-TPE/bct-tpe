@@ -432,6 +432,11 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
 .rs-nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .rs-nav svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .rs-count{min-width:38px;text-align:center;font-size:12px;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.85)}
+@media(max-width:760px){
+  .rs-nav{left:0;right:0;bottom:auto;top:50%;translate:0 -50%;justify-content:space-between;padding:0 8px;pointer-events:none}
+  .rs-nav button{pointer-events:auto}
+  .rs-count{display:none}
+}
 html[lang="zh-Hant"] .rs-t{letter-spacing:.01em}
 @media(prefers-reduced-motion:reduce){.rs-slide{transition:none}}
 
