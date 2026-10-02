@@ -452,19 +452,6 @@ html[lang="zh-Hant"] .rs-kpis span{font-size:max(9px,2.9cqi)}
 .op-steps li{position:absolute;top:73.9%;translate:-50% 0;width:min-content;text-align:center;
   font-size:max(7px,2.05cqi);font-weight:500;line-height:1.1;color:#2B3245}
 html[lang="zh-Hant"] .op-steps li{width:auto;white-space:nowrap}
-/* Prototype slide 1 (dashes march once on entrance, then rest): code-drawn flow — portrait meter → portrait wireframe → rotate → landscape wireframe → landscape meter */
-.pf{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.pf .ln{fill:none;stroke:#8D96A3;stroke-width:2.6;stroke-dasharray:7 7;stroke-linecap:round}
-.rs-slide.on .pf .ln{animation:pfmarch 1.6s cubic-bezier(.22,.61,.36,1) var(--d,0s) both}
-.pf .ah{fill:none;stroke:#8D96A3;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
-.pf .frame{fill:rgba(255,255,255,.66);stroke:#8A929E;stroke-width:2.2}
-.pf .blk{fill:#C5CBD3}
-.pf .hot{fill:#1592E6}
-.rs-slide .pf>g{opacity:0}
-.rs-slide.on .pf>g{animation:pfin .6s cubic-bezier(.22,.61,.36,1) var(--d,0s) both}
-@keyframes pfin{from{opacity:0;translate:0 8px}to{opacity:1;translate:none}}
-@keyframes pfmarch{from{stroke-dashoffset:42}to{stroke-dashoffset:0}}
-@media(prefers-reduced-motion:reduce){.rs-slide .pf>g{opacity:1}}
 /* RideLife food-map slide: UI copy laid onto the blank notification, tooltip and start button */
 .rl-notif{position:absolute;left:55%;top:22.2%;width:26.5%;rotate:-1.8deg;transform-origin:0 0;color:#1d2433;line-height:1.3}
 .rl-notif b{display:block;width:76%;font-size:max(7px,1.4cqi);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1016,17 +1003,9 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
 <div class="rs-slide" aria-hidden="true" style="background:linear-gradient(#101010,#123161)"><div class="rs-art"><img src="assets/design-2.webp" srcset="assets/design-2.webp 1080w, assets/design-2-1600.webp 1600w" sizes="(max-width:760px) 100vw, 52vw" alt="METERLiNK UI components laid out as a kit" width="1080" height="1080" decoding="async" loading="lazy"><p class="rs-t rs-white">Many components.<span>One shared language.</span></p></div></div>
 <div class="rs-slide" aria-hidden="true" style="background:linear-gradient(#101010,#1a3c6b)"><div class="rs-art"><img src="assets/design-3.webp" srcset="assets/design-3.webp 1080w, assets/design-3-1600.webp 1600w" sizes="(max-width:760px) 100vw, 52vw" alt="METERLiNK on phone and tablet with the same cards and charts" width="1080" height="1080" decoding="async" loading="lazy"><p class="rs-t rs-white">Different screens.<span>One coherent experience.</span></p></div></div>
 </div><div class="rs-nav"><button type="button" class="rs-prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><span class="rs-count" data-noi18n aria-live="polite">1 / 3</span><button type="button" class="rs-next" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div><div class="svc-image graphic rs rs-light rs-sky" data-rs="prototype" hidden aria-roledescription="carousel" aria-label="DM266 meter prototype story"><div class="rs-stage">
-<div class="rs-slide on" aria-hidden="false" style="background:linear-gradient(#ededed,#e5e6e7)"><div class="rs-art"><img src="assets/prototype-1.webp" srcset="assets/prototype-1.webp 1080w, assets/prototype-1-1600.webp 1600w" sizes="(max-width:760px) 100vw, 52vw" alt="The DM266 meter in portrait and landscape, with the screen rotating to match" width="1080" height="1080" decoding="async" loading="lazy"><svg class="pf" viewBox="0 0 1000 1000" aria-hidden="true">
-<g style="--d:.25s"><path class="ln" d="M420 378H512"/><path class="ah" d="M505 371l8 7-8 7"/></g>
-<g class="wf" style="--d:.45s"><rect class="frame" x="522" y="318" width="92" height="118" rx="9"/><rect class="blk" x="531" y="328" width="74" height="7" rx="2"/><rect class="blk" x="552" y="351" width="32" height="5" rx="2"/><rect class="hot" x="538" y="365" width="60" height="15" rx="3"/><rect class="blk" x="540" y="406" width="13" height="13" rx="3"/><rect class="blk" x="562" y="406" width="13" height="13" rx="3"/><rect class="blk" x="584" y="406" width="13" height="13" rx="3"/></g>
-<g style="--d:.75s"><path class="ln" d="M624 378H648"/></g>
-<g style="--d:.95s"><path class="ln" d="M774 378H801"/><path class="ah" d="M794 371l8 7-8 7"/></g>
-<g class="wf" style="--d:1.15s"><rect class="frame" x="810" y="326" width="142" height="104" rx="9"/><rect class="blk" x="819" y="336" width="90" height="7" rx="2"/><rect class="blk" x="848" y="356" width="32" height="5" rx="2"/><rect class="hot" x="832" y="370" width="66" height="15" rx="3"/><rect class="blk" x="926" y="341" width="15" height="15" rx="3"/><rect class="blk" x="926" y="371" width="15" height="15" rx="3"/><rect class="blk" x="926" y="401" width="15" height="15" rx="3"/></g>
-<g style="--d:1.45s"><path class="ln" d="M881 440V590"/><path class="ah" d="M874 583l7 8 7-8"/></g>
-</svg><p class="rs-t">Different orientations.<span>Same experience.</span></p></div></div>
-<div class="rs-slide" aria-hidden="true" style="background:linear-gradient(#ededed,#eaeaea)"><div class="rs-art"><img src="assets/prototype-2.webp" srcset="assets/prototype-2.webp 1080w, assets/prototype-2-1600.webp 1600w" sizes="(max-width:760px) 100vw, 52vw" alt="Turning the DM266 dial steps through measurement modes on the screen" width="1080" height="1080" decoding="async" loading="lazy"><p class="rs-t">From screens to<span>real interactions.</span></p></div></div>
+<div class="rs-slide on" aria-hidden="false" style="background:linear-gradient(#ededed,#eaeaea)"><div class="rs-art"><img src="assets/prototype-2.webp" srcset="assets/prototype-2.webp 1080w, assets/prototype-2-1600.webp 1600w" sizes="(max-width:760px) 100vw, 52vw" alt="Turning the DM266 dial steps through measurement modes on the screen" width="1080" height="1080" decoding="async" loading="lazy"><p class="rs-t">From screens to<span>real interactions.</span></p></div></div>
 <div class="rs-slide" aria-hidden="true" style="background:#e6e8e9"><div class="rs-art"><video class="rs-vid" src="assets/prototype-3.mp4" muted playsinline preload="none" aria-label="Animated DM266 prototype: the screen follows the dial and rotates with the device"></video><p class="rs-t">Motion that<span>explains everything.</span></p></div></div>
-</div><div class="rs-nav"><button type="button" class="rs-prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><span class="rs-count" data-noi18n aria-live="polite">1 / 3</span><button type="button" class="rs-next" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div></figure><figure class="svc-media" id="svc-visual-2" aria-hidden="true"><div class="svc-image graphic rs" data-rs="weekday" aria-roledescription="carousel" aria-label="Weekday app story"><div class="rs-stage">
+</div><div class="rs-nav"><button type="button" class="rs-prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><span class="rs-count" data-noi18n aria-live="polite">1 / 2</span><button type="button" class="rs-next" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div></figure><figure class="svc-media" id="svc-visual-2" aria-hidden="true"><div class="svc-image graphic rs" data-rs="weekday" aria-roledescription="carousel" aria-label="Weekday app story"><div class="rs-stage">
 <div class="rs-slide on" aria-hidden="false" style="background:linear-gradient(#1f183d,#130f24)"><div class="rs-art"><img src="assets/weekday-1.webp" srcset="assets/weekday-1.webp 1080w, assets/weekday-1-1600.webp 1600w" sizes="(max-width:760px) 100vw, 52vw" alt="Office floor map with desk conflicts" width="1080" height="1080" decoding="async"><p class="rs-t rs-violet">Hybrid team.<span>Not enough desks.</span></p></div></div>
 <div class="rs-slide" aria-hidden="true" style="background:linear-gradient(#1f183d,#151028)"><div class="rs-art"><img src="assets/weekday-2.webp" srcset="assets/weekday-2.webp 1080w, assets/weekday-2-1600.webp 1600w" sizes="(max-width:760px) 100vw, 52vw" alt="Booking a desk in the Weekday app" width="1080" height="1080" decoding="async" loading="lazy"><p class="rs-t rs-violet">Book a desk<span>before you arrive.</span></p></div></div>
 <div class="rs-slide" aria-hidden="true" style="background:linear-gradient(#1f183d,#120e23)"><div class="rs-art"><img src="assets/weekday-3.webp" srcset="assets/weekday-3.webp 1080w, assets/weekday-3-1600.webp 1600w" sizes="(max-width:760px) 100vw, 52vw" alt="Every desk booked on the Weekday floor map" width="1080" height="1080" decoding="async" loading="lazy"><p class="rs-t rs-violet">Everyone<span>has a seat.</span></p></div></div>
@@ -1471,6 +1450,6 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
 })();
 /* END merged How we work */
 </script>
-<script src="../i18n.js?v=20261002f"></script>
+<script src="../i18n.js?v=20261002g"></script>
 </body>
 </html>

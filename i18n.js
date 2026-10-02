@@ -542,8 +542,6 @@
     "HR Group": "HR 群組",
     "Set Calendar": "設定行事曆",
     "Confirm PTO": "確認特休",
-    "Different orientations.": "直拿橫放，",
-    "Same experience.": "體驗一致。",
     "From screens to": "從螢幕畫面，",
     "real interactions.": "到真實操作。",
     "Motion that": "用動態，",
