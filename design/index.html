@@ -56,6 +56,14 @@ a{color:inherit;text-decoration:none}
   transition:transform .35s var(--ease)}
 #nav.navhid:not(.menuopen){transform:translateY(-110%)}
 #nav .bar{display:flex;align-items:center;gap:18px;position:relative;z-index:2}
+/* frosted glass behind the header so floating hero objects never sit under the text.
+   It lives on a pseudo-element: a backdrop-filter on #nav itself would trap the fixed
+   full-screen mobile menu inside the header box. */
+#nav::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:rgba(250,250,250,.72);
+  -webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);
+  border-bottom:1px solid rgba(26,26,26,.06);transition:opacity .3s}
+#nav.menuopen::before{opacity:0}
 #nav .logo img{height:32px;display:block}
 #nav .navburger{width:28px;height:22px;display:none;flex-direction:column;justify-content:center;gap:5px;
   background:none;border:none;cursor:pointer;padding:0;flex-shrink:0}
