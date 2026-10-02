@@ -339,7 +339,7 @@ section{padding:clamp(72px,10vw,140px) 0;scroll-margin-top:72px}
 .wwd-visual{display:grid;min-width:0;grid-column:2;grid-row:1}
 .wwd-showcase>.svc-list{grid-column:1;grid-row:1}
 .wwd-visual figure{grid-area:1/1;margin:0;opacity:0;visibility:hidden;transform:translateY(14px) scale(.98);transition:opacity .45s ease,transform .6s var(--ease),visibility .45s;pointer-events:none}
-.wwd-visual figure.active{opacity:1;visibility:visible;transform:none}
+.wwd-visual figure.active{opacity:1;visibility:visible;transform:none;pointer-events:auto}
 .wwd-visual .svc-image{height:clamp(360px,42vw,580px);display:flex;align-items:center;justify-content:center;overflow:hidden;background:#E9E5F2;border-radius:12px;padding:24px}
 .wwd-visual img{width:100%;height:100%;object-fit:contain}
 .wwd-visual .flir{background:#1B2632;padding:36px}
@@ -1146,6 +1146,8 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
   document.querySelectorAll('.rs').forEach(rs => {
     const slides = [...rs.querySelectorAll('.rs-slide')], count = rs.querySelector('.rs-count');
     let cur = 0, timer = 0, hovering = false;
+    /* once someone flips slides by hand, the carousel stops advancing on its own */
+    const manual = i => { clearInterval(timer); timer = 0; go(i); };
     const go = i => {
       cur = (i + slides.length) % slides.length;
       slides.forEach((sl, j) => { sl.classList.toggle('on', j === cur); sl.setAttribute('aria-hidden', String(j !== cur)); });
@@ -1155,15 +1157,15 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
       return rs.closest('figure').classList.contains('active') && r.bottom > 0 && r.top < innerHeight; };
     const restart = () => { clearInterval(timer); timer = setInterval(() => {
       if (!hovering && visible() && !heroReduce) go(cur + 1); }, 4500); };
-    rs.querySelector('.rs-prev').addEventListener('click', () => { go(cur - 1); restart(); });
-    rs.querySelector('.rs-next').addEventListener('click', () => { go(cur + 1); restart(); });
+    rs.querySelector('.rs-prev').addEventListener('click', () => manual(cur - 1));
+    rs.querySelector('.rs-next').addEventListener('click', () => manual(cur + 1));
     rs.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') hovering = true; });
     rs.addEventListener('pointerleave', () => { hovering = false; });
     let sx = null;
     rs.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, {passive:true});
     rs.addEventListener('touchend', e => {
       if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; sx = null;
-      if (Math.abs(dx) > 40) { go(cur + (dx < 0 ? 1 : -1)); restart(); }
+      if (Math.abs(dx) > 40) manual(cur + (dx < 0 ? 1 : -1));
     }, {passive:true});
     rsCtl.set(rs, i => { slides.forEach(sl => sl.classList.remove('on'));
       setTimeout(() => { go(i); restart(); }, 260); });
