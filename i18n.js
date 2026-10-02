@@ -489,6 +489,13 @@
       "在 Figma 裡自動替每個圖示命名、設定匯出格式，直接交給工程。",
     "Audits each screen against our design rules and ranks the gaps.":
       "依照我們的設計規範檢查每個畫面，把問題依嚴重程度排序。",
+    "In progress": "開發中",
+    "Starts every prototype on the same single-file base and our own components.":
+      "每個原型都從同一套單檔基底與自家元件開始。",
+    "Two blind AI reviewers: one judges, one measures. Only issues both confirm make the report.":
+      "兩個互不相見的 AI 審查：一個判斷、一個實測，雙方都確認的問題才寫進報告。",
+    "Checks every prototype change on its own: screenshots, contrast and layout.":
+      "原型每次更新都自動體檢：截圖、對比度與版面。",
 
     /* design page: Research carousel (Genome Cache) */
     "A learning adventure.": "一場學習冒險，",

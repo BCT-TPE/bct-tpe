@@ -637,7 +637,7 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 .canvas-object:nth-of-type(1){left:8%;top:18%;right:auto}
 .canvas-object:nth-of-type(2){left:29%;top:31%;right:auto}
 .canvas-object:nth-of-type(3){left:50%;top:10%;right:auto}
-.canvas-object:nth-of-type(4){left:70%;top:27%;right:auto;width:22%}
+.canvas-object:nth-of-type(4){left:70%;top:13%;right:auto;width:22%}
 .canvas-object img,.canvas-object:nth-of-type(3) img{height:clamp(110px,18svh,185px)}
 .canvas-sticker.one{top:76%;left:10%}
 .canvas-sticker.two{top:20%;left:34%}
@@ -759,14 +759,21 @@ html[lang="zh-Hant"] #navmenu{gap:26px}
 @media(prefers-reduced-motion:reduce){.canvas-object{transition:none}}
 
 /* AI teammate card under each station: the team's own Claude Code skill for that step */
-.st-ai{margin-top:14px;max-width:250px;text-align:left;padding:10px 12px 11px;border:1px solid var(--sand);border-radius:12px;
+.st-ai{margin-top:12px;max-width:272px;text-align:left;padding:10px 12px 11px;border:1px solid var(--sand);border-radius:12px;
   background:rgba(255,253,249,.82);box-shadow:0 6px 16px rgba(26,26,26,.05);
   opacity:0;translate:0 8px;transition:opacity .5s cubic-bezier(.22,.61,.36,1) .62s,translate .55s cubic-bezier(.22,.61,.36,1) .62s}
 .studio-canvas.cv-on .st-ai{opacity:1;translate:0 0}
 .st-ai-k{display:block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
-.st-ai code{display:inline-block;font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink);background:#E9E6E0;
+.st-ai code{display:inline-block;font:600 11.5px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink);background:#E9E6E0;
   padding:5px 8px;border-radius:6px;letter-spacing:0}
-.st-ai p{margin:7px 0 0;font-size:12.5px;line-height:1.45;color:var(--ink-2)}
+.st-ai p{margin:6px 0 0;font-size:12.5px;line-height:1.45;color:var(--ink-2)}
+.st-ai-i + .st-ai-i{margin-top:8px;padding-top:8px;border-top:1px dashed var(--sand)}
+.st-ai-h{display:flex;align-items:center;gap:4px 5px;flex-wrap:wrap;white-space:nowrap}
+.st-kind{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);
+  border:1px solid rgba(10,123,196,.35);border-radius:999px;padding:2px 7px;line-height:1.2}
+.st-wip{font-size:9.5px;font-weight:600;color:#7A7468;background:#EFECE6;border-radius:999px;padding:3px 8px;line-height:1.2}
+.st-ai-i.is-wip code{color:#7A7468}
+.st-ai-i.is-wip p{color:var(--ink-3);font-size:11.5px;line-height:1.4;margin-top:4px}
 html[lang="zh-Hant"] .st-ai-k{letter-spacing:.14em}
 @media(max-width:700px){.st-ai{opacity:1;translate:none;margin-top:12px}}
 @media(prefers-reduced-motion:reduce){.st-ai{opacity:1;translate:none}}
@@ -916,10 +923,10 @@ html[lang="zh-Hant"] .process-heading.kick{font-size:11px}
     </article>
  <div class="studio-canvas">
   <svg class="canvas-flow" aria-hidden="true"><path class="canvas-flow-base"/><path class="canvas-flow-progress" pathLength="1"/></svg>
-  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/insight.webp" alt="" loading="lazy"><span class="object-label">Insight</span><ul class="station-points"><li>Understand user needs.</li><li>Identify key pain points.</li><li>Define the right problem.</li></ul><div class="st-ai"><code data-noi18n>/create-slide</code><p>Turns research findings into a client-ready deck: web, PDF or editable PowerPoint.</p></div></div></article>
-  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/figure-out.webp" alt="" loading="lazy"><span class="object-label">Figure out</span><ul class="station-points"><li>Explore ideas with ChatGPT.</li><li>Map user flows with AI.</li><li>Choose the strongest direction.</li></ul><div class="st-ai"><code data-noi18n>/design-partner</code><p>Interviews us, then writes the DESIGN.md every agent follows.</p></div></div></article>
-  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/prototype.webp" alt="" loading="lazy"><span class="object-label">Prototype</span><ul class="station-points"><li>Build faster with Claude Code.</li><li>Create interactive prototypes.</li><li>Refine and iterate with AI.</li></ul><div class="st-ai"><code data-noi18n>/export-assets</code><p>Names every icon in Figma and sets export formats, ready for handoff.</p></div></div></article>
-  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/verify.webp" alt="" loading="lazy"><span class="object-label">Verify</span><ul class="station-points"><li>Test with real users.</li><li>Check usability and value.</li><li>Improve through feedback.</li></ul><div class="st-ai"><code data-noi18n>/design-partner</code><p>Audits each screen against our design rules and ranks the gaps.</p></div></div></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/insight.webp" alt="" loading="lazy"><span class="object-label">Insight</span><ul class="station-points"><li>Understand user needs.</li><li>Identify key pain points.</li><li>Define the right problem.</li></ul><div class="st-ai"><div class="st-ai-i"><div class="st-ai-h"><code data-noi18n>/create-slide</code><span class="st-kind" data-noi18n>Skill</span></div><p>Turns research findings into a client-ready deck: web, PDF or editable PowerPoint.</p></div></div></div></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/figure-out.webp" alt="" loading="lazy"><span class="object-label">Figure out</span><ul class="station-points"><li>Explore ideas with ChatGPT.</li><li>Map user flows with AI.</li><li>Choose the strongest direction.</li></ul><div class="st-ai"><div class="st-ai-i"><div class="st-ai-h"><code data-noi18n>/design-partner</code><span class="st-kind" data-noi18n>Skill</span></div><p>Interviews us, then writes the DESIGN.md every agent follows.</p></div></div></div></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/prototype.webp" alt="" loading="lazy"><span class="object-label">Prototype</span><ul class="station-points"><li>Build faster with Claude Code.</li><li>Create interactive prototypes.</li><li>Refine and iterate with AI.</li></ul><div class="st-ai"><div class="st-ai-i"><div class="st-ai-h"><code data-noi18n>/export-assets</code><span class="st-kind" data-noi18n>Skill</span></div><p>Names every icon in Figma and sets export formats, ready for handoff.</p></div><div class="st-ai-i is-wip"><div class="st-ai-h"><code data-noi18n>/prototype-starter</code><span class="st-kind" data-noi18n>Skill</span><span class="st-wip">In progress</span></div><p>Starts every prototype on the same single-file base and our own components.</p></div></div></div></article>
+  <article class="canvas-object"><div class="st"><img src="assets/process-canvas/verify.webp" alt="" loading="lazy"><span class="object-label">Verify</span><ul class="station-points"><li>Test with real users.</li><li>Check usability and value.</li><li>Improve through feedback.</li></ul><div class="st-ai"><div class="st-ai-i"><div class="st-ai-h"><code data-noi18n>/design-partner</code><span class="st-kind" data-noi18n>Skill</span></div><p>Audits each screen against our design rules and ranks the gaps.</p></div><div class="st-ai-i is-wip"><div class="st-ai-h"><code data-noi18n>/ui-critique</code><span class="st-kind" data-noi18n>Skill</span><span class="st-wip">In progress</span></div><p>Two blind AI reviewers: one judges, one measures. Only issues both confirm make the report.</p></div><div class="st-ai-i is-wip"><div class="st-ai-h"><code data-noi18n>prototype-qa</code><span class="st-kind" data-noi18n>Agent</span><span class="st-wip">In progress</span></div><p>Checks every prototype change on its own: screenshots, contrast and layout.</p></div></div></div></article>
  </div>
   <div class="cv-dots" aria-label="Steps">
     <button type="button" aria-label="Insight" class="on"></button>
