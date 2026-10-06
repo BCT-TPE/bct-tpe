@@ -842,7 +842,7 @@
 
 <!-- fly-through -->
 <div id="transwrap">
-  <video id="transvid" muted playsinline preload="auto"></video>
+  <video id="transvid" muted playsinline preload="none"></video>
 </div>
 
 <!-- station-to-station connector flights (fwd + reversed) -->
@@ -895,7 +895,7 @@
   <div class="visual">
     <video id="herovid" autoplay muted playsinline preload="auto"
       poster="clay/assets/hero-poster.webp"></video>
-    <video id="herovidB" muted playsinline preload="auto" style="opacity:0"></video>
+    <video id="herovidB" muted playsinline preload="none" style="opacity:0"></video>
     <div class="topfade"></div>
   </div>
 </section>
@@ -1235,7 +1235,7 @@ SCENES.forEach((s,i)=>{
   sc.className="scene"; sc.id="scene-"+i;
   sc.innerHTML=`
     <img class="poster" src="${s.poster}" alt="">
-    <video muted playsinline preload="auto" poster="${s.poster}">
+    <video muted playsinline preload="none" poster="${s.poster}">
       <source src="${mSrc(s.video)}" type="video/mp4">
     </video>
     <div class="tint"></div>`;
@@ -1257,10 +1257,20 @@ const dots=document.getElementById("dots");
 const hint=document.getElementById("hint");
 [heroVid,heroVidB,transVid].forEach(v=>{v.muted=true;v.playsInline=true;});
 heroVid.src=mSrc("clay/assets/hero.mp4");
-heroVidB.src=mSrc("clay/assets/hero.mp4");
-transVid.src=mSrc("clay/assets/flythrough.mp4");
 heroVid.play&&heroVid.play().catch(()=>{});
-transVid.load();
+/* load order: the hero alone first, so it starts moving right away. Only once it can play
+   through (or after 4s, or the moment the journey starts) do the loop twin, the flight,
+   station 0 and the warm-cache of connector clips begin downloading. */
+let heroReadyDone=false;
+function afterHero(){
+  if(heroReadyDone) return; heroReadyDone=true;
+  heroVidB.src=mSrc("clay/assets/hero.mp4"); heroVidB.preload="auto";
+  transVid.src=mSrc("clay/assets/flythrough.mp4"); transVid.preload="auto"; transVid.load();
+  videos[0].preload="auto"; videos[0].load();
+  warmFlights();
+}
+heroVid.addEventListener("canplaythrough",afterHero,{once:true});
+setTimeout(afterHero,4000);
 
 /* measure the copy band so the card's top edge is exact (prevents end-of-expand jump) */
 const copyband=hero.querySelector(".copyband");
@@ -1308,6 +1318,7 @@ function showStation(n,snap){
       setTimeout(()=>sc.classList.remove("snap"),120);
     } else sc.classList.toggle("on",i===n);
   });
+  if(videos[n+1] && videos[n+1].preload!=="auto"){ videos[n+1].preload="auto"; videos[n+1].load(); }
   videos.forEach((v,i)=>{
     if(i===n){ v.play().catch(()=>{}); }   /* no seek — seeking causes a visible hitch */
     else if(!v.paused) v.pause();
@@ -1325,6 +1336,7 @@ function showStation(n,snap){
 }
 
 function enterJourney(){           /* hero → fly-through → station 0 */
+  afterHero();
   busy=true; state=0;
   hint.style.opacity=0;
   hero.classList.add("expanding"); /* headline slides away, card goes full-bleed */
@@ -1828,12 +1840,12 @@ function connSrc(i){ return mSrc("clay/assets/conn"+i+".mp4"); }
    disk is instant; falls back silently if fetch fails) ---- */
 const PRE=[], PRER=[];
 function connSrcR(i){ return mSrc("clay/assets/conn"+i+"r.mp4"); }
-(function warmFlights(){
+function warmFlights(){
   if(!window.fetch || location.protocol==="file:") return;
   /* phones: skip the blob warm — it starves the hero stream on cellular;
      mobile relies on native streaming + the 6s patient wait instead */
   if(matchMedia("(pointer:coarse)").matches) return;
-  const list=[["fly","clay/assets/flythrough.mp4"]];
+  const list=[];
   for(let i=1;i<N;i++) list.push([i,connSrc(i)]);
   for(let i=1;i<N;i++) list.push(["r"+i,connSrcR(i)]);   /* reversed clips last */
   let k=0;
@@ -1842,15 +1854,14 @@ function connSrcR(i){ return mSrc("clay/assets/conn"+i+"r.mp4"); }
     const [key,url]=list[k++];
     fetch(url).then(r=>r.ok?r.blob():null).then(b=>{
       if(b){ const u=URL.createObjectURL(b);
-        if(key==="fly"){ if(state===-1&&!busy){ transVid.src=u; transVid.load(); } }
-        else if(String(key).charAt(0)==="r") PRER[+String(key).slice(1)]=u;
+        if(String(key).charAt(0)==="r") PRER[+String(key).slice(1)]=u;
         else PRE[key]=u;
       }
       grab();
     }).catch(grab);
   };
-  setTimeout(grab,900);
-})();
+  grab();
+}
 
 function primeConn(){
   if(!act2Mode && state>=0 && state<N-1){
