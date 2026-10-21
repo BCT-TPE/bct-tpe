@@ -403,6 +403,11 @@
   @media (min-width:1280px) and (orientation:landscape){
     #cases2 .cgrid{grid-template-columns:repeat(3,1fr);gap:20px}
   }
+  /* seven cards: the newest leads full-width, the six below stay 3+3 */
+  #cases2 .ccard--lead{grid-column:1/-1;aspect-ratio:21/9}
+  #cases2 .ccard--lead .cc-name{font-size:24px}
+  #cases2 .ccard--lead .cc-desc{font-size:15px}
+  @media (max-width:1279px){#cases2 .ccard--lead{aspect-ratio:16/9}}
   .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:36px;counter-reset:st}
   .step2{background:#fff;border-radius:14px;padding:16px;box-shadow:0 4px 18px rgba(20,40,60,.08);
     transition:box-shadow .25s var(--ease)}
@@ -1010,6 +1015,9 @@
     <p class="lead rv">Real projects, really shipped. A few of our favorites.</p>
     <div class="casestage">
       <div class="cgrid">
+        <a class="ccard ccard--lead" href="work/Claude/drug-review.html"><img src="work/Claude/uploads/card_drugreview.webp" alt="Drug Review AI" loading="lazy">
+          <span class="cc-info"><b class="cc-name" data-tc="新藥審查 AI">Drug Review AI</b><span class="cc-desc" data-tc="以 RAG 打造的決策輔助，把新藥審查的證據蒐集從數月縮短到幾分鐘。">RAG decision support that cuts drug-review evidence gathering from months to minutes.</span>
+          <span class="cc-pills"><i>AI / GenAI</i><i data-tc="公部門">Public Sector</i></span></span></a>
         <a class="ccard" href="work/Claude/fitting.html"><img src="work/Claude/uploads/card_dcf.webp" alt="Dynamic Cycling Fit" loading="lazy">
           <span class="cc-info"><b class="cc-name">Dynamic Cycling Fit</b><span class="cc-desc">Machine-learning bike fitting that dials in every rider&#39;s perfect position.</span>
           <span class="cc-pills"><i>Fitness &amp; Health</i><i>App</i></span></span></a>
@@ -1137,6 +1145,7 @@
       <div class="navdrop">
         <a class="droptrig" href="#cases2" data-target="cases2">Case Studies <svg class="caret" width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="dropmenu">
+          <a href="work/Claude/drug-review.html" data-tc="新藥審查 AI">Drug Review AI</a>
           <a href="work/Claude/fitting.html">Dynamic Cycling Fit</a>
           <a href="work/flir/flir.html">FLIR</a>
           <a href="work/Claude/DataLake.html">DataLake</a>
@@ -1168,6 +1177,7 @@
     <div class="nm-work">
       <button class="nm-worktrig" aria-expanded="false">Case Studies <svg class="nm-caret" width="16" height="10" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="nm-sub">
+        <a href="work/Claude/drug-review.html" data-tc="新藥審查 AI">Drug Review AI</a>
         <a href="work/Claude/fitting.html">Dynamic Cycling Fit</a>
         <a href="work/flir/flir.html">FLIR</a>
         <a href="work/Claude/DataLake.html">DataLake</a>

@@ -98,6 +98,28 @@ Leave it opted out; don't "fix" it into the shared scale without a reason beyond
 
 Rule: build hierarchy with weight and position on the scale above, not by inventing a new size.
 
+### Running body copy — one size per page, from the token
+
+Body text size comes from `--bct-body-size` / `--bct-body-lh` (`bct-system.css`, currently
+16px / 1.6 — the same value the homepage leads use). It is a token so it can be changed in one place;
+it is never restated as a literal in a page stylesheet.
+
+- Pages on `body.bct-scale` get it automatically (`p`, `li`).
+- Opted-out pages (fitting-template pages, the illustrated case pages) must put `.bct-body` on
+  **every running paragraph**: section ledes, the paragraph under a section title, bullet-point
+  descriptions, principle copy, impact copy. "Running paragraph" = any sentence-length text that is
+  not a heading, eyebrow, pill or UI-card caption.
+- What is **not** body and may differ: the hero lede directly under the `h1` (one step up, 20px, once
+  per page), eyebrows (12px rule above), pill/chip labels, and captions inside UI-style cards
+  (13.5px — component text, not prose).
+- Checkable: on any page, `getComputedStyle` of every running paragraph returns the same
+  `font-size`. If two paragraphs differ, one of them is a bug.
+
+Why this exists: an illustrated case page was first built with five different running
+sizes — 16, 16, 17, 17 and 20px — because each section was built from a different template block
+(fitting's `sec2 p` is 17, `sec3-body` 16, `sec4-body` 20). It read as five products. Don't
+reproduce template sizes; apply the token.
+
 ## 5. Component decision logic (when to use which)
 
 - **Header** — fixed, live-samples the background colour under it and swaps between light-on-dark

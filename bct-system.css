@@ -24,6 +24,9 @@
   --bct-muted:#5d6673;
   --bct-nav-text:#4a5462;
   --bct-gutter:6vw;
+  /* running body copy: ONE size per page (see DESIGN.md §4) */
+  --bct-body-size:16px;
+  --bct-body-lh:1.6;
   --bct-font:"General Sans",-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,"PingFang TC","Noto Sans TC",sans-serif;
   --bct-ease:cubic-bezier(.22,.61,.36,1);
 }
@@ -146,7 +149,9 @@ body.bct-scale h1{font-size:40px!important;line-height:1.15!important}
 body.bct-scale h2{font-size:30px!important;line-height:1.2!important}
 body.bct-scale h3{font-size:22px!important;line-height:1.3!important;font-weight:600!important}
 body.bct-scale h4,body.bct-scale h5,body.bct-scale h6{font-size:18px!important;line-height:1.35!important}
-body.bct-scale p,body.bct-scale li{font-size:16px!important;line-height:1.6!important}
+body.bct-scale p,body.bct-scale li{font-size:var(--bct-body-size)!important;line-height:var(--bct-body-lh)!important}
+/* opted-out pages (fitting, illustrated case pages) put this on every running paragraph instead */
+.bct-body{font-size:var(--bct-body-size)!important;line-height:var(--bct-body-lh)!important;font-weight:400!important;letter-spacing:0!important}
 /* the shared chrome keeps its own sizes regardless of the scale */
 #bctnav .menu>a,#bctnav .droptrig{font-size:14px!important}
 #bctnav .cta{font-size:12.5px!important}
