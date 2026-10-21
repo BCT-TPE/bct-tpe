@@ -826,6 +826,10 @@
     .langsw-m button[aria-current="true"]{color:var(--ink)}
     .langsw-m span{font-size:18px}
     #cases2 .cgrid{grid-template-columns:1fr;gap:14px}
+    /* phones: the two lead cards fall in line with the rest (same 4:3 box, same type) */
+    #cases2 .ccard--feat{aspect-ratio:4/3}
+    #cases2 .ccard--feat .cc-name{font-size:19px}
+    #cases2 .ccard--feat .cc-desc{font-size:13.5px}
     /* phones read: eyebrow, name, the three points, then the panel, and the
        paragraph + CTA land underneath it. display:contents lifts the copy's
        children into the row so they can be ordered around the panel; gap is 0
