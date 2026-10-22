@@ -1020,6 +1020,7 @@ footer {
       <div class="navdrop">
         <a class="droptrig" href="../../index.html">Case Studies <svg class="caret" width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="dropmenu">
+          <a href="../middle-platform/" data-tc="商務中台">Middle Platform</a>
           <a href="../drug-review/" data-tc="新藥審查 AI">Drug Review AI</a>
           <a href="fitting.html">Dynamic Cycling Fit</a>
           <a href="../flir/flir.html">FLIR</a>
@@ -1052,6 +1053,7 @@ footer {
     <div class="nm-work">
       <button class="nm-worktrig" aria-expanded="false">Case Studies <svg class="nm-caret" width="16" height="10" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="nm-sub">
+          <a href="../middle-platform/" data-tc="商務中台">Middle Platform</a>
           <a href="../drug-review/" data-tc="新藥審查 AI">Drug Review AI</a>
           <a href="fitting.html">Dynamic Cycling Fit</a>
           <a href="../flir/flir.html">FLIR</a>
@@ -1391,6 +1393,12 @@ footer {
     <div class="bw-head reveal in"><h2>More case studies</h2>
       <p class="bw-sub">We design systems and experiences that elevate how people connect, work, and grow.</p></div>
     <div class="bw-grid">
+      <a class="bw-card" href="../middle-platform/">
+        <img src="uploads/card_platform.webp?v=2" alt="Middle Platform" loading="lazy">
+        <div class="bw-info"><span class="bw-name" data-tc="商務中台">Middle Platform</span>
+          <p class="bw-desc" data-tc="模組化商務中台，讓各區分階段導入 SAP 時，所有通路照常運作。">A modular commerce platform keeping every channel running through a phased SAP move.</p>
+          <div class="bw-pills"><span data-tc="商務">Commerce</span><span data-tc="平台">Platform</span></div></div>
+      </a>
       <a class="bw-card" href="../drug-review/">
         <img src="uploads/card_drugreview.webp?v=2" alt="Drug Review AI" loading="lazy">
         <div class="bw-info"><span class="bw-name" data-tc="新藥審查 AI">Drug Review AI</span>
@@ -1489,11 +1497,13 @@ document.querySelector('.btn-grad')?.addEventListener('click', () => {
   window.location.href = 'mailto:hello@bct.com.tw?subject=Project%20Inquiry';
 });
 
-// Scroll-triggered animations
+// Scroll-triggered animations — replay each time a block comes back; it
+// resets once fully off screen. The hero's own entrance (on load) plays once.
 function revealAnims() {
   document.querySelectorAll('.fade-up,.fade-left,.fade-right').forEach(el => {
     const r = el.getBoundingClientRect();
-    if (r.top < window.innerHeight + 60) el.classList.add('in');
+    if (r.bottom < 0 || r.top >= window.innerHeight + 60) { if (!el.closest('.hero')) el.classList.remove('in'); }
+    else el.classList.add('in');
   });
 }
 requestAnimationFrame(revealAnims);

@@ -694,6 +694,7 @@
       <div class="navdrop">
         <a class="droptrig" href="../../index.html">Case Studies <svg class="caret" width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="dropmenu">
+          <a href="../middle-platform/" data-tc="商務中台">Middle Platform</a>
           <a href="../drug-review/" data-tc="新藥審查 AI">Drug Review AI</a>
           <a href="fitting.html">Dynamic Cycling Fit</a>
           <a href="../flir/flir.html">FLIR</a>
@@ -726,6 +727,7 @@
     <div class="nm-work">
       <button class="nm-worktrig" aria-expanded="false">Case Studies <svg class="nm-caret" width="16" height="10" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.3 5.5 5.7 10 1.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="nm-sub">
+          <a href="../middle-platform/" data-tc="商務中台">Middle Platform</a>
           <a href="../drug-review/" data-tc="新藥審查 AI">Drug Review AI</a>
           <a href="fitting.html">Dynamic Cycling Fit</a>
           <a href="../flir/flir.html">FLIR</a>
@@ -894,6 +896,12 @@
     <div class="bw-head reveal in"><h2>More case studies</h2>
       <p class="bw-sub">We design systems and experiences that elevate how people connect, work, and grow.</p></div>
     <div class="bw-grid">
+      <a class="bw-card" href="../middle-platform/">
+        <img src="uploads/card_platform.webp?v=2" alt="Middle Platform" loading="lazy">
+        <div class="bw-info"><span class="bw-name" data-tc="商務中台">Middle Platform</span>
+          <p class="bw-desc" data-tc="模組化商務中台，讓各區分階段導入 SAP 時，所有通路照常運作。">A modular commerce platform keeping every channel running through a phased SAP move.</p>
+          <div class="bw-pills"><span data-tc="商務">Commerce</span><span data-tc="平台">Platform</span></div></div>
+      </a>
       <a class="bw-card" href="../drug-review/">
         <img src="uploads/card_drugreview.webp?v=2" alt="Drug Review AI" loading="lazy">
         <div class="bw-info"><span class="bw-name" data-tc="新藥審查 AI">Drug Review AI</span>
@@ -984,6 +992,9 @@
     let current   = 0;
     let started   = false;
     let advanceTimer = null;
+    let run = 0;      // bumped on reset: callbacks from an earlier play bail out
+    let timers = [];
+    const later = (f, ms) => { const r = run; timers.push(setTimeout(() => { if (r === run) f(); }, ms)); };
     const SLIDE_DURATION = 500; // ms — matches CSS transition
 
     function enterSlide(idx) {
@@ -994,7 +1005,7 @@
       slides[idx].classList.remove('active');
       slides[idx].classList.add('exit');
       // After exit finishes, reset silently (invisible, so no visible flash)
-      setTimeout(() => slides[idx].classList.remove('exit'), SLIDE_DURATION + 50);
+      later(() => slides[idx].classList.remove('exit'), SLIDE_DURATION + 50);
     }
 
     function playVideo(idx, isFirst) {
@@ -1015,7 +1026,7 @@
     function stopVideo(idx) {
       const v = videos[idx];
       v.classList.remove('active');
-      setTimeout(() => { v.pause(); v.currentTime = 0; }, 650);
+      later(() => { v.pause(); v.currentTime = 0; }, 650);
     }
 
     function switchTo(nextIdx, isFirst) {
@@ -1026,7 +1037,7 @@
         exitSlide(prevIdx);
         stopVideo(prevIdx);
         // Slight delay so exit animation is visible before enter begins
-        setTimeout(() => { enterSlide(nextIdx); playVideo(nextIdx, false); }, 320);
+        later(() => { enterSlide(nextIdx); playVideo(nextIdx, false); }, 320);
       } else {
         enterSlide(nextIdx);
         playVideo(nextIdx, true);
@@ -1036,7 +1047,9 @@
       // refuse programmatic playback (low-power / data-saver), where 'ended'
       // never fires and the carousel would stall on 01.
       const v = videos[nextIdx];
+      const r = run;
       const arm = () => {
+        if (r !== run) return;
         clearTimeout(advanceTimer);
         const ms = (isFinite(v.duration) && v.duration > 0) ? v.duration * 1000 + 1600 : 9000;
         advanceTimer = setTimeout(() => switchTo((nextIdx + 1) % videos.length, false), ms);
@@ -1044,19 +1057,30 @@
       if (isFinite(v.duration) && v.duration > 0) arm();
       else { arm(); v.addEventListener('loadedmetadata', arm, { once: true }); }
       v.addEventListener('ended', () => {
+        if (r !== run) return;
         clearTimeout(advanceTimer);
         switchTo((nextIdx + 1) % videos.length, false);
       }, { once: true });
     }
 
-    // Trigger when sec2 scrolls into view
+    // Back to the pre-entrance state: nothing shown, every video stopped at 0
+    function reset() {
+      run++; clearTimeout(advanceTimer); timers.forEach(clearTimeout); timers = [];
+      slides.forEach(s => s.classList.remove('active', 'exit'));
+      videos.forEach(v => { v.classList.remove('active'); v.pause(); v.currentTime = 0; });
+      ipadDevice.classList.remove('zoom-enter');
+      current = 0; started = false;
+    }
+
+    // Trigger when sec2 scrolls into view — replays from 01 each time it comes
+    // back; resets once fully off screen
     const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !started) {
+      const e = entries[entries.length - 1];
+      if (e.intersectionRatio >= 0.35 && !started) {
         started = true;
         switchTo(0, true);
-        observer.disconnect();
-      }
-    }, { threshold: 0.35 });
+      } else if (!e.isIntersecting && started) reset();
+    }, { threshold: [0, 0.35] });
     observer.observe(sec2El);
   })();
 
@@ -1072,16 +1096,14 @@
     navWorkWrap.querySelector('.nav-work-btn').setAttribute('aria-expanded', false);
   });
 
-  // Reveal on scroll
+  // Reveal on scroll — replays each time it comes back; resets once fully off screen
   const reveals = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        io.unobserve(e.target);
-      }
+      if (e.intersectionRatio >= 0.12) e.target.classList.add('visible');
+      else if (!e.isIntersecting) e.target.classList.remove('visible');
     });
-  }, { threshold: 0.12 });
+  }, { threshold: [0, 0.12] });
   reveals.forEach(el => io.observe(el));
 </script>
 <footer id="bctftr">© 2026 BCT Taipei. All rights reserved. · Bahwan CyberTek Group</footer>
