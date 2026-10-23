@@ -163,6 +163,46 @@
 
 
 
+    /* ── WHY: before / after slider — After underneath, Before on top clipped to the left of --x ── */
+    .why { background: #fff; padding: 0 80px 110px; }
+    .why-inner { max-width: 1280px; margin: 0 auto; }
+    .why .d1-head { margin-bottom: 20px; }
+    .why-cmp { --x: 40%; position: relative; max-width: 760px; margin: 0 auto; aspect-ratio: 1344 / 752; user-select: none; -webkit-user-select: none; touch-action: pan-y; cursor: ew-resize; }
+    .why-cmp img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none;
+      -webkit-mask-image: radial-gradient(ellipse 62% 64% at 50% 46%, #000 70%, transparent 100%); mask-image: radial-gradient(ellipse 62% 64% at 50% 46%, #000 70%, transparent 100%); }   /* the render's edges melt into the page */
+    .why-cmp .before { clip-path: inset(0 calc(100% - var(--x)) 0 0); }
+    .why-rule { position: absolute; top: 2%; bottom: 2%; left: var(--x); border-left: 1px dashed rgba(27,36,48,.35); }
+    .why-knob { position: absolute; top: 50%; left: var(--x); width: 44px; height: 44px; translate: -50% -50%; border-radius: 50%; background: #fff; box-shadow: 0 6px 20px rgba(20,40,60,.18); display: grid; place-items: center; outline: none; }
+    .why-knob:focus-visible { box-shadow: 0 0 0 3px rgba(10,123,196,.35), 0 6px 20px rgba(20,40,60,.18); }
+    .why-knob svg { width: 20px; height: 20px; stroke: #1b2430; stroke-width: 1.6; fill: none; }
+    .why-side { position: absolute; top: 4%; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; transition: opacity .3s; }
+    .why-side.b { left: 2%; color: #8a96a3; } .why-side.a { right: 2%; color: #0a7bc4; }
+    /* what each column is: channels, the middle (changes with the slider), regional ERP */
+    .why-labs { position: relative; max-width: 760px; height: 40px; margin: 6px auto 0; }
+    .why-lab { position: absolute; top: 0; translate: -50% 0; text-align: center; pointer-events: none; white-space: nowrap; transition: opacity .35s; }
+    .why-lab b { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: #1b2430; }
+    .why-lab small { display: block; margin-top: 4px; font-size: 12px; color: #6d777f; }
+    .why-lab.mp b { color: #0a7bc4; }
+    .why-labs .why-lab.m { transition: opacity .2s; } .why-labs .why-lab.p2p { transition-delay: .2s; }   /* one fades out before the other fades in */
+    .why-labs .why-lab.mp { opacity: 0; } .why-labs.show-after .why-lab.mp { opacity: 1; transition-delay: .2s; } .why-labs.show-after .why-lab.p2p { opacity: 0; transition-delay: 0s; }
+    .why-cmp.glide .before, .why-cmp.glide .why-rule, .why-cmp.glide .why-knob { transition: clip-path 2.6s cubic-bezier(.45,0,.25,1), left 2.6s cubic-bezier(.45,0,.25,1); }
+    /* the two lists follow the slider: the side shown more reads brighter */
+    .why-lists { display: grid; grid-template-columns: 1fr 1fr; gap: 120px; max-width: 880px; margin: 16px auto 0; padding-top: 20px; border-top: 1px solid #f0f3f6; }
+    .why-lists > div { transition: opacity .3s; }
+    .why-lists .a { padding-left: 48px; }
+    .why-lists h3 { display: flex; align-items: baseline; gap: 10px; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #8a96a3; margin-bottom: 12px; }
+    .why-lists h3 b { font-size: 22px; letter-spacing: -.3px; color: #9aa8b6; }
+    .why-lists h3 small { font-size: 12.5px; letter-spacing: 0; text-transform: none; font-weight: 500; color: #6b7684; }
+    .why-lists .a h3, .why-lists .a h3 b { color: #0a7bc4; }
+    .why-lists ul { list-style: none; display: grid; gap: 8px; }
+    .why-lists li { font-size: 14px; line-height: 1.5; color: #555; display: flex; gap: 10px; }
+    .why-lists li::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; margin-top: 7px; background: #b7c2cd; } .why-lists .a li::before { background: #0a7bc4; }
+    @media (max-width: 900px) {
+      .why { padding: 0 6vw 64px; }
+      .why-labs { height: 54px; } .why-lab small { white-space: normal; width: 110px; }
+      .why-lists { grid-template-columns: 1fr; gap: 24px; } .why-lists .a { padding-left: 0; }
+      .why-lists > div { opacity: 1 !important; }
+    }
     /* ── S1: the platform cut open (stage is drawn at 880px and scaled to fit) ── */
     .sec3.s1 { padding: 96px 80px 110px; background: #f5f8fb; }   /* .sec3 is declared later; this must win */
     /* soft light behind the figure and a contact shadow under the pedestal (stage px; the stage is its own stacking context) */
@@ -518,6 +558,36 @@
 </section>
 
 <!-- ── SEC3: THE SOLUTION — the platform cut open: channels plug in above, four services glow in the middle, ERP below ── -->
+<!-- ── WHY: what it looks like without a middle platform, and with one (drag to compare) ── -->
+<section class="why">
+  <div class="why-inner">
+    <div class="sec3-eyebrow reveal" data-tc="為什麼需要中台">Why a middle platform</div>
+    <div class="d1-head reveal">
+      <div><h2 class="sec3-title"><span class="ln" data-tc="沒有中台，">Without one, every channel</span><span class="ln" data-tc="每個通路都得接上每套 ERP。">wires into every ERP.</span></h2></div>
+      <p class="sec3-body bct-body" data-tc="每個前台都得各自接上每一區的 ERP，區域一換系統就得重做。中台把這張網收成一層共用服務。">Every front end wired into every region's ERP and redid it when a region moved. The middle platform turns that web into one shared layer.</p>
+    </div>
+    <div class="why-cmp reveal" id="whyCmp">
+      <img class="after" src="img/why/after.webp" alt="With a middle platform: each channel and each regional system connects once, to one shared hub." loading="lazy" decoding="async">
+      <img class="before" src="img/why/before.webp" alt="Without a middle platform: every channel is wired to every regional system in a tangle of cables." loading="lazy" decoding="async">
+      <span class="why-side b" data-tc="之前">Before</span><span class="why-side a" data-tc="之後">After</span>
+      <span class="why-rule" aria-hidden="true"></span>
+      <span class="why-knob" role="slider" tabindex="0" aria-label="Compare before and after" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5 2 10l5 5M13 5l5 5-5 5"/></svg></span>
+    </div>
+    <div class="why-labs" id="whyLabs">
+        <span class="why-lab l" style="left:18%"><b data-tc="通路">Channels</b><small data-tc="經銷商入口 · 門市 · 電商 · App">Dealer portal · Stores · Online · App</small></span>
+        <span class="why-lab m p2p" style="left:50%"><b data-tc="點對點串接">Point-to-point</b><small data-tc="每個通路接每套 ERP">Every channel to every ERP</small></span>
+        <span class="why-lab m mp" style="left:50%"><b data-tc="中台">Middle platform</b><small data-tc="一層共用服務">One shared layer</small></span>
+        <span class="why-lab r" style="left:82%"><b data-tc="各區 ERP">Regional ERP</b><small data-tc="舊 ERP 或 SAP">Legacy ERP or SAP</small></span>
+    </div>
+    <div class="why-lists">
+      <div class="b"><h3><span data-tc="之前">Before</span><b>16</b><small data-tc="條串接">integrations</small></h3>
+        <ul><li data-tc="每個通路都直接接上各區系統">Every channel wired to every regional system</li><li data-tc="同一個產品，每個系統料號都不同">One product, a different ID in every system</li><li data-tc="ERP 一有變動，所有前台都得跟著改">Any ERP change meant touching every front end</li></ul></div>
+      <div class="a"><h3><span data-tc="之後">After</span><b>8</b><small data-tc="個接點，只建一次">connections, built once</small></h3>
+        <ul><li data-tc="產品、價格與庫存，只有一個資料來源">One source for product, price and stock data</li><li data-tc="換到 SAP 的過程中，通路持續運作">Channels kept running through the SAP move</li><li data-tc="新市場只接一次，不必每區重做">New markets connect once, not per region</li></ul></div>
+    </div>
+  </div>
+</section>
+
 <section class="sec3 s1">
   <div class="s1-grid">
     <div class="s1-text reveal">
@@ -733,6 +803,33 @@
   new IntersectionObserver(es=>es.forEach(e=>{
     if(e.intersectionRatio>=.35&&!shown) play(); else if(!e.isIntersecting&&shown) reset();
   }),{threshold:[0,.35]}).observe(fit);
+})();
+</script>
+<script>
+/* WHY: drag (or arrow keys) to compare; each time it comes into view the handle glides slowly from Before to its resting point */
+(function(){
+  const c=document.getElementById('whyCmp'); if(!c) return;
+  const knob=c.querySelector('.why-knob'), labs=document.getElementById('whyLabs'), lists=document.querySelectorAll('.why-lists > div'), sides=c.querySelectorAll('.why-side'), REST=40;
+  let x=REST;
+  const set=v=>{ x=Math.max(0,Math.min(100,v)); c.style.setProperty('--x',x+'%'); knob.setAttribute('aria-valuenow',Math.round(x));
+    lists[0].style.opacity=.35+.65*Math.min(1,x/50); lists[1].style.opacity=.35+.65*Math.min(1,(100-x)/50);   /* each list dims as its half shrinks */
+    sides[0].style.opacity=x<8?0:1; sides[1].style.opacity=x>92?0:1;
+    labs.classList.toggle('show-after',x<50); };   /* the middle label names whichever side shows more */
+  const fromEvent=e=>{ const r=c.getBoundingClientRect(); set((e.clientX-r.left)/r.width*100); };
+  let t=[];
+  const stop=()=>{ t.forEach(clearTimeout); t=[]; c.classList.remove('glide'); };
+  c.addEventListener('pointerdown',e=>{ stop(); c.setPointerCapture(e.pointerId); fromEvent(e);
+    const mv=ev=>fromEvent(ev), up=()=>{ c.removeEventListener('pointermove',mv); c.removeEventListener('pointerup',up); };
+    c.addEventListener('pointermove',mv); c.addEventListener('pointerup',up); });
+  knob.addEventListener('keydown',e=>{ if(e.key==='ArrowLeft'||e.key==='ArrowRight'){ e.preventDefault(); stop(); set(x+(e.key==='ArrowLeft'?-5:5)); } });
+  const START=88;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){ set(REST); return; }
+  set(START);   /* starts mostly on Before, then slowly tidies up to the resting point */
+  /* plays each time it comes back; resets once fully off screen */
+  new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.intersectionRatio>=.5&&!t.length){ c.classList.add('glide'); t=[setTimeout(()=>set(REST),500),setTimeout(()=>{ c.classList.remove('glide'); t=['done']; },3200)]; }
+    else if(!e.isIntersecting){ stop(); set(START); }
+  }),{threshold:[0,.5]}).observe(c);
 })();
 </script>
 <script>
