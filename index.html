@@ -794,8 +794,14 @@
     /* join-us: tiles are small on phones, so shrink the tall rows & tighten the gap
        so the top/bottom tile rows sit close to the headline instead of far apart */
     #cult{padding:40px 0 46px}
-    #cult .tilerow{height:150px}
-    #cult .cult-center{margin:10px auto}
+    /* the rows are taller than the space they take, so tile shadows and the wave never clip */
+    #cult .tilerow{height:226px;margin:-38px 0}
+    #cult .cult-center{margin:22px auto 62px}
+    #cult .spark{margin-bottom:26px}
+    /* the pills get their own gaps: beside the spark above the headline, under the link below it */
+    #cult .c-coffee{top:-6px!important;left:3%!important}
+    #cult .c-hybrid{top:-6px!important;right:3%!important}
+    #cult .c-outings{top:auto!important;bottom:-46px!important;right:4%!important}
     /* journey on phones: TALL portrait card (88vw wide, 8:9 → 99vw tall,
        video sides crop via object-fit), text below, dots own the bottom */
     .scene{right:6vw;left:6vw;top:8vh;width:auto;aspect-ratio:8/9;transform:none;border-radius:22px}
@@ -1148,7 +1154,7 @@
 <nav id="nav">
   <div class="bar">
     <button class="navburger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
-    <a class="logo" href="#"><img src="logo_black.svg" alt="BahwanCyberTek"></a>
+    <a class="logo" href="./"><img src="logo_black.svg" alt="BahwanCyberTek"></a>
     <div class="menu">
       <a href="#svc" data-target="svc">Services</a>
       <div class="navdrop">
