@@ -1187,7 +1187,7 @@ function showStation(n,snap){
   finale.classList.toggle("on",n===N-1);
   /* let the scene settle before the caption slides in */
   setTimeout(()=>{
-    if(state===n && (chainTo===null||chainTo===n)) caps.forEach(c=>c.classList.toggle("on",+c.dataset.cap===n));
+    if(state===n) caps.forEach(c=>c.classList.toggle("on",+c.dataset.cap===n));
   },300);
   dotEls.forEach((d,i)=>d.classList.toggle("on",i===n));
   dots.classList.add("on");
@@ -1244,21 +1244,12 @@ function goTo(n){                  /* jump between stations (dots / skip) */
   if(busy||state===-1&&n>0&&false) return;
   if(state===-1){ enterJourney(); if(n>0){ setTimeout(()=>goTo(n),6500); } return; }
   if(n===state) return;
-  if(REDUCE){ busy=true; state=n; showStation(n); setTimeout(()=>busy=false,950); return; }
-  /* every dot is a real flight: farther jumps fly through each station in turn, faster */
-  if(Math.abs(n-state)===1){ n>state?flyForward():flyBackward(); return; }
-  chainTo=n; connRate=CHAIN_RATE; stepChain();
-}
-const CHAIN_RATE=6;
-const CONN_RATE=3;   /* 5s clip lands in ~1.7s */
-let chainTo=null, connRate=CONN_RATE;
-const chaining=()=>chainTo!==null && chainTo!==state;
-function stepChain(){
-  if(chainTo===null) return;
-  if(busy){ setTimeout(stepChain,30); return; }
-  if(state===chainTo){ chainTo=null; connRate=CONN_RATE; return; }
-  chainTo>state?flyForward():flyBackward();
-  setTimeout(stepChain,30);
+  /* adjacent dot = real flight (fwd / reversed); farther jumps stay a crossfade */
+  if(!REDUCE && n===state+1){ flyForward(); return; }
+  if(!REDUCE && n===state-1){ flyBackward(); return; }
+  busy=true; state=n;
+  showStation(n);
+  setTimeout(()=>busy=false,950);
 }
 
 /* ---------- ACT 2 ---------- */
@@ -1696,6 +1687,7 @@ function undock(el){ const s=el.style;
   s.borderRadius=""; }
 
 /* ---------- connector flights (scroll-world technique) ---------- */
+const CONN_RATE=3.0;   /* 5s clip lands in ~1.7s */
 const connwrap=document.getElementById("connwrap");
 const connVid=document.getElementById("connvid");
 const connVidR=document.getElementById("connvidR");
@@ -1769,8 +1761,8 @@ function flyForward(){
       connwrap.style.transition="none"; connwrap.style.opacity=0;
       void connwrap.offsetWidth;
       connwrap.style.transition="";
-      setTimeout(()=>{ busy=false; primeConn(); primeConnR(); },chaining()?20:250);
-    },fast||chaining()?0:100);
+      setTimeout(()=>{ busy=false; primeConn(); primeConnR(); },250);
+    },fast?0:100);
   };
   const begin=()=>{
     connVid.classList.add("act"); connVidR.classList.remove("act");
@@ -1778,7 +1770,7 @@ function flyForward(){
     caps.forEach(c=>c.classList.remove("on"));
     /* the NEXT caption slides in while the camera is still flying */
     setTimeout(()=>{
-      if(chainTo===null||chainTo===to) caps.forEach(c=>c.classList.toggle("on",+c.dataset.cap===to));
+      caps.forEach(c=>c.classList.toggle("on",+c.dataset.cap===to));
       if(to===N-1) finale.classList.add("on");
     },280);
     connwrap.style.opacity=1;
@@ -1796,10 +1788,10 @@ function flyForward(){
       const nv=videos[to];
       try{ nv.currentTime=0; }catch(e){}
       nv.play().then(()=>{ setTimeout(()=>{ nv.pause(); try{ nv.currentTime=0; }catch(e){} },180); }).catch(()=>{});
-      connVid.playbackRate=connRate;
+      connVid.playbackRate=CONN_RATE;
       connVid.play().catch(()=>{});
       connVid.addEventListener("ended",()=>land(false),{once:true});
-      setTimeout(()=>land(false),(connVid.duration?connVid.duration*1000/connRate:2100)+800);
+      setTimeout(()=>land(false),(connVid.duration?connVid.duration*1000/CONN_RATE:2100)+800);
     },360);
   };
   /* last-resort landing when the clip truly cannot load: graceful crossfade
@@ -1829,10 +1821,9 @@ function flyBackward(){
     setTimeout(()=>{
       /* landing frame = station's LAST frame but the video restarts at 0 —
          a short crossfade (not a hard cut) masks the pose difference */
-      if(chaining()){ connwrap.style.transition="none"; connwrap.style.opacity=0; void connwrap.offsetWidth; connwrap.style.transition=""; }
-      else connwrap.style.opacity=0;
-      setTimeout(()=>{ busy=false; primeConn(); primeConnR(); },chaining()?20:550);
-    },chaining()?0:100);
+      connwrap.style.opacity=0;
+      setTimeout(()=>{ busy=false; primeConn(); primeConnR(); },550);
+    },100);
   };
   const landPlain=()=>{ if(done) return; done=true;
     state=to; showStation(to);
@@ -1843,7 +1834,7 @@ function flyBackward(){
     connVidR.currentTime=0; connVidR.pause();
     caps.forEach(c=>c.classList.remove("on"));
     finale.classList.remove("on");
-    setTimeout(()=>{ if(chainTo===null||chainTo===to) caps.forEach(c=>c.classList.toggle("on",+c.dataset.cap===to)); },280);
+    setTimeout(()=>{ caps.forEach(c=>c.classList.toggle("on",+c.dataset.cap===to)); },280);
     connwrap.style.opacity=1;
     setTimeout(()=>{
       const old=scenes[to+1];
@@ -1855,10 +1846,10 @@ function flyBackward(){
       const nv=videos[to];
       try{ nv.currentTime=0; }catch(e){}
       nv.play().then(()=>{ setTimeout(()=>{ nv.pause(); try{ nv.currentTime=0; }catch(e){} },180); }).catch(()=>{});
-      connVidR.playbackRate=connRate;
+      connVidR.playbackRate=CONN_RATE;
       connVidR.play().catch(()=>{});
       connVidR.addEventListener("ended",land,{once:true});
-      setTimeout(land,(connVidR.duration?connVidR.duration*1000/connRate:2100)+800);
+      setTimeout(land,(connVidR.duration?connVidR.duration*1000/CONN_RATE:2100)+800);
     },360);
   };
   primeConnR();
@@ -1874,7 +1865,7 @@ function flyBackward(){
 
 const REDUCE=matchMedia("(prefers-reduced-motion: reduce)").matches;
 function next(){
-  if(busy||chainTo!==null) return;
+  if(busy) return;
   if(state===-1){ enterJourney(); return; }
   if(state===N-1){ enterAct2(); return; }
   if(state<N-1){
@@ -1883,7 +1874,7 @@ function next(){
   }
 }
 function prev(){
-  if(busy||chainTo!==null) return;
+  if(busy) return;
   if(state===0){ backToHero(); return; }
   if(state>0){
     if(REDUCE){ busy=true; state--; showStation(state); setTimeout(()=>busy=false,950); }
